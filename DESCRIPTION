@@ -1,0 +1,5 @@
+Vantiv eCommerce Online Ruby SDK created for version 12.0 of Vantiv eCommerce XML format, see the XSD schema for specific fields that are supported by this format.
+
+This gem contains an application interface in the Ruby programming language created by Vantiv eCommerce.
+
+
