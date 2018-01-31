@@ -1,4 +1,4 @@
-require_relative '../../lib/LitleOnline'
+require_relative '../../lib/CnpOnline'
  
 #Authorization
 auth_info = {
@@ -19,14 +19,14 @@ auth_info = {
   'cardValidationNum' => '349',
   'type' => 'VI'}
 }
-auth_response = LitleOnline::LitleOnlineRequest.new.authorization(auth_info)
+auth_response = CnpOnline::CnpOnlineRequest.new.authorization(auth_info)
  
 #display results
 puts "Response: " + auth_response.authorizationResponse.response
 puts "Message: " + auth_response.authorizationResponse.message
-puts "Litle Transaction ID: " + auth_response.authorizationResponse.litleTxnId
+puts "Cnp Transaction ID: " + auth_response.authorizationResponse.cnpTxnId
 
 if (!auth_response.authorizationResponse.message.eql?'Approved')
-   raise ArgumentError, "LitleAuthorizationTransaction has not been Approved", caller
+   raise ArgumentError, "CnpAuthorizationTransaction has not been Approved", caller
 end
 

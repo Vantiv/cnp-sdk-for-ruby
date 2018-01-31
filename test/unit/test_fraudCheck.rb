@@ -22,12 +22,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
 #test FraudCheck Transaction
-module LitleOnline
+module CnpOnline
   class TestFraudCheck < Test::Unit::TestCase
     def test_success_fraud_check
       hash = {
@@ -38,8 +38,8 @@ module LitleOnline
         'advancedFraudChecks' => {'threatMetrixSessionId' => 'test2-BXXXXXX003'},
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<threatMetrixSessionId>test2-BXXXXXX003<\/threatMetrixSessionId>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.fraud_check_request(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<threatMetrixSessionId>test2-BXXXXXX003<\/threatMetrixSessionId>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.fraud_check_request(hash)
     end
   end
 end

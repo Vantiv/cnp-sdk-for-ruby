@@ -22,12 +22,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 require_relative 'Configuration'
 
 #
-# This class creates a new batch to which Litle XML transactions are added.
+# This class creates a new batch to which Cnp XML transactions are added.
 # The batch is stored in the local file system until it is ready to be sent
-# to Litle.
+# to Cnp.
 #
-module LitleOnline
-  class LitleBatchRequest
+module CnpOnline
+  class CnpBatchRequest
     include XML::Mapping
     def initialize ()
       #load configuration data
@@ -42,11 +42,11 @@ module LitleOnline
         :captureGivenAuth=>{ :numCaptureGivenAuths=>0, :captureGivenAuthAmount=>0 },
         :forceCapture=>{ :numForceCaptures=>0, :forceCaptureAmount=>0 },
         :authReversal=>{ :numAuthReversals=>0, :authReversalAmount=>0 },
-        #11.0 begin
+        #12.0 begin
         :giftCardAuthReversal=>{ :numGiftCardAuthReversals=>0, :giftCardAuthReversalOriginalAmount=>0 },
         #end 
         :capture=>{ :numCaptures=>0, :captureAmount=>0 },
-        #11.0 begin
+        #12.0 begin
         :giftCardCapture=>{ :numGiftCardCaptures=>0, :giftCardCaptureAmount=>0 },
         :giftCardCredit=>{ :numGiftCardCredits=>0, :giftCardCreditAmount=>0 },
         #end 
@@ -82,7 +82,7 @@ module LitleOnline
         #SDK XML 10
         :numFundingInstructionVoid=>0
       }
-      @litle_txn = LitleTransaction.new
+      @cnp_txn = CnpTransaction.new
       @path_to_batch = nil
       @txn_file = nil
       @MAX_TXNS_IN_BATCH = 100000
@@ -143,7 +143,7 @@ module LitleOnline
       temp_counts = File.open(@path_to_batch, "rb") { |f| Marshal.load(f) }
       # woops, they opened an AU batch
       if(temp_counts[:numAccountUpdates] != 0) then
-        au_batch = LitleAUBatch.new
+        au_batch = CnpAUBatch.new
         au_batch.open_existing_batch(pathToBatchFile)
         initialize()
         create_new_batch(File.dirname(pathToBatchFile))
@@ -179,7 +179,7 @@ module LitleOnline
     end
 
     def authorization(options)
-      transaction = @litle_txn.authorization(options)
+      transaction = @cnp_txn.authorization(options)
       @txn_counts[:auth][:numAuths] += 1
       @txn_counts[:auth][:authAmount] += options['amount'].to_i
 
@@ -187,7 +187,7 @@ module LitleOnline
     end
 
     def sale(options)
-      transaction = @litle_txn.sale(options)
+      transaction = @cnp_txn.sale(options)
       @txn_counts[:sale][:numSales] += 1
       @txn_counts[:sale][:saleAmount] += options['amount'].to_i
 
@@ -195,7 +195,7 @@ module LitleOnline
     end
 
     def credit(options)
-      transaction = @litle_txn.credit(options)
+      transaction = @cnp_txn.credit(options)
       @txn_counts[:credit][:numCredits] += 1
       @txn_counts[:credit][:creditAmount] += options['amount'].to_i
 
@@ -203,7 +203,7 @@ module LitleOnline
     end
 
     def auth_reversal(options)
-      transaction = @litle_txn.auth_reversal(options)
+      transaction = @cnp_txn.auth_reversal(options)
       @txn_counts[:authReversal][:numAuthReversals] += 1
       @txn_counts[:authReversal][:authReversalAmount] += options['amount'].to_i
 
@@ -211,105 +211,105 @@ module LitleOnline
     end
 
     def gift_card_auth_reversal(options)
-      transaction = @litle_txn.gift_card_auth_reversal(options)
+      transaction = @cnp_txn.gift_card_auth_reversal(options)
       @txn_counts[:giftCardAuthReversal][:numGiftCardAuthReversals] += 1
       @txn_counts[:giftCardAuthReversal][:giftCardAuthReversalOriginalAmount] += options['amount'].to_i
       add_txn_to_batch(transaction, :giftCardAuthReversal, options)
     end
     
     def gift_card_capture(options)
-      transaction = @litle_txn.gift_card_capture(options)
+      transaction = @cnp_txn.gift_card_capture(options)
       @txn_counts[:giftCardCapture][:numGiftCardCaptures] += 1
       @txn_counts[:giftCardCapture][:giftCardCaptureAmount] += options['amount'].to_i
       add_txn_to_batch(transaction, :giftCardCapture, options)
     end
 
     def gift_card_credit(options)
-      transaction = @litle_txn.gift_card_credit(options)
+      transaction = @cnp_txn.gift_card_credit(options)
       @txn_counts[:giftCardCredit][:numGiftCardCredits] += 1
       @txn_counts[:giftCardCredit][:giftCardCreditAmount] += options['amount'].to_i
       add_txn_to_batch(transaction, :giftCardCredit, options)
     end
 
     def cancel_subscription(options)
-      transaction = @litle_txn.cancel_subscription(options)
+      transaction = @cnp_txn.cancel_subscription(options)
       @txn_counts[:numCancelSubscriptions] += 1
 
       add_txn_to_batch(transaction, :cancelSubscription, options)
     end
 
     def update_subscription(options)
-      transaction = @litle_txn.update_subscription(options)
+      transaction = @cnp_txn.update_subscription(options)
       @txn_counts[:numUpdateSubscriptions] += 1
 
       add_txn_to_batch(transaction, :updateSubscription, options)
     end
 
     def create_plan(options)
-      transaction = @litle_txn.create_plan(options)
+      transaction = @cnp_txn.create_plan(options)
       @txn_counts[:numCreatePlans] += 1
 
       add_txn_to_batch(transaction, :createPlan, options)
     end
 
     def update_plan(options)
-      transaction = @litle_txn.update_plan(options)
+      transaction = @cnp_txn.update_plan(options)
       @txn_counts[:numUpdatePlans] += 1
 
       add_txn_to_batch(transaction, :updatePlan, options)
     end
 
     def activate(options)
-      transaction = @litle_txn.activate(options)
+      transaction = @cnp_txn.activate(options)
       @txn_counts[:numActivates] += 1
 
       add_txn_to_batch(transaction, :activate, options)
     end
 
     def deactivate(options)
-      transaction = @litle_txn.deactivate(options)
+      transaction = @cnp_txn.deactivate(options)
       @txn_counts[:numDeactivates] += 1
 
       add_txn_to_batch(transaction, :deactivate, options)
     end
 
     def load_request(options)
-      transaction = @litle_txn.load_request(options)
+      transaction = @cnp_txn.load_request(options)
       @txn_counts[:numLoads] += 1
 
       add_txn_to_batch(transaction, :load, options)
     end
 
     def unload_request(options)
-      transaction = @litle_txn.unload_request(options)
+      transaction = @cnp_txn.unload_request(options)
       @txn_counts[:numunLoads] += 1
 
       add_txn_to_batch(transaction, :unload, options)
     end
 
     def balance_inquiry(options)
-      transaction = @litle_txn.balance_inquiry(options)
+      transaction = @cnp_txn.balance_inquiry(options)
       @txn_counts[:numBalanceInquirys] += 1
 
       add_txn_to_batch(transaction, :balanceInquirys, options)
     end
 
     def register_token_request(options)
-      transaction = @litle_txn.register_token_request(options)
+      transaction = @cnp_txn.register_token_request(options)
       @txn_counts[:numTokenRegistrations] += 1
 
       add_txn_to_batch(transaction, :numTokenRegistrations, options)
     end
 
     def update_card_validation_num_on_token(options)
-      transaction = @litle_txn.update_card_validation_num_on_token(options)
+      transaction = @cnp_txn.update_card_validation_num_on_token(options)
       @txn_counts[:numUpdateCardValidationNumOnTokens] += 1
 
       add_txn_to_batch(transaction, :numUpdateCardValidationNumOnTokens, options)
     end
 
     def force_capture(options)
-      transaction = @litle_txn.force_capture(options)
+      transaction = @cnp_txn.force_capture(options)
       @txn_counts[:forceCapture][:numForceCaptures] += 1
       @txn_counts[:forceCapture][:forceCaptureAmount] += options['amount'].to_i
 
@@ -317,7 +317,7 @@ module LitleOnline
     end
 
     def capture(options)
-      transaction = @litle_txn.capture(options)
+      transaction = @cnp_txn.capture(options)
       @txn_counts[:capture][:numCaptures] += 1
       @txn_counts[:capture][:captureAmount] += options['amount'].to_i
 
@@ -325,7 +325,7 @@ module LitleOnline
     end
 
     def capture_given_auth(options)
-      transaction = @litle_txn.capture_given_auth(options)
+      transaction = @cnp_txn.capture_given_auth(options)
       @txn_counts[:captureGivenAuth][:numCaptureGivenAuths] += 1
       @txn_counts[:captureGivenAuth][:captureGivenAuthAmount] += options['amount'].to_i
 
@@ -333,7 +333,7 @@ module LitleOnline
     end
 
     def echeck_verification(options)
-      transaction = @litle_txn.echeck_verification(options)
+      transaction = @cnp_txn.echeck_verification(options)
       @txn_counts[:echeckVerification][:numEcheckVerification] += 1
       @txn_counts[:echeckVerification][:echeckVerificationAmount] += options['amount'].to_i
 
@@ -341,7 +341,7 @@ module LitleOnline
     end
 
     def echeck_credit(options)
-      transaction = @litle_txn.echeck_credit(options)
+      transaction = @cnp_txn.echeck_credit(options)
       @txn_counts[:echeckCredit][:numEcheckCredit] += 1
       @txn_counts[:echeckCredit][:echeckCreditAmount] += options['amount'].to_i
 
@@ -349,28 +349,28 @@ module LitleOnline
     end
 
     def echeck_redeposit(options)
-      transaction = @litle_txn.echeck_redeposit(options)
+      transaction = @cnp_txn.echeck_redeposit(options)
       @txn_counts[:numEcheckRedeposit] += 1
 
       add_txn_to_batch(transaction, :echeckRedeposit, options)
     end
 
     def echeck_pre_note_sale(options)
-      transaction = @litle_txn.echeck_pre_note_sale(options)
+      transaction = @cnp_txn.echeck_pre_note_sale(options)
       @txn_counts[:numEcheckPreNoteSale] += 1
 
       add_txn_to_batch(transaction, :echeckPreNoteSale, options)
     end
 
     def echeck_pre_note_credit(options)
-      transaction = @litle_txn.echeck_pre_note_credit(options)
+      transaction = @cnp_txn.echeck_pre_note_credit(options)
       @txn_counts[:numEcheckPreNoteCredit] += 1
 
       add_txn_to_batch(transaction, :echeckPreNoteCredit, options)
     end
 
     def payFac_credit(options)
-      transaction = @litle_txn.payFac_credit(options)
+      transaction = @cnp_txn.payFac_credit(options)
       @txn_counts[:payFacCredit][:numPayFacCredit] += 1
       @txn_counts[:payFacCredit][:payFacCreditAmount] += options['amount'].to_i
 
@@ -378,7 +378,7 @@ module LitleOnline
     end
 
     def submerchant_credit(options)
-      transaction = @litle_txn.submerchant_credit(options)
+      transaction = @cnp_txn.submerchant_credit(options)
       @txn_counts[:submerchantCredit][:numSubmerchantCredit] += 1
       @txn_counts[:submerchantCredit][:submerchantCreditAmount] += options['amount'].to_i
 
@@ -386,7 +386,7 @@ module LitleOnline
     end
 
     def reserve_credit(options)
-      transaction = @litle_txn.reserve_credit(options)
+      transaction = @cnp_txn.reserve_credit(options)
       @txn_counts[:reserveCredit][:numReserveCredit] += 1
       @txn_counts[:reserveCredit][:reserveCreditAmount] += options['amount'].to_i
 
@@ -394,7 +394,7 @@ module LitleOnline
     end
 
     def vendor_credit(options)
-      transaction = @litle_txn.vendor_credit(options)
+      transaction = @cnp_txn.vendor_credit(options)
       @txn_counts[:vendorCredit][:numVendorCredit] += 1
       @txn_counts[:vendorCredit][:vendorCreditAmount] += options['amount'].to_i
 
@@ -402,7 +402,7 @@ module LitleOnline
     end
 
     def physical_check_credit(options)
-      transaction = @litle_txn.physical_check_credit(options)
+      transaction = @cnp_txn.physical_check_credit(options)
       @txn_counts[:physicalCheckCredit][:numPhysicalCheckCredit] += 1
       @txn_counts[:physicalCheckCredit][:physicalCheckCreditAmount] += options['amount'].to_i
 
@@ -416,14 +416,14 @@ module LitleOnline
  # Desc: Change proposed as a part of SDK XML 10 to incorporate the feature of voiding transactions
  # on request.
     def funding_txn_void(options)
-      transaction = @litle_txn.funding_txn_void(options)
+      transaction = @cnp_txn.funding_txn_void(options)
       @txn_counts[:numFundingInstructionVoid] += 1
       
       add_txn_to_batch(transaction, :fundingInstructionVoid, options)
     end
 
     def payFac_debit(options)
-      transaction = @litle_txn.payFac_debit(options)
+      transaction = @cnp_txn.payFac_debit(options)
       @txn_counts[:payFacDebit][:numPayFacDebit] += 1
       @txn_counts[:payFacDebit][:payFacDebitAmount] += options['amount'].to_i
 
@@ -431,7 +431,7 @@ module LitleOnline
     end
 
     def submerchant_debit(options)
-      transaction = @litle_txn.submerchant_debit(options)
+      transaction = @cnp_txn.submerchant_debit(options)
       @txn_counts[:submerchantDebit][:numSubmerchantDebit] += 1
       @txn_counts[:submerchantDebit][:submerchantDebitAmount] += options['amount'].to_i
 
@@ -439,7 +439,7 @@ module LitleOnline
     end
 
     def reserve_debit(options)
-      transaction = @litle_txn.reserve_debit(options)
+      transaction = @cnp_txn.reserve_debit(options)
       @txn_counts[:reserveDebit][:numReserveDebit] += 1
       @txn_counts[:reserveDebit][:reserveDebitAmount] += options['amount'].to_i
 
@@ -447,7 +447,7 @@ module LitleOnline
     end
 
     def vendor_debit(options)
-      transaction = @litle_txn.vendor_debit(options)
+      transaction = @cnp_txn.vendor_debit(options)
       @txn_counts[:vendorDebit][:numVendorDebit] += 1
       @txn_counts[:vendorDebit][:vendorDebitAmount] += options['amount'].to_i
 
@@ -455,7 +455,7 @@ module LitleOnline
     end
 
     def physical_check_debit(options)
-      transaction = @litle_txn.physical_check_debit(options)
+      transaction = @cnp_txn.physical_check_debit(options)
       @txn_counts[:physicalCheckDebit][:numPhysicalCheckDebit] += 1
       @txn_counts[:physicalCheckDebit][:physicalCheckDebitAmount] += options['amount'].to_i
 
@@ -463,7 +463,7 @@ module LitleOnline
     end
 
     def echeck_sale(options)
-      transaction = @litle_txn.echeck_sale(options)
+      transaction = @cnp_txn.echeck_sale(options)
       @txn_counts[:echeckSale][:numEcheckSales] += 1
       @txn_counts[:echeckSale][:echeckSalesAmount] += options['amount'].to_i
 
@@ -473,7 +473,7 @@ module LitleOnline
     def account_update(options)
 
       if(@au_batch == nil) then
-        @au_batch = LitleAUBatch.new
+        @au_batch = CnpAUBatch.new
         @au_batch.create_new_batch(File.dirname(@path_to_batch))
       end
       @au_batch.account_update(options)
@@ -525,18 +525,18 @@ module LitleOnline
       request.forceCaptureAmount       = @txn_counts[:forceCapture][:forceCaptureAmount]
       request.numAuthReversals         = @txn_counts[:authReversal][:numAuthReversals]
       request.authReversalAmount       = @txn_counts[:authReversal][:authReversalAmount]
-      # 11.0 begin
+      # 12.0 begin
       request.numGiftCardAuthReversals                 = @txn_counts[:giftCardAuthReversal][:numGiftCardAuthReversals]
       request.giftCardAuthReversalOriginalAmount       = @txn_counts[:giftCardAuthReversal][:giftCardAuthReversalOriginalAmount]
-      # 11.0 end 
+      # 12.0 end 
       request.numCaptures              = @txn_counts[:capture][:numCaptures]
       request.captureAmount            = @txn_counts[:capture][:captureAmount]
-      # 11.0 begin
+      # 12.0 begin
       request.numGiftCardCaptures      = @txn_counts[:giftCardCapture][:numGiftCardCaptures]
       request.giftCardCaptureAmount    = @txn_counts[:giftCardCapture][:giftCardCaptureAmount]
       request.numGiftCardCredits      = @txn_counts[:giftCardCredit][:numGiftCardCredits]
       request.giftCardCreditAmount    = @txn_counts[:giftCardCredit][:giftCardCreditAmount]
-      # 11.0 end 
+      # 12.0 end 
       request.numEcheckSales           = @txn_counts[:echeckSale][:numEcheckSales]
       request.echeckSalesAmount        = @txn_counts[:echeckSale][:echeckSalesAmount]
       request.numEcheckRedeposit       = @txn_counts[:numEcheckRedeposit]
@@ -606,7 +606,7 @@ module LitleOnline
 
   # IF YOU ARE A MERCHANT, DON'T LOOK HERE. IT'S SCARY!
 
-  class LitleAUBatch
+  class CnpAUBatch
     include XML::Mapping
     def initialize
       #load configuration data
@@ -617,7 +617,7 @@ module LitleOnline
         :numAccountUpdates=>0,
         :total=>0
       }
-      @litle_txn = LitleTransaction.new
+      @cnp_txn = CnpTransaction.new
       @path_to_batch = nil
       @txn_file = nil
       @MAX_TXNS_IN_BATCH = 100000
@@ -694,7 +694,7 @@ module LitleOnline
     end
 
     def account_update(options)
-      transaction = @litle_txn.account_update(options)
+      transaction = @cnp_txn.account_update(options)
       @txn_counts[:numAccountUpdates] += 1
 
       add_txn_to_batch(transaction, :authorization, options)

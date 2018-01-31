@@ -19,21 +19,21 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   
-  class TestLitleRequest < Test::Unit::TestCase
+  class TestCnpRequest < Test::Unit::TestCase
     
     def test_create_with_file
-      request = LitleRequest.new({'sessionId'=>'8675309', 
+      request = CnpRequest.new({'sessionId'=>'8675309', 
                                        'user'=>'john', 
                                        'password'=>'tinkleberry'}) 
       message = ""
       File.expects(:file?).with('/durrrrrr').returns(true).once
-      request.create_new_litle_request('/durrrrrr')
+      request.create_new_cnp_request('/durrrrrr')
       
       rescue RuntimeError=> e
         message = e.message
@@ -42,16 +42,16 @@ module LitleOnline
     end
     
     def test_create_with_no_sep
-      request = LitleRequest.new({'sessionId'=>'8675309', 
+      request = CnpRequest.new({'sessionId'=>'8675309', 
                                         'user'=>'john', 
                                         'password'=>'tinkleberry'})
       File.expects(:open).twice  
-      request.create_new_litle_request('/usr/local')    
+      request.create_new_cnp_request('/usr/local')    
       assert request.get_path_to_batches.include?('/usr/local/')
     end
     
     def test_create_name_collision
-      request = LitleRequest.new({'sessionId'=>'8675309', 
+      request = CnpRequest.new({'sessionId'=>'8675309', 
                                         'user'=>'john', 
                                         'password'=>'tinkleberry'})
                                         
@@ -62,11 +62,11 @@ module LitleOnline
       File.expects(:file?).returns(false).twice.in_sequence(create_new) #or's don't quit
       File.expects(:open).twice.in_sequence(create_new)
       
-      request.create_new_litle_request('/usr/local')                         
+      request.create_new_cnp_request('/usr/local')                         
     end
     
     def test_create_normal
-      request = LitleRequest.new({'sessionId'=>'8675309', 
+      request = CnpRequest.new({'sessionId'=>'8675309', 
                                         'user'=>'john', 
                                         'password'=>'tinkleberry'})
       
@@ -76,10 +76,10 @@ module LitleOnline
       File.expects(:open).once.in_sequence(create_new)
       File.expects(:open).once.in_sequence(create_new)
       
-      request.create_new_litle_request('/usr/local') 
+      request.create_new_cnp_request('/usr/local') 
     end
     
-    def test_add_rfr_request_litle_session
+    def test_add_rfr_request_cnp_session
       add_rfr = sequence('add_rfr')
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).times(1).in_sequence(add_rfr)
       
@@ -88,27 +88,27 @@ module LitleOnline
       File.expects(:open).with(regexp_matches(/request_\d+\z/), 'a+').in_sequence(add_rfr)
       File.expects(:rename).with(regexp_matches(/request_\d+\z/), regexp_matches(/request_\d+.complete\z/)).in_sequence(add_rfr)
       
-      request = LitleRequest.new({'sessionId'=>'8675309', 
+      request = CnpRequest.new({'sessionId'=>'8675309', 
                                         'user'=>'john', 
                                         'password'=>'tinkleberry'})
  
-      request.add_rfr_request({'litleSessionId' => '137813712'}, '/usr/srv')
+      request.add_rfr_request({'cnpSessionId' => '137813712'}, '/usr/srv')
 
     end
     
     def test_commit_batch_with_batch
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).times(2)
 
-      request = LitleRequest.new({'sessionId'=>'8675309',
+      request = CnpRequest.new({'sessionId'=>'8675309',
         'user'=>'john',
         'password'=>'tinkleberry'})
       File.expects(:file?).returns(false).once
       File.expects(:file?).returns(false).twice #or's don't quit
       File.expects(:open).twice
       File.expects(:directory?).returns(true).once
-      request.create_new_litle_request("/usr/srv/batches")
+      request.create_new_cnp_request("/usr/srv/batches")
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       File.expects(:open).twice
       File.expects(:file?).returns(false).twice
       File.expects(:directory?).returns(true).once
@@ -126,14 +126,14 @@ module LitleOnline
     def test_commit_batch_with_path
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).times(1)
 
-      request = LitleRequest.new({'sessionId'=>'8675309',
+      request = CnpRequest.new({'sessionId'=>'8675309',
         'user'=>'john',
         'password'=>'tinkleberry'})
       File.expects(:file?).returns(false).once
       File.expects(:file?).returns(false).twice #or's don't quit
       File.expects(:open).twice
       File.expects(:directory?).returns(true).once
-      request.create_new_litle_request("/usr/srv/batches")
+      request.create_new_cnp_request("/usr/srv/batches")
 
       File.expects(:open).with(regexp_matches(/.*_batches.*/), 'a+')
       File.expects(:delete).with(regexp_matches(/.*\.closed.*/))
@@ -142,7 +142,7 @@ module LitleOnline
     
     def test_add_bad_object
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).once
-      request = LitleRequest.new({})
+      request = CnpRequest.new({})
       request.commit_batch({:apple => "pear"})
       test = ""
       rescue RuntimeError => e
@@ -155,9 +155,9 @@ module LitleOnline
       File.expects(:open).with(regexp_matches(/\/usr\/srv\/.*/), 'a+').times(2)
       
       Dir.expects(:mkdir).with('/usr/srv/batches/').once
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('/usr/srv/batches')  
-      request = LitleRequest.new({'sessionId'=>'8675309', 
+      request = CnpRequest.new({'sessionId'=>'8675309', 
                                         'user'=>'john', 
                                         'password'=>'tinkleberry'})
       
@@ -174,14 +174,14 @@ module LitleOnline
     def test_batch_too_big
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).times(1)
 
-      request = LitleRequest.new({'sessionId'=>'8675309',
+      request = CnpRequest.new({'sessionId'=>'8675309',
         'user'=>'john',
         'password'=>'tinkleberry'})
       File.expects(:file?).returns(false).once
       File.expects(:file?).returns(false).twice #or's don't quit
       File.expects(:open).twice
       File.expects(:directory?).returns(true).once
-      request.create_new_litle_request("/usr/srv/batches")
+      request.create_new_cnp_request("/usr/srv/batches")
       create_new = sequence('create_new')
 
       File.expects(:open).with(regexp_matches(/.*_batches.*/), 'a+').times(5)
@@ -193,7 +193,7 @@ module LitleOnline
 
       request.expects(:finish_request).once
       request.expects(:initialize).once
-      request.expects(:create_new_litle_request).once
+      request.expects(:create_new_cnp_request).once
       request.commit_batch("/usr/srv/batches/batch_123123131231.closed-100000")
     end
     
@@ -204,12 +204,12 @@ module LitleOnline
       reader.expects(:read).once.in_sequence(xml)
       reader.expects(:get_attribute).with('response').returns("0").in_sequence(xml)
       reader.expects(:read).once.in_sequence(xml)
-      reader.expects(:node).returns(node = LibXML::XML::Node.new("litleResponse")).twice.in_sequence(xml)
+      reader.expects(:node).returns(node = LibXML::XML::Node.new("cnpResponse")).twice.in_sequence(xml)
       
-      request = LitleRequest.new({})
+      request = CnpRequest.new({})
       request.process_response(Dir.pwd + '/responses/good_xml.xml' , 
-      DefaultLitleListener.new{|txn| puts txn["type"]} ,
-      DefaultLitleListener.new{|batch| } )
+      DefaultCnpListener.new{|txn| puts txn["type"]} ,
+      DefaultCnpListener.new{|batch| } )
     end
     
     def test_process_response_xml_error
@@ -218,21 +218,21 @@ module LitleOnline
       reader.expects(:get_attribute).with('response').twice.returns(4)
       reader.expects(:get_attribute).with("message").returns("Error validating xml data against the schema")
       
-      request = LitleRequest.new({})
+      request = CnpRequest.new({})
       response = ''
       begin
         request.process_response(Dir.pwd + '/responses/bad_xml.xml' , 
-        DefaultLitleListener.new{|txn| puts txn["type"]} ,
-        DefaultLitleListener.new{|batch| } )
+        DefaultCnpListener.new{|txn| puts txn["type"]} ,
+        DefaultCnpListener.new{|batch| } )
       rescue Exception => e
           response = e.message
       end
-      assert_equal "Error parsing Litle Request: Error validating xml data against the schema", response.to_s
+      assert_equal "Error parsing Cnp Request: Error validating xml data against the schema", response.to_s
     end      
 
     def test_process_responses
-      request = LitleRequest.new({})
-      listener = DefaultLitleListener.new
+      request = CnpRequest.new({})
+      listener = DefaultCnpListener.new
       args = {:transaction_listener=>listener,:path_to_responses=>"fake/path/"}
       args.expects(:[]).with(:transaction_listener)
       args.expects(:[]).with(:batch_listener).returns(nil)
@@ -243,7 +243,7 @@ module LitleOnline
     end
 
     def test_get_responses_from_server
-      request = LitleRequest.new({})
+      request = CnpRequest.new({})
       resp_seq = sequence("resp_seq")
       args = {:responses_expected=>4, :response_path=>"new/path", :sftp_username=>"periwinkle",:sftp_password=>"password", :sftp_url=>"reddit.com"}
       
@@ -255,24 +255,24 @@ module LitleOnline
     end
 
     def test_send_over_stream
-      request = LitleRequest.new({})
+      request = CnpRequest.new({})
       req_seq = sequence('request')
       
       File.expects(:directory?).with(regexp_matches(/responses\//)).once.returns(false).in_sequence(req_seq)
       Dir.expects(:mkdir).with(regexp_matches(/responses\//)).once.in_sequence(req_seq)
       Dir.expects(:foreach).once.in_sequence(req_seq)
       
-      request.send_to_litle_stream({:fast_url=>"www.redit.com", :fast_port=>"2313"}) 
+      request.send_to_cnp_stream({:fast_url=>"www.redit.com", :fast_port=>"2313"}) 
     end
     
     def test_send_over_stream_bad_crds
-      request = LitleRequest.new({})
+      request = CnpRequest.new({})
       
       assert_raise ArgumentError do
-        request.send_to_litle_stream({:fast_url=>"", :fast_port=>""})
+        request.send_to_cnp_stream({:fast_url=>"", :fast_port=>""})
       end 
     end
-    #Outputs an example LitleRequest doc in the current directory
+    #Outputs an example CnpRequest doc in the current directory
     # def test_finish_request_xml! #that's why the name has a bang
       # # see the bang up there ^^^ that means we ACTUALLY edit the file system
       # # make sure to clear this; otherwise, you're gonna have a bad time.      
@@ -290,14 +290,14 @@ module LitleOnline
         # 'expDate' =>'1210'
       # }}
 #       
-      # request = LitleRequest.new({'sessionId'=>'8675309',
+      # request = CnpRequest.new({'sessionId'=>'8675309',
         # 'user'=>'john',
         # 'password'=>'tinkleberry'})
-      # request.create_new_litle_request(path)
+      # request.create_new_cnp_request(path)
 #       
 #       
       # #5.times{
-        # batch = LitleBatchRequest.new
+        # batch = CnpBatchRequest.new
         # batch.create_new_batch(path)
         # puts "Batch is at: " + batch.get_batch_name
 #         

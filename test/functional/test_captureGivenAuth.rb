@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class TestcaptureGivenAuth < Test::Unit::TestCase
     def test_simple_capture_given_auth_with_card
       hash = {
@@ -45,7 +45,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -63,12 +63,12 @@ module LitleOnline
         'amount'=>'106',
         'orderSource'=>'ecommerce',
         'token'=> {
-        'litleToken'=>'123456789101112',
+        'cnpToken'=>'123456789101112',
         'expDate'=>'1210',
         'cardValidationNum'=>'555',
         'type'=>'VI'
         }}
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -91,7 +91,7 @@ module LitleOnline
         'reportGroup'=>'Planets',
         'orderId'=>'12344'
       }
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -114,7 +114,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -130,7 +130,7 @@ module LitleOnline
         'authDate'=>'2002-10-09','authCode'=>'543216',
         'authAmount'=>'12345'
         },
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
         'processingInstructions'=>{'bypassVelocityCheck'=>'true'},
         'orderSource'=>'ecommerce',
         'card'=>{
@@ -138,7 +138,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -166,7 +166,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -188,7 +188,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.capture_given_auth(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.capture_given_auth(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -215,7 +215,7 @@ module LitleOnline
         'track2Status'=>'0'
         }
       }
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -234,12 +234,12 @@ module LitleOnline
         'secondaryAmount'=>'50',
         'orderSource'=>'ecommerce',
         'token'=> {
-        'litleToken'=>'123456789101112',
+        'cnpToken'=>'123456789101112',
         'expDate'=>'1210',
         'cardValidationNum'=>'555',
         'type'=>'VI'
         }}
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end
     
@@ -262,7 +262,7 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end    
 
@@ -287,7 +287,7 @@ module LitleOnline
         'originalNetworkTransactionId'=>'987654321098765432109876543210',
         'originalTransactionAmount'=>'10661'
         }
-      response= LitleOnlineRequest.new.capture_given_auth(hash)
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end 
     

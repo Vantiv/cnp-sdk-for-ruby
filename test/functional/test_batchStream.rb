@@ -19,15 +19,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'fileutils'
 
-module LitleOnline
-  class TestLitleBatchStream < Test::Unit::TestCase
+module CnpOnline
+  class TestCnpBatchStream < Test::Unit::TestCase
   
     def setup
-      dir = '/tmp/litle-sdk-for-ruby-test'
+      dir = '/tmp/cnp-sdk-for-ruby-test'
       FileUtils.rm_rf dir
       Dir.mkdir dir
     end
@@ -47,10 +47,10 @@ module LitleOnline
 
       dir = '/tmp'
 
-      request = LitleRequest.new()
-      request.create_new_litle_request(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new()
+      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
 
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
 
       assert_equal 4,entries.size
@@ -59,8 +59,8 @@ module LitleOnline
 
       #create five batches, each with 10 sales
    
-        batch = LitleBatchRequest.new
-        batch.create_new_batch(dir + '/litle-sdk-for-ruby-test')
+        batch = CnpBatchRequest.new
+        batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
         
         cancelSubscriptionHash = 
              {
@@ -105,12 +105,12 @@ module LitleOnline
         batch.close_batch()
         
         
-        #add the batch to the LitleRequest
+        #add the batch to the CnpRequest
         request.commit_batch(batch)
       
-      #finish the Litle Request, indicating we plan to add no more batches
+      #finish the Cnp Request, indicating we plan to add no more batches
       request.finish_request
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       assert_equal 3, entries.length
       entries.sort!
       assert_not_nil entries[2] =~ /request_\d+.complete\z/
@@ -118,7 +118,7 @@ module LitleOnline
       #send the batch files at the given directory over sFTP
       count = 1
       begin
-        request.send_to_litle_stream
+        request.send_to_cnp_stream
       rescue
         if (count < 3) then
           count = count + 1
@@ -127,7 +127,7 @@ module LitleOnline
           raise
         end
       end
-      request.process_responses({:transaction_listener => LitleOnline::DefaultLitleListener.new do |transaction|
+      request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
       type = transaction["type"]
     
       if(type == "cancelSubscriptionResponse") then

@@ -45,16 +45,16 @@ end
 
 
 require_relative 'Communications'
-require_relative 'LitleXmlMapper'
+require_relative 'CnpXmlMapper'
 require_relative 'XMLFields'
-require_relative 'LitleTransaction'
-require_relative 'LitleBatchRequest'
-require_relative 'LitleOnlineRequest'
-require_relative 'LitleRequest'
-require_relative 'LitleListeners'
+require_relative 'CnpTransaction'
+require_relative 'CnpBatchRequest'
+require_relative 'CnpOnlineRequest'
+require_relative 'CnpRequest'
+require_relative 'CnpListeners'
 require_relative 'Configuration'
 
-#allows attribute values to be in double quotes, required by Litle Server
+#allows attribute values to be in double quotes, required by Cnp Server
 REXML::Attribute.class_eval( %q^
     def to_string
       %Q[#@expanded_name="#{to_s().gsub(/"/, '&quot;')}"]

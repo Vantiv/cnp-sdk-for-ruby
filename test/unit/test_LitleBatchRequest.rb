@@ -22,19 +22,19 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
-  class TestLitleBatchRequest < Test::Unit::TestCase
+module CnpOnline
+  class TestCnpBatchRequest < Test::Unit::TestCase
     def test_create_new_batch
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).once
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').twice
       Dir.expects(:mkdir).with('/usr/local/Batches/').once
       File.expects(:directory?).returns(false).once
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('/usr/local/Batches/')
     end
 
@@ -56,7 +56,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('/usr/local/Batches/')
 
       2.times(){ batch.authorization(authHash) }
@@ -85,7 +85,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.sale(saleHash)
 
@@ -114,7 +114,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.credit(creditHash)
 
@@ -134,12 +134,12 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'12345678000',
+        'cnpTxnId'=>'12345678000',
         'amount'=>'106',
         'payPalNotes'=>'Notes'
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.auth_reversal(authReversalHash)
 
@@ -163,7 +163,7 @@ module LitleOnline
         'accountNumber'=>'1233456789103801'
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.register_token_request(registerTokenHash)
 
@@ -185,7 +185,7 @@ module LitleOnline
         'subscriptionId'=>'100'
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.cancel_subscription(hash)
 
@@ -206,10 +206,10 @@ module LitleOnline
         'reportGroup'=>'Planets',
         'subscriptionId'=>'100',
         'planCode'=>'planCodeString',
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.update_subscription(hash)
 
@@ -229,11 +229,11 @@ module LitleOnline
         'version'=>'8.8',
         'reportGroup'=>'Planets',
         'orderId'=>'12344',
-        'litleToken'=>'1233456789103801',
+        'cnpToken'=>'1233456789103801',
         'cardValidationNum'=>'123'
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.update_card_validation_num_on_token(updateCardHash)
 
@@ -252,7 +252,7 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -262,7 +262,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.force_capture(forceCaptHash)
 
@@ -282,11 +282,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456000',
+        'cnpTxnId'=>'123456000',
         'amount'=>'106',
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.capture(captHash)
 
@@ -319,7 +319,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.capture_given_auth(captGivenAuthHash)
 
@@ -343,10 +343,10 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.echeck_verification(echeckVerificationHash)
 
@@ -366,11 +366,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456789101112',
+        'cnpTxnId'=>'123456789101112',
         'amount'=>'12'
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.echeck_credit(echeckCreditHash)
 
@@ -390,10 +390,10 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456'
+        'cnpTxnId'=>'123456'
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.echeck_redeposit(echeckRedeopsitHash)
 
@@ -417,10 +417,10 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
       batch.echeck_sale(echeckSaleHash)
 
@@ -451,7 +451,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('D:\Batches\\')
 
       batch.sale(saleHash)
@@ -486,8 +486,8 @@ module LitleOnline
       File.expects(:rename).once.in_sequence(open)
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.closed.*/), 'w').once.in_sequence(open)
       File.expects(:delete).with(regexp_matches(/.*batch_.*\d_txns.*/)).once.in_sequence(open)
-      batch1 = LitleBatchRequest.new
-      batch2 = LitleBatchRequest.new
+      batch1 = CnpBatchRequest.new
+      batch2 = CnpBatchRequest.new
       batch2.expects(:build_batch_header).returns("foo")
       batch1.create_new_batch('/usr/local/Batches/')
       batch2.open_existing_batch(batch1.get_batch_name)
@@ -503,7 +503,7 @@ module LitleOnline
       File.expects(:delete).once
       File.expects(:directory?).returns(true).once
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.get_counts_and_amounts.expects(:[]).returns(hash = Hash.new).at_least(25)
       hash.expects(:[]).returns('a').at_least(20)
 
@@ -516,7 +516,7 @@ module LitleOnline
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').once
       File.expects(:open).with(regexp_matches(/.*batch_.*\d_txns.*/), 'a+').once
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('/usr/local')
 
       assert batch.get_batch_name.include?('/usr/local/')
@@ -533,14 +533,14 @@ module LitleOnline
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').in_sequence(fileExists)
       File.expects(:open).with(regexp_matches(/.*batch_.*\d_txns.*/), 'a+').in_sequence(fileExists)
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('/usr/local/')
     end
 
     def test_create_new_batch_when_full
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).once
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       addTxn = sequence('addTxn')
 
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').in_sequence(addTxn)
@@ -614,11 +614,11 @@ module LitleOnline
         'id'=>'12345',
         'customerId'=>'0987',
         'orderId'=>'12344',
-        'litleToken'=>'1233456789103801',
+        'cnpToken'=>'1233456789103801',
         'cardValidationNum'=>'123'
       }
 
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('/usr/local/Batches/')
 
       5.times(){ batch.authorization(authHash) }
@@ -732,7 +732,7 @@ module LitleOnline
         'fundsTransferId'=>'1234567',
         'amount'=>'110',
       }
-      batch = LitleBatchRequest.new
+      batch = CnpBatchRequest.new
       batch.create_new_batch('/usr/local/Batches/')
 
       batch.submerchant_credit(submerchantCreditHash)

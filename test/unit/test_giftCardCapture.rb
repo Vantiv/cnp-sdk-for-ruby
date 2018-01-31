@@ -22,17 +22,17 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   class TestGiftCardCapture < Test::Unit::TestCase
     def test_simple
       hash = {
         'merchantId' => '101',
         'version'=>'8.8',
-        'litleTxnId' => '5000',
+        'cnpTxnId' => '5000',
         'card'=>{
           'type'=>'GC',
           'number' =>'400000000000001',
@@ -49,8 +49,8 @@ module LitleOnline
         
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<litleTxnId>5000<\/litleTxnId><card><type>GC<\/type><number>400000000000001<\/number><expDate>0150<\/expDate><cardValidationNum>411<\/cardValidationNum><pin>1234<\/pin><\/card>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.giftCardCapture(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<cnpTxnId>5000<\/cnpTxnId><card><type>GC<\/type><number>400000000000001<\/number><expDate>0150<\/expDate><cardValidationNum>411<\/cardValidationNum><pin>1234<\/pin><\/card>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.giftCardCapture(hash)
     end
   end
 

@@ -22,11 +22,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 
 #test DepositReversal Transaction
-module LitleOnline
+module CnpOnline
   class TestDepositReversal < Test::Unit::TestCase
     def test_simple
       hash = {
@@ -34,7 +34,7 @@ module LitleOnline
         'version'=>'8.8',
         'id'=>'test',
         'reportGroup'=>'Planets',
-        'litleTxnId' =>'5000',
+        'cnpTxnId' =>'5000',
         'card'=>{
           'type'=>'GC',
           'number' =>'400000000000000',
@@ -49,7 +49,7 @@ module LitleOnline
         'originalSequenceNumber' => '111111',
       }
 
-      response= LitleOnlineRequest.new.deposit_reversal(hash)
+      response= CnpOnlineRequest.new.deposit_reversal(hash)
       assert_equal('000', response.depositReversalResponse.response)
     end
 
@@ -62,7 +62,7 @@ module LitleOnline
       }
 
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.deposit_reversal(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.deposit_reversal(hash)}
       #Test
       assert(exception.message =~ /Error validating xml data against the schema/)
     end

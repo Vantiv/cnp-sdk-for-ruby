@@ -24,14 +24,14 @@ OTHER DEALINGS IN THE SOFTWARE.
 =end
 
 
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
 # TESTING THE QUERY TRANSACTION FEATURE 
 
 
-module LitleOnline
+module CnpOnline
 =begin
   Definition: Class Definition for the Testing Class TestQueryTransaction
   Created on: 01-29-2016
@@ -60,8 +60,8 @@ class TestQueryTransaction < Test::Unit::TestCase
       #'origAccountNumber' => '4000000000000001'      
      }  
          
-     LitleXmlMapper.expects(:request).with(regexp_matches(/.*?<litleOnlineRequest.*?<queryTransaction.*?<origId>834262<\/origId><origActionType>A<\/origActionType>.*?<\/queryTransaction>.*?/m), is_a(Hash))
-     LitleOnlineRequest.new.query_Transaction(hash)
+     CnpXmlMapper.expects(:request).with(regexp_matches(/.*?<cnpOnlineRequest.*?<queryTransaction.*?<origId>834262<\/origId><origActionType>A<\/origActionType>.*?<\/queryTransaction>.*?/m), is_a(Hash))
+     CnpOnlineRequest.new.query_Transaction(hash)
    end
        
 =begin
@@ -82,8 +82,8 @@ class TestQueryTransaction < Test::Unit::TestCase
         'transactionId'=>'123456'
       }
       
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*?<litleOnlineRequest.*?<queryTransaction.*?<origId>834262<\/origId><origActionType>A<\/origActionType>.*?<\/queryTransaction>.*?/m), is_a(Hash))
-      LitleOnlineRequest.new.query_Transaction(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*?<cnpOnlineRequest.*?<queryTransaction.*?<origId>834262<\/origId><origActionType>A<\/origActionType>.*?<\/queryTransaction>.*?/m), is_a(Hash))
+      CnpOnlineRequest.new.query_Transaction(hash)
   end
         
    def test_queryTransaction_no_origId1
@@ -98,8 +98,8 @@ class TestQueryTransaction < Test::Unit::TestCase
        'transactionId'=>'123456'
      }  
               
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*?<litleOnlineRequest.*?<queryTransaction.*?<origActionType>A<\/origActionType>.*?<\/queryTransaction>.*?/m), is_a(Hash))
-      LitleOnlineRequest.new.query_Transaction(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*?<cnpOnlineRequest.*?<queryTransaction.*?<origActionType>A<\/origActionType>.*?<\/queryTransaction>.*?/m), is_a(Hash))
+      CnpOnlineRequest.new.query_Transaction(hash)
   end   
  end
 end

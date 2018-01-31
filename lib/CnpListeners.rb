@@ -24,10 +24,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 =end
 # This file contains the preloaded listeners for parsing the response XML.
 
-module LitleOnline
+module CnpOnline
   # This listener will run the provided closure over every response hash
   # This is the base class for all listeners applied to transaction responses
-  class DefaultLitleListener
+  class DefaultCnpListener
     def initialize(&action)
       @action = action
     end
@@ -38,7 +38,7 @@ module LitleOnline
     end
   end
 
-  class AuthorizationListener < DefaultLitleListener
+  class AuthorizationListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "authorizationResponse") then
         @action.call(duck)
@@ -46,7 +46,7 @@ module LitleOnline
     end
   end
 
-  class CaptureListener < DefaultLitleListener
+  class CaptureListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "captureResponse") then
         @action.call(duck)
@@ -54,7 +54,7 @@ module LitleOnline
     end
   end
 
-  class ForceCaptureListener < DefaultLitleListener
+  class ForceCaptureListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "forceCaptureResponse") then
         @action.call(duck)
@@ -62,7 +62,7 @@ module LitleOnline
     end
   end
 
-  class CaptureGivenAuthListener < DefaultLitleListener
+  class CaptureGivenAuthListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "captureGivenAuthResponse") then
         @action.call(duck)
@@ -70,7 +70,7 @@ module LitleOnline
     end
   end
 
-  class SaleListener < DefaultLitleListener
+  class SaleListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "saleResponse") then
         @action.call(duck)
@@ -78,7 +78,7 @@ module LitleOnline
     end
   end
 
-  class CreditListener < DefaultLitleListener
+  class CreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "creditResponse") then
         @action.call(duck)
@@ -86,7 +86,7 @@ module LitleOnline
     end
   end
 
-  class EcheckSaleListener < DefaultLitleListener
+  class EcheckSaleListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "echeckSaleResponse") then
         @action.call(duck)
@@ -94,7 +94,7 @@ module LitleOnline
     end
   end
 
-  class EcheckCreditListener < DefaultLitleListener
+  class EcheckCreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "echeckCreditResponse") then
         @action.call(duck)
@@ -102,7 +102,7 @@ module LitleOnline
     end
   end
 
-  class EcheckVerificationListener < DefaultLitleListener
+  class EcheckVerificationListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "echeckVerificationResponse") then
         @action.call(duck)
@@ -110,7 +110,7 @@ module LitleOnline
     end
   end
 
-  class EcheckRedepositListener < DefaultLitleListener
+  class EcheckRedepositListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "echeckRedepositResponse") then
         @action.call(duck)
@@ -118,7 +118,7 @@ module LitleOnline
     end
   end
 
-  class EcheckPreNoteSaleListener < DefaultLitleListener
+  class EcheckPreNoteSaleListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "echeckPreNoteSaleResponse") then
         @action.call(duck)
@@ -126,7 +126,7 @@ module LitleOnline
     end
   end
 
-  class EcheckPreNoteCreditListener < DefaultLitleListener
+  class EcheckPreNoteCreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "echeckPreNoteCreditResponse") then
         @action.call(duck)
@@ -134,7 +134,7 @@ module LitleOnline
     end
   end
 
-  class SubmerchantCreditListener < DefaultLitleListener
+  class SubmerchantCreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "submerchantCreditResponse") then
         @action.call(duck)
@@ -142,7 +142,7 @@ module LitleOnline
     end
   end
 
-  class PayFacCreditListener < DefaultLitleListener
+  class PayFacCreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "payFacCreditResponse") then
         @action.call(duck)
@@ -150,7 +150,7 @@ module LitleOnline
     end
   end
 
-  class ReserveCreditListener < DefaultLitleListener
+  class ReserveCreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "reserveCreditResponse") then
         @action.call(duck)
@@ -158,7 +158,7 @@ module LitleOnline
     end
   end
 
-  class VendorCreditListener < DefaultLitleListener
+  class VendorCreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "vendorCreditResponse") then
         @action.call(duck)
@@ -166,7 +166,7 @@ module LitleOnline
     end
   end
 
-  class PhysicalCheckCreditListener < DefaultLitleListener
+  class PhysicalCheckCreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "physicalCheckCreditResponse") then
         @action.call(duck)
@@ -174,7 +174,7 @@ module LitleOnline
     end
   end
 
-  class SubmerchantDebitListener < DefaultLitleListener
+  class SubmerchantDebitListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "submerchantDebitResponse") then
         @action.call(duck)
@@ -182,7 +182,7 @@ module LitleOnline
     end
   end
 
-  class PayFacDebitListener < DefaultLitleListener
+  class PayFacDebitListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "payFacDebitResponse") then
         @action.call(duck)
@@ -190,7 +190,7 @@ module LitleOnline
     end
   end
 
-  class ReserveDebitListener < DefaultLitleListener
+  class ReserveDebitListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "reserveDebitResponse") then
         @action.call(duck)
@@ -198,7 +198,7 @@ module LitleOnline
     end
   end
 
-  class VendorDebitListener < DefaultLitleListener
+  class VendorDebitListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "vendorDebitResponse") then
         @action.call(duck)
@@ -206,7 +206,7 @@ module LitleOnline
     end
   end
 
-  class PhysicalCheckDebitListener < DefaultLitleListener
+  class PhysicalCheckDebitListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "physicalCheckDebitResponse") then
         @action.call(duck)
@@ -214,7 +214,7 @@ module LitleOnline
     end
   end
 
-  class AuthReversalListener < DefaultLitleListener
+  class AuthReversalListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "authReversalResponse") then
         @action.call(duck)
@@ -222,7 +222,7 @@ module LitleOnline
     end
   end
 
-  class RegisterTokenListener < DefaultLitleListener
+  class RegisterTokenListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "registerTokenResponse") then
         @action.call(duck)
@@ -230,7 +230,7 @@ module LitleOnline
     end
   end
 
-  class FraudCheckListener < DefaultLitleListener
+  class FraudCheckListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "advancedFraudResults") then
         @action.call(duck)

@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class Test_echeckVerification < Test::Unit::TestCase
   
     def test_simple_echeck_verification
@@ -38,9 +38,9 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_verification(hash)
+      response= CnpOnlineRequest.new.echeck_verification(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -53,10 +53,10 @@ module LitleOnline
         'amount'=>'123456',
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
-        'echeckToken' => {'accType'=>'Checking','litleToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'echeckToken' => {'accType'=>'Checking','cnpToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_verification(hash)
+      response= CnpOnlineRequest.new.echeck_verification(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -71,9 +71,9 @@ module LitleOnline
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_verification(hash)
+      response= CnpOnlineRequest.new.echeck_verification(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -90,7 +90,7 @@ module LitleOnline
         'orderSource'=>'ecommerce',
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.echeck_verification(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.echeck_verification(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -104,7 +104,7 @@ module LitleOnline
         'orderId'=>'12345'
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.echeck_verification(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.echeck_verification(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -117,7 +117,7 @@ module LitleOnline
         'reportGroup'=>'Planets',
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.echeck_verification(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.echeck_verification(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -132,12 +132,12 @@ module LitleOnline
         'orderId'=>'12345'
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.echeck_verification(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.echeck_verification(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
     
-    def test_no_litleTxnId
+    def test_no_cnpTxnId
       hash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -145,13 +145,13 @@ module LitleOnline
         'reportGroup'=>'Planets',
         'amount'=>'123',
         'invalidfield'=>'nonexistant',
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
-        #'litleTxnId'=>'123456',
+        #'cnpTxnId'=>'123456',
       }
-      response= LitleOnlineRequest.new.echeck_verification(hash)
+      response= CnpOnlineRequest.new.echeck_verification(hash)
       assert_equal('Valid Format', response.message)
     end
   

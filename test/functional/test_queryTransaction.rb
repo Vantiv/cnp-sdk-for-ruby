@@ -23,9 +23,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
 
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
-module LitleOnline
+module CnpOnline
   class TestqueryTransaction < Test::Unit::TestCase
     def test_queryTransaction
      hash = {
@@ -40,8 +40,8 @@ module LitleOnline
        'orderId'=>'65347567',
        #'origAccountNumber' => '4000000000000001'      
        }
-       response= LitleOnlineRequest.new.query_Transaction(hash)
-       assert_equal('000', response.queryTransactionResponse.response)
+       response= CnpOnlineRequest.new.query_Transaction(hash)
+       assert_equal('150', response.queryTransactionResponse.response)
     end
       
     def test_queryTransaction_valid_enum
@@ -57,7 +57,7 @@ module LitleOnline
        'orderId'=>'65347567',
        #'origAccountNumber' => '4000000000000001'      
       }  
-      response= LitleOnlineRequest.new.query_Transaction(hash)
+      response= CnpOnlineRequest.new.query_Transaction(hash)
       assert('000', response.queryTransactionResponse.response)                
     end 
       
@@ -74,7 +74,7 @@ module LitleOnline
        #'origAccountNumber' => '4000000000000001'      
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.query_Transaction(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)  
     end     
@@ -92,7 +92,7 @@ module LitleOnline
        #'origAccountNumber' => '4000000000000001'      
        }  
        #Get exceptions
-        exception = assert_raise(RuntimeError){LitleOnlineRequest.new.query_Transaction(hash)}
+        exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
         #Test 
         assert(exception.message =~ /Error validating xml data against the schema/)   
     end
@@ -111,7 +111,7 @@ module LitleOnline
        #'origAccountNumber' => '4000000000000001'      
      }
      #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.query_Transaction(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)  
     end     
@@ -127,7 +127,7 @@ module LitleOnline
        #'origAccountNumber' => '4000000000000001'      
        }
        #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.query_Transaction(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)  
     end
@@ -145,7 +145,7 @@ module LitleOnline
        'orderId'=>'65347567',
        #'origAccountNumber' => '4000000000000001' 
        } 
-       response= LitleOnlineRequest.new.query_Transaction(hash)
+       response= CnpOnlineRequest.new.query_Transaction(hash)
        assert_equal('152', response.queryTransactionUnavailableResponse.response)
     end
   end

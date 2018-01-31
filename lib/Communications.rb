@@ -24,22 +24,22 @@ OTHER DEALINGS IN THE SOFTWARE.
 =end
 
 #
-# Used for all transmission to Litle over HTTP or HTTPS
+# Used for all transmission to Cnp over HTTP or HTTPS
 # works with or without an HTTP proxy
 #
 # URL and proxy server settings are derived from the configuration file
 #
-module LitleOnline
+module CnpOnline
   class Communications
     ##For http or https post with or without a proxy
     def Communications.http_post(post_data,config_hash)
   
       proxy_addr = config_hash['proxy_addr']
       proxy_port = config_hash['proxy_port']
-      litle_url = config_hash['url']
+      cnp_url = config_hash['url']
   
       # setup https or http post
-      url = URI.parse(litle_url)
+      url = URI.parse(cnp_url)
   
       response_xml = nil
       https = Net::HTTP.new(url.host, url.port, proxy_addr, proxy_port)
@@ -71,9 +71,9 @@ end
   The round-trip time of an Authorization can be broken down into three parts, as follows:
     1.  Transmission time (across the internet) to Vantiv eCommerce and back to the merchant
     2.  Processing time by the authorization provider
-    3.  Processing time by Litle 
-  Under normal operating circumstances, the transmission time to and from Litle does not exceed 0.6 seconds 
-  and processing overhead by Litle occurs in 0.1 seconds. 
+    3.  Processing time by Cnp 
+  Under normal operating circumstances, the transmission time to and from Cnp does not exceed 0.6 seconds 
+  and processing overhead by Cnp occurs in 0.1 seconds. 
   Typically, the processing time by the card association or authorization provider can take between 0.5 and 3 seconds,
   but some percentage of transactions may take significantly longer.
  

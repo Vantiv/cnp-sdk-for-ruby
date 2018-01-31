@@ -27,11 +27,11 @@ require 'socket'
 
 include Socket::Constants
 #
-# This class handles sending the Litle Request (which is actually a series of batches!)
+# This class handles sending the Cnp Request (which is actually a series of batches!)
 #
 
-module LitleOnline
-  class LitleRequest
+module CnpOnline
+  class CnpRequest
     include XML::Mapping
     def initialize(options = {})
       #load configuration data
@@ -49,11 +49,11 @@ module LitleOnline
       @responses_expected = 0
     end
 
-    # Creates the necessary files for the LitleRequest at the path specified. path/request_(TIMESTAMP) will be
+    # Creates the necessary files for the CnpRequest at the path specified. path/request_(TIMESTAMP) will be
     # the final XML markup and path/request_(TIMESTAMP) will hold intermediary XML markup
     # Params:
     # +path+:: A +String+ containing the path to the folder on disc to write the files to
-    def create_new_litle_request(path)
+    def create_new_cnp_request(path)
       ts = Time::now.to_i.to_s
       begin
         ts += Time::now.nsec.to_s
@@ -77,7 +77,7 @@ module LitleOnline
       @path_to_batches = @path_to_request + '_batches'
 
       if File.file?(@path_to_request) or File.file?(@path_to_batches) then
-        create_new_litle_request(path)
+        create_new_cnp_request(path)
         return
       end
 
@@ -89,20 +89,20 @@ module LitleOnline
       end
     end
 
-    # Adds a batch to the LitleRequest. If the batch is open when passed, it will be closed prior to being added.
+    # Adds a batch to the CnpRequest. If the batch is open when passed, it will be closed prior to being added.
     # Params:
-    # +arg+:: a +LitleBatchRequest+ containing the transactions you wish to send or a +String+ specifying the
+    # +arg+:: a +CnpBatchRequest+ containing the transactions you wish to send or a +String+ specifying the
     # path to the batch file
     def commit_batch(arg)
       path_to_batch = ""
       #they passed a batch
-      if arg.kind_of?(LitleBatchRequest) then
+      if arg.kind_of?(CnpBatchRequest) then
         path_to_batch = arg.get_batch_name
         if((au = arg.get_au_batch) != nil) then 
           # also commit the account updater batch
           commit_batch(au)
         end
-      elsif arg.kind_of?(LitleAUBatch) then
+      elsif arg.kind_of?(CnpAUBatch) then
         path_to_batch = arg.get_batch_name
       elsif arg.kind_of?(String) then
         path_to_batch = arg
@@ -112,7 +112,7 @@ module LitleOnline
       #the batch isn't closed. let's help a brother out
       if (ind = path_to_batch.index(/\.closed/)) == nil then
         if arg.kind_of?(String) then
-          new_batch = LitleBatchRequest.new
+          new_batch = CnpBatchRequest.new
           new_batch.open_existing_batch(path_to_batch)
           new_batch.close_batch()
           path_to_batch = new_batch.get_batch_name
@@ -122,10 +122,10 @@ module LitleOnline
             File.remove(path_to_batch)
             path_to_batch = new_batch.get_au_batch.get_batch_name
           end 
-        elsif arg.kind_of?(LitleBatchRequest) then
+        elsif arg.kind_of?(CnpBatchRequest) then
           arg.close_batch()
           path_to_batch = arg.get_batch_name
-        elsif arg.kind_of?(LitleAUBatch) then
+        elsif arg.kind_of?(CnpAUBatch) then
           arg.close_batch()
           path_to_batch = arg.get_batch_name 
         end
@@ -133,11 +133,11 @@ module LitleOnline
       end
       transactions_in_batch = path_to_batch[ind+8..path_to_batch.length].to_i
 
-      # if the litle request would be too big, let's make another!
+      # if the cnp request would be too big, let's make another!
       if (@num_total_transactions + transactions_in_batch) > @MAX_NUM_TRANSACTIONS then
         finish_request
         initialize(@options)
-        create_new_litle_request
+        create_new_cnp_request
       else #otherwise, let's add it line by line to the request doc
        # @num_batch_requests += 1
         #how long we wnat to wait around for the FTP server to get us a response
@@ -157,42 +157,42 @@ module LitleOnline
       end
     end
 
-    # Adds an RFRRequest to the LitleRequest.
+    # Adds an RFRRequest to the CnpRequest.
     # params: 
     # +options+:: a required +Hash+ containing configuration info for the RFRRequest. If the RFRRequest is for a batch, then the 
-    # litleSessionId is required as a key/val pair. If the RFRRequest is for account updater, then merchantId and postDay are required
+    # cnpSessionId is required as a key/val pair. If the RFRRequest is for account updater, then merchantId and postDay are required
     # as key/val pairs.
-    # +path+:: optional path to save the new litle request containing the RFRRequest at
+    # +path+:: optional path to save the new cnp request containing the RFRRequest at
     def add_rfr_request(options, path = (File.dirname(@path_to_batches)))
      
-      rfrrequest = LitleRFRRequest.new
-      if(options['litleSessionId']) then
-        rfrrequest.litleSessionId = options['litleSessionId']
+      rfrrequest = CnpRFRRequest.new
+      if(options['cnpSessionId']) then
+        rfrrequest.cnpSessionId = options['cnpSessionId']
       elsif(options['merchantId'] and options['postDay']) then
         accountUpdate = AccountUpdateFileRequestData.new
         accountUpdate.merchantId = options['merchantId']
         accountUpdate.postDay = options['postDay']
         rfrrequest.accountUpdateFileRequestData = accountUpdate
       else
-        raise ArgumentError, "For an RFR Request, you must specify either a litleSessionId for an RFRRequest for batch or a merchantId 
+        raise ArgumentError, "For an RFR Request, you must specify either a cnpSessionId for an RFRRequest for batch or a merchantId
         and a postDay for an RFRRequest for account updater."
       end 
       
-      litleRequest = LitleRequestForRFR.new
-      litleRequest.rfrRequest = rfrrequest
+      cnpRequest = CnpRequestForRFR.new
+      cnpRequest.rfrRequest = rfrrequest
       
       authentication = Authentication.new
       authentication.user = get_config(:user, options)
       authentication.password = get_config(:password, options)
 
-      litleRequest.authentication = authentication
-      litleRequest.numBatchRequests = "0"
+      cnpRequest.authentication = authentication
+      cnpRequest.numBatchRequests = "0"
       
-      litleRequest.version         = '11.0'
-      litleRequest.xmlns           = "http://www.litle.com/schema"
+      cnpRequest.version         = '12.0'
+      cnpRequest.xmlns           = "http://www.vantivcnp.com/schema"
       
       
-      xml = litleRequest.save_to_xml.to_s
+      xml = cnpRequest.save_to_xml.to_s
       
       ts = Time::now.to_i.to_s
       begin
@@ -221,14 +221,14 @@ module LitleOnline
       @RESPONSE_TIME_OUT += 90   
     end
 
-    # FTPs all previously unsent LitleRequests located in the folder denoted by path to the server
+    # FTPs all previously unsent CnpRequests located in the folder denoted by path to the server
     # Params:
-    # +path+:: A +String+ containing the path to the folder on disc where LitleRequests are located.
-    # This should be the same location where the LitleRequests were written to. If no path is explicitly
+    # +path+:: A +String+ containing the path to the folder on disc where CnpRequests are located.
+    # This should be the same location where the CnpRequests were written to. If no path is explicitly
     # provided, then we use the directory where the current working batches file is stored.
     # +options+:: An (option) +Hash+ containing the username, password, and URL to attempt to sFTP to.
     # If not provided, the values will be populated from the configuration file.
-    def send_to_litle(path = (File.dirname(@path_to_batches)), options = {})
+    def send_to_cnp(path = (File.dirname(@path_to_batches)), options = {})
       username = get_config(:sftp_username, options)
       password = get_config(:sftp_password, options)
     
@@ -271,10 +271,10 @@ module LitleOnline
       end
     end
     
-    # Sends all previously unsent LitleRequests in the specified directory to the Litle server
+    # Sends all previously unsent CnpRequests in the specified directory to the Cnp server
     # by use of fast batch. All results will be written to disk as we get them. Note that use
     # of fastbatch is strongly discouraged!
-    def send_to_litle_stream(options = {}, path = (File.dirname(@path_to_batches)))
+    def send_to_cnp_stream(options = {}, path = (File.dirname(@path_to_batches)))
       url = get_config(:fast_url, options)
       port = get_config(:fast_port, options)
     
@@ -307,7 +307,7 @@ module LitleOnline
                  
            rescue => e 
             raise "A connection couldn't be established. Are you sure you have the correct credentials? Exception: " + e.message
-           end 
+          end
             
             File.foreach(path + filename) do |li|
               ssl_socket.puts li
@@ -325,10 +325,10 @@ module LitleOnline
     end
     
     
-    # Grabs response files over SFTP from Litle.
+    # Grabs response files over SFTP from Cnp.
     # Params:
     # +args+:: An (optional) +Hash+ containing values for the number of responses expected, the
-    # path to the folder on disk to write the responses from the Litle server to, the username and
+    # path to the folder on disk to write the responses from the Cnp server to, the username and
     # password with which to connect ot the sFTP server, and the URL to connect over sFTP. Values not
     # provided in the hash will be populate automatically based on our best guess
     def get_responses_from_server(args = {})
@@ -404,7 +404,7 @@ module LitleOnline
     
     # Params:
     # +args+:: A +Hash+ containing arguments for the processing process. This hash MUST contain an entry
-    # for a transaction listener (see +DefaultLitleListener+). It may also include a batch listener and a
+    # for a transaction listener (see +DefaultCnpListener+). It may also include a batch listener and a
     # custom path where response files from the server are located (if it is not provided, we'll guess the position)
     def process_responses(args)
       #the transaction listener is required
@@ -427,7 +427,7 @@ module LitleOnline
     # Params:
     # +path_to_response+:: The path to a specific .asc file to process
     # +transaction_listener+:: A listener to be applied to the hash of each transaction 
-    # (see +DefaultLitleListener+)
+    # (see +DefaultCnpListener+)
     # +batch_listener+:: An (optional) listener to be applied to the hash of each batch. 
     # Note that this will om-nom-nom quite a bit of memory    
     def process_response(path_to_response, transaction_listener, batch_listener = nil)
@@ -435,7 +435,7 @@ module LitleOnline
       reader.read # read into the root node
       #if the response attribute is nil, we're dealing with an RFR and everything is a-okay
       if reader.get_attribute('response') != "0" and reader.get_attribute('response') != nil then
-        raise RuntimeError,  "Error parsing Litle Request: " + reader.get_attribute("message")
+        raise RuntimeError,  "Error parsing Cnp Request: " + reader.get_attribute("message")
       end
       
       reader.read
@@ -450,7 +450,7 @@ module LitleOnline
         case reader.node.name.to_s
         when "batchResponse"
           reader.read
-        when "litleResponse"
+        when "cnpResponse"
           return false
         when "text"
           reader.read
@@ -470,7 +470,7 @@ module LitleOnline
     end
 
     # Called when you wish to finish adding batches to your request, this method rewrites the aggregate
-    # batch file to the final LitleRequest xml doc with the appropos LitleRequest tags.
+    # batch file to the final CnpRequest xml doc with the appropos CnpRequest tags.
     def finish_request
       File.open(@path_to_request, 'w') do |f|
         #jam dat header in there
@@ -480,7 +480,7 @@ module LitleOnline
           f.puts li
         end
         #finally, let's poot in a header, for old time's sake
-        f.puts '</litleRequest>'
+        f.puts '</cnpRequest>'
       end
 
       #rename the requests file
@@ -492,20 +492,20 @@ module LitleOnline
     private
 
     def build_request_header(options = @options)
-      litle_request = self
+      cnp_request = self
 
       authentication = Authentication.new
       authentication.user = get_config(:user, options)
       authentication.password = get_config(:password, options)
 
-      litle_request.authentication = authentication
-      litle_request.version         = '11.0'
-      litle_request.xmlns           = "http://www.litle.com/schema"
-      # litle_request.id              = options['sessionId'] #grab from options; okay if nil
-      litle_request.numBatchRequests = @num_batch_requests
+      cnp_request.authentication = authentication
+      cnp_request.version         = '12.0'
+      cnp_request.xmlns           = "http://www.vantivcnp.com/schema"
+      # cnp_request.id              = options['sessionId'] #grab from options; okay if nil
+      cnp_request.numBatchRequests = @num_batch_requests
 
-      xml = litle_request.save_to_xml.to_s
-      xml[/<\/litleRequest>/]=''
+      xml = cnp_request.save_to_xml.to_s
+      xml[/<\/cnpRequest>/]=''
       return xml
     end
 

@@ -24,112 +24,112 @@ OTHER DEALINGS IN THE SOFTWARE.
 =end
 
 
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
-  class TestLitleXmlMapper < Test::Unit::TestCase
+module CnpOnline
+  class TestCnpXmlMapper < Test::Unit::TestCase
     
-    def test_LitleXmlMapper_request_xml_response_0
+    def test_CnpXmlMapper_request_xml_response_0
       hash =
       {
         'merchantId' => '101',
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
       }
-      Communications.expects(:http_post).returns("<litleOnlineResponse version=\"1.0\" xmlns=\"http://www.litle.com/schema/online\" response=\"0\" message=\"Invalid credentials. Contact support@litle.com.\"></litleOnlineResponse>")
-      response = LitleXmlMapper.request("","")
+      Communications.expects(:http_post).returns("<cnpOnlineResponse version=\"1.0\" xmlns=\"http://www.vantivcnp.com/schema/online\" response=\"0\" message=\"Invalid credentials. Contact support@cnp.com.\"></cnpOnlineResponse>")
+      response = CnpXmlMapper.request("","")
       assert_equal('0',response.response)
     end
     
-    def test_LitleXmlMapper_request_xml_response_1
+    def test_CnpXmlMapper_request_xml_response_1
       hash =
       {
         'merchantId' => '101',
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
       }
-      Communications.expects(:http_post).returns("<litleOnlineResponse version=\"1.0\" xmlns=\"http://www.litle.com/schema/online\" response=\"1\" message=\"Invalid credentials. Contact support@litle.com.\"></litleOnlineResponse>")
+      Communications.expects(:http_post).returns("<cnpOnlineResponse version=\"1.0\" xmlns=\"http://www.vantivcnp.com/schema/online\" response=\"1\" message=\"Invalid credentials. Contact support@cnp.com.\"></cnpOnlineResponse>")
       #Get exceptions
       exception = assert_raise(RuntimeError){
-        LitleXmlMapper.request("","")
+        CnpXmlMapper.request("","")
         }
       #Test 
       assert(exception.message =~ /Error with http response, code: 1/)
     end
     
-    def test_LitleXmlMapper_request_xml_response_2
+    def test_CnpXmlMapper_request_xml_response_2
       hash =
       {
         'merchantId' => '101',
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
       }
-      Communications.expects(:http_post).returns("<litleOnlineResponse version=\"1.0\" xmlns=\"http://www.litle.com/schema/online\" response=\"2\" message=\"Invalid credentials. Contact support@litle.com.\"></litleOnlineResponse>")
+      Communications.expects(:http_post).returns("<cnpOnlineResponse version=\"1.0\" xmlns=\"http://www.vantivcnp.com/schema/online\" response=\"2\" message=\"Invalid credentials. Contact support@cnp.com.\"></cnpOnlineResponse>")
       #Get exceptions
       exception = assert_raise(RuntimeError){
-        LitleXmlMapper.request("","")
+        CnpXmlMapper.request("","")
         }
       #Test 
       assert(exception.message =~ /Error with http response, code: 2/)
     end
 
-    def test_LitleXmlMapper_request_xml_response_3
+    def test_CnpXmlMapper_request_xml_response_3
       hash =
       {
         'merchantId' => '101',
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
       }
-      Communications.expects(:http_post).returns("<litleOnlineResponse version=\"1.0\" xmlns=\"http://www.litle.com/schema/online\" response=\"3\" message=\"Invalid credentials. Contact support@litle.com.\"></litleOnlineResponse>")
+      Communications.expects(:http_post).returns("<cnpOnlineResponse version=\"1.0\" xmlns=\"http://www.vantivcnp.com/schema/online\" response=\"3\" message=\"Invalid credentials. Contact support@cnp.com.\"></cnpOnlineResponse>")
       #Get exceptions
       exception = assert_raise(RuntimeError){
-        LitleXmlMapper.request("","")
+        CnpXmlMapper.request("","")
         }
       #Test 
       assert(exception.message =~ /Error with http response, code: 3/)
     end
 
-    def test_LitleXmlMapper_request_xml_response_4
+    def test_CnpXmlMapper_request_xml_response_4
       hash =
       {
         'merchantId' => '101',
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
       }
-      Communications.expects(:http_post).returns("<litleOnlineResponse version=\"1.0\" xmlns=\"http://www.litle.com/schema/online\" response=\"4\" message=\"Invalid credentials. Contact support@litle.com.\"></litleOnlineResponse>")
+      Communications.expects(:http_post).returns("<cnpOnlineResponse version=\"1.0\" xmlns=\"http://www.vantivcnp.com/schema/online\" response=\"4\" message=\"Invalid credentials. Contact support@cnp.com.\"></cnpOnlineResponse>")
       #Get exceptions
       exception = assert_raise(RuntimeError){
-        LitleXmlMapper.request("","")
+        CnpXmlMapper.request("","")
         }
       #Test 
       assert(exception.message =~ /Error with http response, code: 4/)
     end    
 
-    def test_LitleXmlMapper_request_xml_response_5
+    def test_CnpXmlMapper_request_xml_response_5
       hash =
       {
         'merchantId' => '101',
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
       }
-      Communications.expects(:http_post).returns("<litleOnlineResponse version=\"1.0\" xmlns=\"http://www.litle.com/schema/online\" response=\"5\" message=\"Invalid credentials. Contact support@litle.com.\"></litleOnlineResponse>")
+      Communications.expects(:http_post).returns("<cnpOnlineResponse version=\"1.0\" xmlns=\"http://www.vantivcnp.com/schema/online\" response=\"5\" message=\"Invalid credentials. Contact support@cnp.com.\"></cnpOnlineResponse>")
       #Get exceptions
       exception = assert_raise(RuntimeError){
-        LitleXmlMapper.request("","")
+        CnpXmlMapper.request("","")
         }
       #Test 
       assert(exception.message =~ /Error with http response, code: 5/)

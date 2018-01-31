@@ -22,11 +22,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
 #test UpdatePlan Transaction
-module LitleOnline
+module CnpOnline
  class TestUpdatePlan < Test::Unit::TestCase
   
 def test_simple_happy
@@ -39,7 +39,7 @@ def test_simple_happy
         'active'=>'true'  
             }
 
-    response= LitleOnlineRequest.new.update_plan(hash)
+    response= CnpOnlineRequest.new.update_plan(hash)
     assert_equal('Valid Format', response.message)
   end
 
@@ -53,7 +53,7 @@ def test_simple_happy
 	   }
 
     #Get exceptions
-    exception = assert_raise(RuntimeError){LitleOnlineRequest.new.update_plan(hash)}
+    exception = assert_raise(RuntimeError){CnpOnlineRequest.new.update_plan(hash)}
     #Test 
     assert(exception.message =~ /Error validating xml data against the schema/)
   end

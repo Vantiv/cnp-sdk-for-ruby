@@ -22,23 +22,23 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
 #test Authorization Transaction
-module LitleOnline
+module CnpOnline
  class TestAuth < Test::Unit::TestCase
     def test_success_re_auth
       hash = {
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456'
+        'cnpTxnId'=>'123456'
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<litleTxnId>123456<\/litleTxnId>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<cnpTxnId>123456<\/cnpTxnId>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_success_applepay
@@ -62,8 +62,8 @@ module LitleOnline
         }
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*?<litleOnlineRequest.*?<authorization.*?<applepay>.*?<data>user<\/data>.*?<\/applepay>.*?<\/authorization>.*?/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*?<cnpOnlineRequest.*?<authorization.*?<applepay>.*?<data>user<\/data>.*?<\/applepay>.*?<\/authorization>.*?/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_both_choices_card_and_applepay
@@ -91,7 +91,7 @@ module LitleOnline
         'version' =>'10000'
         }}
 
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.authorization(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.authorization(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -114,7 +114,7 @@ module LitleOnline
         'transactionId'=>'123456'
         }}
 
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.authorization(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.authorization(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -141,7 +141,7 @@ module LitleOnline
         'token'=>'1234',
         'transactionId'=>'123456'
         }}
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.authorization(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.authorization(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -170,13 +170,13 @@ module LitleOnline
         'token'=>'1234',
         'transactionId'=>'123456'},
         'token'=> {
-        'litleToken'=>'1234567890123',
+        'cnpToken'=>'1234567890123',
         'expDate'=>'1210',
         'cardValidationNum'=>'555',
         'type'=>'VI'
         }}
 
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.authorization(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.authorization(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -193,8 +193,8 @@ module LitleOnline
         }
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<merchantData>.*?<campaign>foo<\/campaign>.*?<\/merchantData>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<merchantData>.*?<campaign>foo<\/campaign>.*?<\/merchantData>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_fraud_filter_override
@@ -208,8 +208,8 @@ module LitleOnline
         'fraudFilterOverride'=> 'true'
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<authorization.*?<fraudFilterOverride>true<\/fraudFilterOverride>.*?<\/authorization>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<authorization.*?<fraudFilterOverride>true<\/fraudFilterOverride>.*?<\/authorization>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
     
  
@@ -229,7 +229,7 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.authorization(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.authorization(hash)}
       assert_match /If pos is specified, it must have a capability/, exception.message
     end
 
@@ -245,7 +245,7 @@ module LitleOnline
         'token'=>'1234',
         'transactionId'=>'123456'
         }}
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.authorization(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.authorization(hash)}
      assert_match /If paypal is specified, it must have a payerId/, exception.message
     end
 
@@ -261,7 +261,7 @@ module LitleOnline
         'token'=>'1234',
         'payerId'=>'123456'
         }}
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.authorization(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.authorization(hash)}
       assert_match /If paypal is specified, it must have a transactionId/, exception.message
     end
 
@@ -279,7 +279,7 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.authorization(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.authorization(hash)}
       assert_match /If pos is specified, it must have a entryMode/, exception.message
     end
 
@@ -296,8 +296,8 @@ module LitleOnline
         'fraudFilterOverride'=> 'true'
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<authentication.*?<user>UNIT<\/user>.*?<\/authentication>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<authentication.*?<user>UNIT<\/user>.*?<\/authentication>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_auth_override_password
@@ -313,8 +313,8 @@ module LitleOnline
         'fraudFilterOverride'=> 'true'
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<authentication.*?<password>TEST<\/password>.*?<\/authentication>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<authentication.*?<password>TEST<\/password>.*?<\/authentication>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_logged_in_user
@@ -323,12 +323,12 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'loggedInUser'=>'gdake'
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_surcharge_amount
@@ -339,8 +339,8 @@ module LitleOnline
         'orderSource' => 'ecommerce',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><surchargeAmount>1<\/surchargeAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><surchargeAmount>1<\/surchargeAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_secondary_amount
@@ -351,8 +351,8 @@ module LitleOnline
         'orderSource' => 'ecommerce',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><secondaryAmount>1<\/secondaryAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><secondaryAmount>1<\/secondaryAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_surcharge_amount_optional
@@ -362,8 +362,8 @@ module LitleOnline
         'orderSource' => 'ecommerce',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_method_of_payment_allows_giftcard
@@ -377,8 +377,8 @@ module LitleOnline
         'type' => 'GC'
         }
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<card><type>GC<\/type><number>4141000000000000<\/number><expDate>1210<\/expDate><\/card>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<card><type>GC<\/type><number>4141000000000000<\/number><expDate>1210<\/expDate><\/card>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_advanced_fraud_check
@@ -393,8 +393,8 @@ module LitleOnline
         },
         'advancedFraudChecks' => {'threatMetrixSessionId'=>'1234'}        
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<advancedFraudChecks><threatMetrixSessionId>1234<\/threatMetrixSessionId><\/advancedFraudChecks>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<advancedFraudChecks><threatMetrixSessionId>1234<\/threatMetrixSessionId><\/advancedFraudChecks>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_mpos
@@ -411,8 +411,8 @@ module LitleOnline
         'track2Status'=>'0'
         }
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<mpos><ksn>ksnString<\/ksn><formatId>30<\/formatId><encryptedTrack>encryptedTrackString<\/encryptedTrack><track1Status>0<\/track1Status><track2Status>0<\/track2Status><\/mpos>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<mpos><ksn>ksnString<\/ksn><formatId>30<\/formatId><encryptedTrack>encryptedTrackString<\/encryptedTrack><track1Status>0<\/track1Status><track2Status>0<\/track2Status><\/mpos>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
     
     def test_processingType_originalNetworkTransactionId_originalTransactionAmount
@@ -429,8 +429,8 @@ module LitleOnline
         'originalNetworkTransactionId' => '9876543210',
         'originalTransactionAmount' => '536981'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<processingType>initialInstallment<\/processingType><originalNetworkTransactionId>9876543210<\/originalNetworkTransactionId><originalTransactionAmount>536981<\/originalTransactionAmount>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<processingType>initialInstallment<\/processingType><originalNetworkTransactionId>9876543210<\/originalNetworkTransactionId><originalTransactionAmount>536981<\/originalTransactionAmount>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
     
      def test_processingType_wallet
@@ -455,8 +455,8 @@ module LitleOnline
           'walletSourceTypeId' => 'VCIND'
         }
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<wallet><walletSourceType>VisaCheckout<\/walletSourceType><walletSourceTypeId>VCIND<\/walletSourceTypeId><\/wallet>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<wallet><walletSourceType>VisaCheckout<\/walletSourceType><walletSourceTypeId>VCIND<\/walletSourceTypeId><\/wallet>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
     
   end

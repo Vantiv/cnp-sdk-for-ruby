@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class TestUpdateCardValidationNumOnToken < Test::Unit::TestCase
     def test_simple
       hash = {
@@ -34,10 +34,10 @@ module LitleOnline
         'id'=>'test',
         'reportGroup'=>'Planets',
         'orderId'=>'12344',
-        'litleToken'=>'1233456789103801',
+        'cnpToken'=>'1233456789103801',
 		    'cardValidationNum'=>'123'
       }
-      response= LitleOnlineRequest.new.update_card_validation_num_on_token(hash)
+      response= CnpOnlineRequest.new.update_card_validation_num_on_token(hash)
       assert_equal('Valid Format', response.message)
     end
   end

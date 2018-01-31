@@ -22,18 +22,18 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 
 #test GiftCardCapture Transaction
-module LitleOnline
+module CnpOnline
   class TestGiftCardCredit < Test::Unit::TestCase
     def test_giftCardCredit
       hash = {
         'id'=>'test',
         'merchantId' => '101',
         'version'=>'8.8',
-        'litleTxnId' => '5000',
+        'cnpTxnId' => '5000',
         'creditAmount' =>'1000',
         #'orderId' =>'1230',
         'card'=>{
@@ -46,7 +46,7 @@ module LitleOnline
         'reportGroup'=>'Planets',
       }
 
-      response= LitleOnlineRequest.new.giftCardCredit(hash)
+      response= CnpOnlineRequest.new.giftCardCredit(hash)
       assert_equal('000', response.giftCardCreditResponse.response)
       assert_equal('0', response.giftCardCreditResponse.giftCardResponse.systemTraceId)
     end
@@ -60,7 +60,7 @@ module LitleOnline
       }
 
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.giftCardCredit(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.giftCardCredit(hash)}
       #Test
       assert(exception.message =~ /Error validating xml data against the schema/)
     end

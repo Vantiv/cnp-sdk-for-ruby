@@ -1,4 +1,4 @@
-module LitleOnline
+module CnpOnline
   class EnvironmentVariables
     def initialize
       # load configuration data

@@ -17,7 +17,7 @@ This SDK was implemented to support the Ruby programming language and was create
 
 See LICENSE file for details on using this software.
 
-Source Code available from : https://github.com/LitleCo/litle-sdk-for-ruby
+Source Code available from : https://github.com/Vantiv/cnp-sdk-for-ruby
 
 Please contact [Vantiv eCommerce](http://www.vantiv.com) to receive valid merchant credentials in order to run tests successfully or if you require assistance in any way. We are reachable at sdksupport@vantiv.com
 
@@ -32,18 +32,18 @@ Our gem is available publicly from rubygems.org.  Use the command below to insta
 Note: If you get errors, you might have to configure your proxy.
 
 2) Once the gem is installed run our setup program to generate a configuration file.  The configuration file resides in your home directory
-$HOME/.litle_SDK_config.yml
+$HOME/.cnp_SDK_config.yml
 
-For more details on setup see our instructions [here](https://github.com/LitleCo/litle-sdk-for-ruby/blob/master/SETUP.md)
+For more details on setup see our instructions [here](https://github.com/Vantiv/cnp-sdk-for-ruby/blob/master/SETUP.md)
 
 3.) Create a ruby file similar to:  
 
 ```ruby
-require 'LitleOnline'
-include LitleOnline
+require 'CnpOnline'
+include CnpOnline
 
 # Visa $10 Sale
-litleSaleTxn = {
+cnpSaleTxn = {
     'reportGroup'=>'rpt_grp',
     'orderId'=>'1234567',
     'card'=>{
@@ -54,19 +54,19 @@ litleSaleTxn = {
         'amount'=>'1000'
     }
 
-# Peform the transaction on the Litle Platform
-response = LitleOnlineRequest.new.sale(litleSaleTxn)
+# Peform the transaction on the Cnp Platform
+response = CnpOnlineRequest.new.sale(cnpSaleTxn)
 
 # display result
 puts "Message: "+ response.message
-puts "Litle Transaction ID: "+ response.saleResponse.litleTxnId
+puts "Cnp Transaction ID: "+ response.saleResponse.cnpTxnId
 ```
 
-3) Next run this file using ruby. You should see the following result provided you have connectivity to the Litle certification environment.  You will see an HTTP error if you don't have access to the Litle URL
+3) Next run this file using ruby. You should see the following result provided you have connectivity to the Cnp certification environment.  You will see an HTTP error if you don't have access to the Cnp URL
 
     Message: Valid Format
-    Litle Transaction ID: <your-numeric-litle-txn-id>
+    Cnp Transaction ID: <your-numeric-cnp-txn-id>
  
-More examples (including batch processing with sFTP) can be found here [Ruby Gists](https://gist.github.com/litleSDK)
+More examples can be found here [Ruby SDK](https://vantiv.github.io/ruby/#gettingStarted)
 
 Please contact Vantiv eCommerce with any further questions. You can reach us at sdksupport@vantiv.com.

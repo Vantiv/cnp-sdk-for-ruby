@@ -22,22 +22,22 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   class Test_echeckCredit < Test::Unit::TestCase
     def test_echeck_credit_with_both
       hash = {
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
-        'echeckToken' => {'accType'=>'Checking','litleToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
+        'cnpTxnId'=>'123456',
+        'echeckToken' => {'accType'=>'Checking','cnpToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'}
       }
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.echeck_credit(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.echeck_credit(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -48,11 +48,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'}
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
-      LitleOnlineRequest.new.echeck_credit(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
+      CnpOnlineRequest.new.echeck_credit(hash)
     end
 
     def test_echeck_credit_with_orderId_secondary_amount
@@ -63,8 +63,8 @@ module LitleOnline
         'orderSource' => 'ecommerce',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><secondaryAmount>1<\/secondaryAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.echeck_credit(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><secondaryAmount>1<\/secondaryAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.echeck_credit(hash)
     end
     
     def test_echeck_credit_with_txnId_secondaryAmount
@@ -72,12 +72,12 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456789101112',
+        'cnpTxnId'=>'123456789101112',
         'amount'=>'12',
         'secondaryAmount'=>'1'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<litleTxnId>123456789101112<\/litleTxnId>.*?<amount>12<\/amount><secondaryAmount>1<\/secondaryAmount>.*/m), is_a(Hash))
-            LitleOnlineRequest.new.echeck_credit(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<cnpTxnId>123456789101112<\/cnpTxnId>.*?<amount>12<\/amount><secondaryAmount>1<\/secondaryAmount>.*/m), is_a(Hash))
+            CnpOnlineRequest.new.echeck_credit(hash)
     end
     
     def test_echeck_credit_with_customIdentifier
@@ -91,12 +91,12 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455','ccdPaymentInformation'=>'12345678901234567890123456789012345678901234567890123456789012345678901234567890'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
         'merchantData'=>{'campaign'=>'camping'},
         'customIdentifier' =>'identifier',
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<customIdentifier>identifier<\/customIdentifier>.*/m), is_a(Hash))
-            LitleOnlineRequest.new.echeck_credit(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<customIdentifier>identifier<\/customIdentifier>.*/m), is_a(Hash))
+            CnpOnlineRequest.new.echeck_credit(hash)
     end
 
   end

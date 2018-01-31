@@ -25,7 +25,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 =end
 
 #Sample Driver
-require_relative '../lib/LitleOnline'
+require_relative '../lib/CnpOnline'
 
 saleHash = {
         'reportGroup'=>'Planets',
@@ -57,14 +57,14 @@ rfrHash = {
       
 path = Dir.pwd
 
-request = LitleOnline::LitleRequest.new({'sessionId'=>'8675309'})
+request = CnpOnline::CnpRequest.new({'sessionId'=>'8675309'})
   
-request.create_new_litle_request(path)
-puts "Created new LitleRequest at location: " + path
+request.create_new_cnp_request(path)
+puts "Created new CnpRequest at location: " + path
 start = Time::now
 #create five batches, each with 10 sales
 #5.times{
-  batch = LitleOnline::LitleBatchRequest.new
+  batch = CnpOnline::CnpBatchRequest.new
   batch.create_new_batch(path)
 
   #add the same sale ten times
@@ -75,7 +75,7 @@ start = Time::now
 
   #close the batch, indicating we plan to add no more transactions
   batch.close_batch()
-  #add the batch to the LitleRequest
+  #add the batch to the CnpRequest
   request.commit_batch(batch)
 #}
 
@@ -83,28 +83,28 @@ request.add_rfr_request(rfrHash)
 
 
  
-# puts "Finished adding batches to LitleRequest at " + request.get_path_to_batches
-#finish the Litle Request, indicating we plan to add no more batches
+# puts "Finished adding batches to CnpRequest at " + request.get_path_to_batches
+#finish the Cnp Request, indicating we plan to add no more batches
 request.finish_request
-puts "Generated final XML markup of the LitleRequest"
+puts "Generated final XML markup of the CnpRequest"
  
 #send the batch files at the given directory over sFTP
-request.send_to_litle
-puts "Dropped off the XML of the LitleRequest over FTP"
+request.send_to_cnp
+puts "Dropped off the XML of the CnpRequest over FTP"
 #grab the expected number of responses from the sFTP server and save them to the given path
 request.get_responses_from_server()
-puts "Received the LitleRequest responses from the server"
+puts "Received the CnpRequest responses from the server"
 #process the responses from the server with a listener which applies the given block
 start = Time::now
-request.process_responses({:transaction_listener => LitleOnline::DefaultLitleListener.new do |transaction|
+request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
   type = transaction["type"]
-  #if we're dealing with a saleResponse (check the Litle XML Reference Guide!)
+  #if we're dealing with a saleResponse (check the Cnp XML Reference Guide!)
   if(type == "saleResponse") then
     #grab an attribute of the parent of the response
     puts "Report Group: " + transaction["reportGroup"]
     
     #grab some child elements of the transaction
-    puts "Litle Txn Id: " + transaction["litleTxnId"]
+    puts "Cnp Txn Id: " + transaction["cnpTxnId"]
     puts "Order Id: " + transaction["orderId"]
     puts "Response: " + transaction["response"]
     

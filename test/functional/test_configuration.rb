@@ -20,11 +20,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
 
-module LitleOnline
+module CnpOnline
   class TestConfiguration < Test::Unit::TestCase
     #the flag is to judge the data in config file exist or not
     @@flag=false
@@ -42,47 +42,47 @@ module LitleOnline
 
     def test_configuration_mix_file_env
       #check the env variable override
-      ENV['litle_timeout']='80'
+      ENV['cnp_timeout']='80'
       @config_hash = Configuration.new.config
       assert_equal('80',@config_hash['timeout'])
-      ENV['litle_timeout']=nil
+      ENV['cnp_timeout']=nil
     end
 
 
 
     def test_configuration_without_file
       #set up Env variable
-      ENV['litle_user']='isola'
-      ENV['litle_password']='vinicius'
-      ENV['litle_currency_merchant_map']='0180'
-      ENV['litle_url']='basketball@gmail.com'
-      ENV['litle_proxy_addr']='iwp1.lowell.litle.com'
-      ENV['litle_proxy_port']='8080'
-      ENV['litle_sftp_username']='sdkFire'
-      ENV['litle_sftp_password']='fire is comming'
-      ENV['litle_fast_url']='prelive.litle.com'
-      ENV['litle_fast_port']='15000'
+      ENV['cnp_user']='isola'
+      ENV['cnp_password']='vinicius'
+      ENV['cnp_currency_merchant_map']='0180'
+      ENV['cnp_url']='basketball@gmail.com'
+      ENV['cnp_proxy_addr']='iwp1.lowell.cnp.com'
+      ENV['cnp_proxy_port']='8080'
+      ENV['cnp_sftp_username']='sdkFire'
+      ENV['cnp_sftp_password']='fire is comming'
+      ENV['cnp_fast_url']='prelive.cnp.com'
+      ENV['cnp_fast_port']='15000'
       @config_hash = Configuration.new.config
       assert_equal('isola',@config_hash['user'])
       assert_equal('vinicius',@config_hash['password'])
       assert_equal('0180',@config_hash['currency_merchant_map'])
       assert_equal('basketball@gmail.com',@config_hash['url'])
-      assert_equal('iwp1.lowell.litle.com',@config_hash['proxy_addr'])
+      assert_equal('iwp1.lowell.cnp.com',@config_hash['proxy_addr'])
       assert_equal('8080',@config_hash['proxy_port'])
       assert_equal('sdkFire',@config_hash['sftp_username'])
       assert_equal('fire is comming',@config_hash['sftp_password'])
-      assert_equal('prelive.litle.com',@config_hash['fast_url'])
+      assert_equal('prelive.cnp.com',@config_hash['fast_url'])
       assert_equal('15000',@config_hash['fast_port'])
-      ENV['litle_user']=nil
-      ENV['litle_password']=nil
-      ENV['litle_currency_merchant_map']=nil
-      ENV['litle_url']=nil
-      ENV['litle_proxy_addr']=nil
-      ENV['litle_proxy_port']=nil
-      ENV['litle_sftp_username']=nil
-      ENV['litle_sftp_password']=nil
-      ENV['litle_fast_url']=nil
-      ENV['litle_fast_port']=nil
+      ENV['cnp_user']=nil
+      ENV['cnp_password']=nil
+      ENV['cnp_currency_merchant_map']=nil
+      ENV['cnp_url']=nil
+      ENV['cnp_proxy_addr']=nil
+      ENV['cnp_proxy_port']=nil
+      ENV['cnp_sftp_username']=nil
+      ENV['cnp_sftp_password']=nil
+      ENV['cnp_fast_url']=nil
+      ENV['cnp_fast_port']=nil
     end
 
   end

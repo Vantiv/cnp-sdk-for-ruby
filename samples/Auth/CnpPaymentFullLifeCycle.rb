@@ -1,4 +1,4 @@
-require_relative '../../lib/LitleOnline'
+require_relative '../../lib/CnpOnline'
  
 #Authorization
 #Puts a hold on the funds
@@ -20,34 +20,34 @@ auth_hash = {
   'cardValidationNum' => '349',
   'type' => 'VI'}
 }
-auth_response = LitleOnline::LitleOnlineRequest.new.authorization(auth_hash)
+auth_response = CnpOnline::CnpOnlineRequest.new.authorization(auth_hash)
  
 #Capture
 #Captures the authorization and results in money movement
 capture_hash =  {'id'=>auth_response.authorizationResponse.id,
-                  'litleTxnId' => auth_response.authorizationResponse.litleTxnId}
-capture_response = LitleOnline::LitleOnlineRequest.new.capture(capture_hash)
+                  'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId}
+capture_response = CnpOnline::CnpOnlineRequest.new.capture(capture_hash)
 
 if (!capture_response.captureResponse.message.eql?'Transaction Received')
-   raise ArgumentError, "LitlePaymentFullLifeCycle's Capture Transaction has not been Approved", caller
+   raise ArgumentError, "CnpPaymentFullLifeCycle's Capture Transaction has not been Approved", caller
 end
 #Credit
 #Refund the customer
 credit_hash =  {'id'=>capture_response.captureResponse.id,
-                'litleTxnId' => capture_response.captureResponse.litleTxnId}
+                'cnpTxnId' => capture_response.captureResponse.cnpTxnId}
 
-credit_response = LitleOnline::LitleOnlineRequest.new.credit(credit_hash)
+credit_response = CnpOnline::CnpOnlineRequest.new.credit(credit_hash)
 
 if (!credit_response.creditResponse.message.eql?'Transaction Received')
-   raise ArgumentError, "LitlePaymentFullLifeCycle's credit Transaction has not been Approved", caller
+   raise ArgumentError, "CnpPaymentFullLifeCycle's credit Transaction has not been Approved", caller
 end
 #Void
 #Cancel the refund, note that a deposit can be Voided as well
 void_hash =  {'id'=>credit_response.creditResponse.id,
-              'litleTxnId' => credit_response.creditResponse.litleTxnId}
+              'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
 
-void_response = LitleOnline::LitleOnlineRequest.new.void(void_hash)
+void_response = CnpOnline::CnpOnlineRequest.new.void(void_hash)
 
 if (!void_response.voidResponse.message.eql?'Transaction Received')
-   raise ArgumentError, "LitlePaymentFullLifeCycle's Void Transaction has not been Approved", caller
+   raise ArgumentError, "CnpPaymentFullLifeCycle's Void Transaction has not been Approved", caller
 end

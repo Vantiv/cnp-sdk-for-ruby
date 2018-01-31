@@ -26,9 +26,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 =end
 
 #Sample Driver
-#require 'LitleOnline'
-#include LitleOnline
-require_relative '../lib/LitleOnline'
+#require 'CnpOnline'
+#include CnpOnline
+require_relative '../lib/CnpOnline'
 hash = {
   'reportGroup'=>'product1',
   'orderId'=>'12344',
@@ -42,8 +42,8 @@ hash = {
 }
 
 #perform credit transaction
-response= LitleOnline::LitleOnlineRequest.new.credit(hash)
+response= CnpOnline::CnpOnlineRequest.new.credit(hash)
 
 #display results
 puts "Message: "+response.message
-puts "Litle Transaction ID: "+response.creditResponse.litleTxnId
+puts "Cnp Transaction ID: "+response.creditResponse.cnpTxnId

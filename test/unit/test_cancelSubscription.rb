@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
-module LitleOnline
+module CnpOnline
   class TestCancelSubscription < Test::Unit::TestCase
 
     def test_simple
@@ -34,8 +34,8 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<cancelSubscription><subscriptionId>100<\/subscriptionId><\/cancelSubscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.cancel_subscription(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<cancelSubscription><subscriptionId>100<\/subscriptionId><\/cancelSubscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.cancel_subscription(hash)
     end
 
   end

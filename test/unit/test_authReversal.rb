@@ -22,24 +22,24 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   class TestAuthReversal < Test::Unit::TestCase
     def test_invalid_field
       hash = {
         'merchantId' => '101',
         'version'=>'8.8',
-        'litleTxnId'=>'12345678000',
+        'cnpTxnId'=>'12345678000',
         'NonexistentField'=>'none',
         'payPalNotes'=>'Notes',
         'amount'=>'106',
         'reportGroup'=>'Planets',
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<litleTxnId>12345678000<\/litleTxnId>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.auth_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<cnpTxnId>12345678000<\/cnpTxnId>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.auth_reversal(hash)
     end  
 
     def test_logged_in_user
@@ -47,36 +47,36 @@ module LitleOnline
        	'merchantSdk' => 'Ruby;8.14.0',
         'merchantId' => '101',
         'version'=>'8.8',
-        'litleTxnId'=>'12345678000',
+        'cnpTxnId'=>'12345678000',
 		    'reportGroup'=>'Planets',
 		    'amount'=>'5000',
 		    'loggedInUser'=>'gdake'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
-      LitleOnlineRequest.new.auth_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
+      CnpOnlineRequest.new.auth_reversal(hash)
     end  
     
     def test_surcharge_amount
       hash = {
-        'litleTxnId' => '3',
+        'cnpTxnId' => '3',
         'amount' => '2',
         'surchargeAmount' => '1',
         'payPalNotes' => 'note',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><surchargeAmount>1<\/surchargeAmount><payPalNotes>note<\/payPalNotes>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.auth_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><surchargeAmount>1<\/surchargeAmount><payPalNotes>note<\/payPalNotes>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.auth_reversal(hash)
     end
     
     def test_surcharge_amount_optional
       hash = {
-        'litleTxnId' => '3',
+        'cnpTxnId' => '3',
         'amount' => '2',
         'payPalNotes' => 'note',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><payPalNotes>note<\/payPalNotes>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.auth_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><payPalNotes>note<\/payPalNotes>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.auth_reversal(hash)
     end
   end
 end

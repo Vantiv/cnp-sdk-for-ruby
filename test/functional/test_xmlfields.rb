@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class TestXmlfields < Test::Unit::TestCase
     def test_card_no_required_type_or_track
       hash = {
@@ -33,7 +33,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -43,7 +43,7 @@ module LitleOnline
         'cardValidationNum'=> '123'
         }}
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -54,7 +54,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -64,38 +64,17 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal('Valid Format', response.message)
     end
-  
-    def test_bill_me_later
-      hash = {
-        'merchantId' => '101',
-        'id' => 'test',
-        'version'=>'8.8',
-        'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
-        'orderId'=>'12344',
-        'amount'=>'106',
-        'orderSource'=>'ecommerce',
-        'billMeLaterRequest'=>{'bmlMerchantId'=>'12345','preapprovalNumber'=>'12345678909023',
-        'customerPhoneChnaged'=>'False','itemCategoryCode'=>'2'},
-        'card'=>{
-        'type'=>'VI',
-        'number' =>'4100000000000000',
-        'expDate' =>'1210'
-        }}
-      response= LitleOnlineRequest.new.sale(hash)
-      assert_equal('000', response.saleResponse.response)
-    end
-  
+
     def test__customer_info
       hash = {
         'merchantId' => '101',
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -105,7 +84,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -118,13 +97,13 @@ module LitleOnline
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
         'card'=>{
         'type'=>'VI',
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.authorization(hash)
+      response= CnpOnlineRequest.new.authorization(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -143,7 +122,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.authorization(hash)
+      response= CnpOnlineRequest.new.authorization(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -162,26 +141,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.authorization(hash)
-      assert_equal('Valid Format', response.message)
-    end
-  
-    def test_amex_data
-      hash = {
-        'merchantId' => '101',
-        'id' => 'test',
-        'version'=>'8.8',
-        'reportGroup'=>'Planets',
-        'orderId'=>'12344',
-        'amount'=>'106',
-        'card'=>{
-        'type'=>'VI',
-        'number' =>'4100000000000000',
-        'expDate' =>'1210'},
-        'orderSource'=>'ecommerce',
-        'amexAggregatorData'=>{'sellerMerchantCategoryCode'=>'1234','sellerId'=>'1234Id'}
-      }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.authorization(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -201,7 +161,7 @@ module LitleOnline
         'amexAggregatorData'=>{'sellerMerchantCategoryCode'=>'1234'}
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.credit(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.credit(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -220,14 +180,14 @@ module LitleOnline
         'expDate' =>'1210'},
         'orderSource'=>'ecommerce',
         'enhancedData'=>{
-        'customerReference'=>'Litle',
+        'customerReference'=>'Cnp',
         'salesTax'=>'50',
         'deliveryType'=>'TBD',
         'restriction'=>'DIG',
         'shipFromPostalCode'=>'01741',
         'destinationPostalCode'=>'01742'}
       }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -246,14 +206,14 @@ module LitleOnline
         'orderSource'=>'ecommerce',
         'enhancedData'=>{
         'detailtax'=>{'taxAmount'=>'1234','tax'=>'50'},
-        'customerReference'=>'Litle',
+        'customerReference'=>'Cnp',
         'salesTax'=>'50',
         'deliveryType'=>'TBD',
         'restriction'=>'DIG',
         'shipFromPostalCode'=>'01741',
         'destinationPostalCode'=>'01742'}
       }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -278,14 +238,14 @@ module LitleOnline
         'unitOfMeasure'=>'pounds',
         'enhancedData'=>{
         'detailtax'=>{'taxAmount'=>'1234','tax'=>'50'}},
-        'customerReference'=>'Litle',
+        'customerReference'=>'Cnp',
         'salesTax'=>'50',
         'deliveryType'=>'TBD',
         'restriction'=>'DIG',
         'shipFromPostalCode'=>'01741',
         'destinationPostalCode'=>'01742'}
       }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -299,12 +259,12 @@ module LitleOnline
         'amount'=>'106',
         'orderSource'=>'ecommerce',
         'token'=> {
-        'litleToken'=>'123456789101112',
+        'cnpToken'=>'123456789101112',
         'expDate'=>'1210',
         'cardValidationNum'=>'555',
         'type'=>'VI'
         }}
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -318,10 +278,10 @@ module LitleOnline
         'amount'=>'106',
         'orderSource'=>'ecommerce',
         'token'=> {
-        'litleToken'=>'123456789101112',
+        'cnpToken'=>'123456789101112',
         'type'=>'VI'
         }}
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -340,7 +300,7 @@ module LitleOnline
         'cardValidationNum'=>'555',
         'type'=>'VI'
         }}
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -357,7 +317,7 @@ module LitleOnline
         'paypageRegistrationId'=>'123456789101112',
         'type'=>'VI'
         }}
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
     
@@ -383,7 +343,7 @@ module LitleOnline
         ]
         }
       }
-      response= LitleOnlineRequest.new.authorization(hash)
+      response= CnpOnlineRequest.new.authorization(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -409,7 +369,7 @@ module LitleOnline
         ]
         }
       }
-      response= LitleOnlineRequest.new.authorization(hash)
+      response= CnpOnlineRequest.new.authorization(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -443,7 +403,7 @@ module LitleOnline
         {'taxAmount'=>'6'}
         ]}
       }
-      response= LitleOnlineRequest.new.authorization(hash)
+      response= CnpOnlineRequest.new.authorization(hash)
       assert_equal('Valid Format', response.message)
     end
   end

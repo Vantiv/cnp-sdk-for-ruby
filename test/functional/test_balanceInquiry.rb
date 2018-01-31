@@ -22,11 +22,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
 #test BalanceInquiry Transaction
-module LitleOnline
+module CnpOnline
  class TestBalanceInquiry < Test::Unit::TestCase
   
 def test_simple_happy
@@ -44,7 +44,7 @@ def test_simple_happy
                 }
 	   }
 
-    response= LitleOnlineRequest.new.balance_inquiry(hash)
+    response= CnpOnlineRequest.new.balance_inquiry(hash)
     assert_equal('Valid Format', response.message)
   end
 
@@ -63,7 +63,7 @@ def test_simple_happy
                 }
 	   }
 
-    response= LitleOnlineRequest.new.balance_inquiry(hash)
+    response= CnpOnlineRequest.new.balance_inquiry(hash)
     assert_equal('Valid Format', response.message)
   end
 
@@ -76,7 +76,7 @@ def test_simple_happy
 	   }
 
     #Get exceptions
-    exception = assert_raise(RuntimeError){LitleOnlineRequest.new.balance_inquiry(hash)}
+    exception = assert_raise(RuntimeError){CnpOnlineRequest.new.balance_inquiry(hash)}
     #Test 
     assert(exception.message =~ /Error validating xml data against the schema/)
   end
@@ -98,7 +98,7 @@ def test_simple_happy
      }
 
    #Get exceptions
-    exception = assert_raise(RuntimeError){LitleOnlineRequest.new.balance_inquiry(hash)}
+    exception = assert_raise(RuntimeError){CnpOnlineRequest.new.balance_inquiry(hash)}
     #Test 
     assert(exception.message =~ /Error validating xml data against the schema/)
   end

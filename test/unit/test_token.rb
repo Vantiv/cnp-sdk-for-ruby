@@ -22,11 +22,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   class TestToken < Test::Unit::TestCase
     def test_success_applepay
       hash = {
@@ -48,8 +48,8 @@ module LitleOnline
           'version' =>'10000'
         }
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*?<litleOnlineRequest.*?<registerTokenRequest.*?<applepay>.*?<data>user<\/data>.*?<\/applepay>.*?<\/registerTokenRequest>.*?/m), is_a(Hash))
-      LitleOnlineRequest.new.register_token_request(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*?<cnpOnlineRequest.*?<registerTokenRequest.*?<applepay>.*?<data>user<\/data>.*?<\/applepay>.*?<\/registerTokenRequest>.*?/m), is_a(Hash))
+      CnpOnlineRequest.new.register_token_request(hash)
     end
 
     def test_account_num_and_applepay
@@ -73,7 +73,7 @@ module LitleOnline
           'version' =>'10000'
         }
       }
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.register_token_request(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.register_token_request(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -86,7 +86,7 @@ module LitleOnline
         'accountNumber'=>'1233456789101112',
         'paypageRegistrationId'=>'1233456789101112'
       }
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.register_token_request(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.register_token_request(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -99,7 +99,7 @@ module LitleOnline
         'echeckForToken'=>{'accNum'=>'12344565','routingNum'=>'123476545'},
         'paypageRegistrationId'=>'1233456789101112'
       }
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.register_token_request(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.register_token_request(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -113,7 +113,7 @@ module LitleOnline
         'echeckForToken'=>{'accNum'=>'12344565','routingNum'=>'123476545'},
         'paypageRegistrationId'=>'1233456789101112'
       }
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.register_token_request(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.register_token_request(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -125,7 +125,7 @@ module LitleOnline
         'orderId'=>'12344',
         'echeckForToken'=>{'routingNum'=>'132344565'}
       }
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.register_token_request(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.register_token_request(hash)}
       assert_match /If echeckForToken is specified, it must have a accNum/, exception.message
     end
 
@@ -139,8 +139,8 @@ module LitleOnline
         'orderId'=>'12344',
         'echeckForToken'=>{'accNum'=>'12344565','routingNum'=>'123476545'}
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
-      LitleOnlineRequest.new.register_token_request(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
+      CnpOnlineRequest.new.register_token_request(hash)
     end
 
     def test_androidpay
@@ -152,8 +152,8 @@ module LitleOnline
         'orderId'=>'androidpay',
         'accountNumber'=>'1233456789103801'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<orderId>androidpay<\/orderId>.*<accountNumber>1233456789103801<\/accountNumber>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.register_token_request(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<orderId>androidpay<\/orderId>.*<accountNumber>1233456789103801<\/accountNumber>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.register_token_request(hash)
     end
   end
 end

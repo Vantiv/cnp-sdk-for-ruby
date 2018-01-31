@@ -22,11 +22,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   class TestcaptureGivenAuth < Test::Unit::TestCase
     def test_both_choices_card_and_token
       hash = {
@@ -41,7 +41,7 @@ module LitleOnline
         'authAmount'=>'12345'
         },
         'token'=> {
-        'litleToken'=>'123456789101112',
+        'cnpToken'=>'123456789101112',
         'expDate'=>'1210',
         'cardValidationNum'=>'555',
         'type'=>'VI'},
@@ -50,7 +50,7 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.capture_given_auth(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.capture_given_auth(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -77,13 +77,13 @@ module LitleOnline
         'cardValidationNum'=>'555',
         'type'=>'VI'},
         'token'=> {
-        'litleToken'=>'1234567890123',
+        'cnpToken'=>'1234567890123',
         'expDate'=>'1210',
         'cardValidationNum'=>'555',
         'type'=>'VI'
         }}
 
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.capture_given_auth(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.capture_given_auth(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
 
@@ -106,8 +106,8 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
-      LitleOnlineRequest.new.capture_given_auth(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
+      CnpOnlineRequest.new.capture_given_auth(hash)
     end
 
     def test_secondary_amount
@@ -118,8 +118,8 @@ module LitleOnline
         'orderSource' => 'ecommerce',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><secondaryAmount>1<\/secondaryAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.capture_given_auth(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><secondaryAmount>1<\/secondaryAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.capture_given_auth(hash)
     end
 
     def test_surcharge_amount
@@ -129,8 +129,8 @@ module LitleOnline
         'orderSource' => 'ecommerce',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><surchargeAmount>1<\/surchargeAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.capture_given_auth(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><surchargeAmount>1<\/surchargeAmount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.capture_given_auth(hash)
     end
 
     def test_surcharge_amount_optional
@@ -139,8 +139,8 @@ module LitleOnline
         'orderSource' => 'ecommerce',
         'reportGroup' => 'Planets'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.capture_given_auth(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<amount>2<\/amount><orderSource>ecommerce<\/orderSource>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.capture_given_auth(hash)
     end
 
     def test_fraudResult
@@ -159,8 +159,8 @@ module LitleOnline
         }
         }
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<advancedFraudResults><deviceReviewStatus>deviceReviewStatusString<\/deviceReviewStatus><deviceReputationScore>100<\/deviceReputationScore><\/advancedFraudResults>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.capture_given_auth(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<advancedFraudResults><deviceReviewStatus>deviceReviewStatusString<\/deviceReviewStatus><deviceReputationScore>100<\/deviceReputationScore><\/advancedFraudResults>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.capture_given_auth(hash)
     end
 
     def test_fraudResult1
@@ -180,8 +180,8 @@ module LitleOnline
         }
         }
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<advancedFraudResults><deviceReviewStatus>deviceReviewStatusString<\/deviceReviewStatus><deviceReputationScore>100<\/deviceReputationScore><triggeredRule>rule1<\/triggeredRule><triggeredRule>rule2<\/triggeredRule><\/advancedFraudResults>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.capture_given_auth(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<advancedFraudResults><deviceReviewStatus>deviceReviewStatusString<\/deviceReviewStatus><deviceReputationScore>100<\/deviceReputationScore><triggeredRule>rule1<\/triggeredRule><triggeredRule>rule2<\/triggeredRule><\/advancedFraudResults>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.capture_given_auth(hash)
     end
     
      def test_processingType
@@ -202,8 +202,8 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<processingType>initialRecurring<\/processingType>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.capture_given_auth(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<processingType>initialRecurring<\/processingType>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.capture_given_auth(hash)
     end    
 
     def test_originalNetworkTransactionId_originalTransactionAmount
@@ -226,8 +226,8 @@ module LitleOnline
         'originalNetworkTransactionId'=>'987654321098765432109876543210',
         'originalTransactionAmount'=>'10661'
         }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<originalNetworkTransactionId>987654321098765432109876543210<\/originalNetworkTransactionId><originalTransactionAmount>10661<\/originalTransactionAmount>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.capture_given_auth(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<originalNetworkTransactionId>987654321098765432109876543210<\/originalNetworkTransactionId><originalTransactionAmount>10661<\/originalTransactionAmount>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.capture_given_auth(hash)
     end 
 
   end

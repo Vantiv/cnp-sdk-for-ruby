@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
-module LitleOnline
+module CnpOnline
   class TestBalanceInquiry < Test::Unit::TestCase
 
     def test_simple
@@ -43,8 +43,8 @@ module LitleOnline
                 }
       }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<balanceInquiry reportGroup="Planets"><orderId>11<\/orderId><orderSource>ecommerce<\/orderSource><card><type>GC<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/balanceInquiry>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.balance_inquiry(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<balanceInquiry reportGroup="Planets"><orderId>11<\/orderId><orderSource>ecommerce<\/orderSource><card><type>GC<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/balanceInquiry>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.balance_inquiry(hash)
     end
 
    end

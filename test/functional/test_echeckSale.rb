@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class Test_echeckSale < Test::Unit::TestCase
     def test_echeck_sale_with_echeck
       hash = {
@@ -38,9 +38,9 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -52,7 +52,7 @@ module LitleOnline
         'reportGroup'=>'Planets'
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.echeck_sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.echeck_sale(hash)}
       #Test 
       assert(exception.message =~ /The content of element 'echeckSale' is not complete/) 
     end
@@ -68,9 +68,9 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -85,10 +85,10 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
-        'shipToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
+        'shipToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -102,11 +102,11 @@ module LitleOnline
         'verify'=>'true',
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
-        'echeckToken' => {'accType'=>'Checking','litleToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
+        'echeckToken' => {'accType'=>'Checking','cnpToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
         'customBilling'=>{'phone'=>'123456789','descriptor'=>'good'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -122,9 +122,9 @@ module LitleOnline
         'verify'=>'true',
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -142,7 +142,7 @@ module LitleOnline
         'orderSource'=>'ecommerce',
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.echeck_sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.echeck_sale(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -151,15 +151,15 @@ module LitleOnline
       hash = {
         'reportGroup'=>'Planets',
         'id'=>'test',
-        'litleTxnId'=>'123456789101112',
+        'cnpTxnId'=>'123456789101112',
         'orderId'=>'12345',
         'amount'=>'12',
         'orderSource'=>'ecommerce',
-        'echeckToken' => {'accType'=>'Checking','litleToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
-        'shipToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'echeckToken' => {'accType'=>'Checking','cnpToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
+        'shipToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -167,15 +167,15 @@ module LitleOnline
       hash = {
         'reportGroup'=>'Planets',
         'id'=>'test',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12345',
         'amount'=>'10',
         'orderSource'=>'ecommerce',
-        'echeckToken' => {'accType'=>'Checking','litleToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
-        'shipToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'echeckToken' => {'accType'=>'Checking','cnpToken'=>'1234565789012','routingNum'=>'123456789','checkNum'=>'123455'},
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
+        'shipToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -191,9 +191,9 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455','ccdPaymentInformation'=>'12345678901234567890123456789012345678901234567890123456789012345678901234567890'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
     
@@ -209,10 +209,10 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455','ccdPaymentInformation'=>'123456789012345678901234567890123456789012345678901234567890123456789012345678901'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
       assert_raises RuntimeError do 
-        response= LitleOnlineRequest.new.echeck_sale(hash)
+        response= CnpOnlineRequest.new.echeck_sale(hash)
         puts "validation for ccdPaymentInformation"
       end
     end
@@ -221,12 +221,12 @@ module LitleOnline
       hash = {
         'reportGroup'=>'Planets',
         'id'=>'test',
-        'litleTxnId'=>'123456789101112',
+        'cnpTxnId'=>'123456789101112',
         'amount'=>'12',
         'secondaryAmount'=>'50'
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.echeck_sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.echeck_sale(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -242,12 +242,12 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
-        'shipToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'},
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
+        'shipToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'},
         'merchantData'=>{'campaign'=>'camping'},
         'customIdentifier' =>'identifier',   
       }
-      response= LitleOnlineRequest.new.echeck_sale(hash)
+      response= CnpOnlineRequest.new.echeck_sale(hash)
       assert_equal('Valid Format', response.message)
     end
 

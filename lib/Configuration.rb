@@ -25,7 +25,7 @@ require 'yaml'
 #
 # Loads the configuration from a file
 #
-module LitleOnline
+module CnpOnline
   class Configuration
     class << self
       # External logger, if specified
@@ -33,10 +33,10 @@ module LitleOnline
     end
 
     def config
-      if !ENV['LITLE_CONFIG_DIR'].nil?
-        config_file = ENV['LITLE_CONFIG_DIR'] + '/.litle_SDK_config.yml'
+      if !ENV['CNP_CONFIG_DIR'].nil?
+        config_file = ENV['CNP_CONFIG_DIR'] + '/.cnp_SDK_config.yml'
       else
-        config_file = ENV['HOME'] + '/.litle_SDK_config.yml'
+        config_file = ENV['HOME'] + '/.cnp_SDK_config.yml'
       end
       # if Env variable exist, then just override the data from config file
       if File.exist?(config_file)
@@ -53,7 +53,7 @@ module LitleOnline
     end
 
     def setENV(key, datas)
-      datas[key] = ENV['litle_' + key] unless ENV['litle_' + key].nil?
+      datas[key] = ENV['cnp_' + key] unless ENV['cnp_' + key].nil?
     end
   end
 end

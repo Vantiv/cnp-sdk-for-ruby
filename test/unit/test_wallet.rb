@@ -24,7 +24,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 =end
 
 
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
@@ -32,7 +32,7 @@ require 'mocha/setup'
 # TYPE 1 - Success Scenarios
 # TYPE 2 - Error Scenarios
 
-module LitleOnline
+module CnpOnline
 =begin
   Definition: Class Definition for the Testing Class TestWallet
   Created on: 01-29-2016
@@ -54,7 +54,7 @@ class TestWallet < Test::Unit::TestCase
             'id' => 'test',
             'version'=>'8.8',
             'reportGroup'=>'Planets',
-            'litleTxnId'=>'123456',
+            'cnpTxnId'=>'123456',
             'orderId'=>'12344',
             'amount'=>'106',
             'orderSource'=>'ecommerce',
@@ -70,7 +70,7 @@ class TestWallet < Test::Unit::TestCase
                 }
           }
          
-         exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+         exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
          assert_match /If wallet is specified, it must have a walletSourceType/, exception.message
          
     end
@@ -88,7 +88,7 @@ class TestWallet < Test::Unit::TestCase
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -105,7 +105,7 @@ class TestWallet < Test::Unit::TestCase
           }
       } 
       
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       assert_match /If wallet is specified, it must have a walletSourceTypeId/, exception.message
    
    end
@@ -124,7 +124,7 @@ class TestWallet < Test::Unit::TestCase
           'id' => 'test',
           'version'=>'8.8',
           'reportGroup'=>'Planets',
-          'litleTxnId'=>'123456',
+          'cnpTxnId'=>'123456',
           'orderId'=>'12344',
           'amount'=>'106',
           'orderSource'=>'ecommerce',
@@ -142,8 +142,8 @@ class TestWallet < Test::Unit::TestCase
               }
         }              
         
-        LitleXmlMapper.expects(:request).with(regexp_matches(/.*?<litleOnlineRequest.*?<sale.*?<wallet>.*?<walletSourceType>MasterPass<\/walletSourceType>.*?<\/wallet>.*?<\/sale>.*?/m), is_a(Hash))
-        LitleOnlineRequest.new.sale(hash)
+        CnpXmlMapper.expects(:request).with(regexp_matches(/.*?<cnpOnlineRequest.*?<sale.*?<wallet>.*?<walletSourceType>MasterPass<\/walletSourceType>.*?<\/wallet>.*?<\/sale>.*?/m), is_a(Hash))
+        CnpOnlineRequest.new.sale(hash)
     end
       
     
@@ -187,8 +187,8 @@ class TestWallet < Test::Unit::TestCase
               }
        }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*?<litleOnlineRequest.*?<authorization.*?<wallet>.*?<walletSourceType>MasterPass<\/walletSourceType><walletSourceTypeId>102<\/walletSourceTypeId>.*?<\/wallet>.*?<\/authorization>.*?/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*?<cnpOnlineRequest.*?<authorization.*?<wallet>.*?<walletSourceType>MasterPass<\/walletSourceType><walletSourceTypeId>102<\/walletSourceTypeId>.*?<\/wallet>.*?<\/authorization>.*?/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
     
 =begin
@@ -221,7 +221,7 @@ def test_auth_wallet_no_sourcetype
        }
       }
 
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       assert_match /If wallet is specified, it must have a walletSourceType/, exception.message
     end
     
@@ -255,7 +255,7 @@ def test_auth_wallet_no_sourcetype
        }
       }
 
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       assert_match /If wallet is specified, it must have a walletSourceTypeId/, exception.message
     end    
   end

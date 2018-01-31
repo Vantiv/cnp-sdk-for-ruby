@@ -25,237 +25,237 @@ OTHER DEALINGS IN THE SOFTWARE.
 require_relative 'Configuration'
 
 #
-# This class handles sending the Litle online request
+# This class handles sending the Cnp online request
 #
-module LitleOnline
+module CnpOnline
 
-  class LitleOnlineRequest
+  class CnpOnlineRequest
     def initialize
       #load configuration data
       @config_hash = Configuration.new.config
-      @litle_transaction = LitleTransaction.new
+      @cnp_transaction = CnpTransaction.new
     end
 
     def virtual_giftcard(options)
-       transaction =@litle_transaction.virtual_giftcard(options)
+       transaction =@cnp_transaction.virtual_giftcard(options)
 
        commit(transaction, :virtualGiftCard, options)
     end
 
     def create_plan(options)
-       transaction =@litle_transaction.create_plan(options)
+       transaction =@cnp_transaction.create_plan(options)
 
        commit(transaction, :createPlan, options)
     end
 
     def update_plan(options)
-       transaction =@litle_transaction.update_plan(options)
+       transaction =@cnp_transaction.update_plan(options)
 
        commit(transaction, :updatePlan, options)
     end
 
     def cancel_subscription(options)
-       transaction =@litle_transaction.cancel_subscription(options)
+       transaction =@cnp_transaction.cancel_subscription(options)
 
        commit(transaction, :cancelSubscription, options)
     end
 
     def update_subscription(options)
-       transaction =@litle_transaction.update_subscription(options)
+       transaction =@cnp_transaction.update_subscription(options)
 
        commit(transaction, :updateSubscription, options)
     end
 
     def activate(options)
-      transaction = @litle_transaction.activate(options)
+      transaction = @cnp_transaction.activate(options)
 
       commit(transaction, :activate, options)
     end 
    
     def deactivate(options)
-     transaction = @litle_transaction.deactivate(options)
+     transaction = @cnp_transaction.deactivate(options)
 
       commit(transaction, :deactivate, options)
     end
 
     def load_request(options)
-     transaction = @litle_transaction.load_request(options)
+     transaction = @cnp_transaction.load_request(options)
 
       commit(transaction, :load, options)
     end
 
     def unload_request(options)
-     transaction = @litle_transaction.unload_request(options)
+     transaction = @cnp_transaction.unload_request(options)
 
       commit(transaction, :unload, options)
     end
 
     def balance_inquiry(options)
-      transaction = @litle_transaction.balance_inquiry(options)
+      transaction = @cnp_transaction.balance_inquiry(options)
 
       commit(transaction, :balanceInquiry, options)
     end
 
     def activate_reversal(options)
-      transaction = @litle_transaction.activate_reversal(options)
+      transaction = @cnp_transaction.activate_reversal(options)
 
       commit(transaction, :activateReversal, options)
     end
 
     def deposit_reversal(options)
-      transaction = @litle_transaction.deposit_reversal(options)
+      transaction = @cnp_transaction.deposit_reversal(options)
 
       commit(transaction, :depositReversal, options)
     end
     
-    #XML 11.0
+    #XML 12.0
     def giftCardAuth_reversal(options)
-      transaction = @litle_transaction.giftCardAuth_reversal(options)
+      transaction = @cnp_transaction.giftCardAuth_reversal(options)
 
       commit(transaction, :giftCardAuthReversal, options)
     end
     
     def giftCardCapture(options)
-      transaction = @litle_transaction.giftCardCapture(options)
+      transaction = @cnp_transaction.giftCardCapture(options)
 
       commit(transaction, :giftCardCapture, options)
     end
     
     def giftCardCredit(options)
-      transaction = @litle_transaction.giftCardCredit(options)
+      transaction = @cnp_transaction.giftCardCredit(options)
 
       commit(transaction, :giftCardCredit, options)
     end
 
     def refund_reversal(options)
-      transaction = @litle_transaction.refund_reversal(options)
+      transaction = @cnp_transaction.refund_reversal(options)
 
       commit(transaction, :refundReversal, options)
     end
 
     def deactivate_reversal(options)
-      transaction = @litle_transaction.deactivate_reversal(options)
+      transaction = @cnp_transaction.deactivate_reversal(options)
 
       commit(transaction, :deactivateReversal, options)
     end
 
     def load_reversal(options)
-      transaction = @litle_transaction.load_reversal(options)
+      transaction = @cnp_transaction.load_reversal(options)
 
       commit(transaction, :loadReversal, options)
     end
 
     def unload_reversal(options)
-      transaction = @litle_transaction.unload_reversal(options)
+      transaction = @cnp_transaction.unload_reversal(options)
 
       commit(transaction, :unloadReversal, options)
     end
     
 
     def authorization(options)
-      transaction = @litle_transaction.authorization(options)
+      transaction = @cnp_transaction.authorization(options)
       
       commit(transaction, :authorization, options)
     end
 
     def sale(options)
-      transaction = @litle_transaction.sale(options)
+      transaction = @cnp_transaction.sale(options)
 
       commit(transaction, :sale, options)
     end
 
     def auth_reversal(options)
-      transaction = @litle_transaction.auth_reversal(options)      
+      transaction = @cnp_transaction.auth_reversal(options)      
 
       commit(transaction, :authReversal, options)
     end
 
     def credit(options)
-      transaction = @litle_transaction.credit(options)
+      transaction = @cnp_transaction.credit(options)
       
       commit(transaction, :credit, options)
     end
 
     def register_token_request(options)
-      transaction = @litle_transaction.register_token_request(options)
+      transaction = @cnp_transaction.register_token_request(options)
 
       commit(transaction, :registerTokenRequest, options)
     end
     
     def update_card_validation_num_on_token(options)
-   	  transaction = @litle_transaction.update_card_validation_num_on_token(options)
+   	  transaction = @cnp_transaction.update_card_validation_num_on_token(options)
     	
       commit(transaction, :updateCardValidationNumOnToken, options)
     end
 
     def force_capture(options)
-      transaction = @litle_transaction.force_capture(options)
+      transaction = @cnp_transaction.force_capture(options)
       
       commit(transaction, :forceCapture, options)
     end
 
     def capture(options)
-      transaction = @litle_transaction.capture(options)
+      transaction = @cnp_transaction.capture(options)
       
       commit(transaction, :captureTxn, options)
     end
 
     def capture_given_auth(options)
-      transaction = @litle_transaction.capture_given_auth(options)
+      transaction = @cnp_transaction.capture_given_auth(options)
       
       commit(transaction, :captureGivenAuth, options)
     end
 
     def void(options)
-      transaction = @litle_transaction.void(options)
+      transaction = @cnp_transaction.void(options)
 
       commit(transaction, :void, options)
     end
 
     def echeck_redeposit(options)
-      transaction = @litle_transaction.echeck_redeposit(options)
+      transaction = @cnp_transaction.echeck_redeposit(options)
       
       commit(transaction, :echeckRedeposit, options)
     end
 
     def echeck_sale(options)
-      transaction = @litle_transaction.echeck_sale(options)
+      transaction = @cnp_transaction.echeck_sale(options)
 
       commit(transaction, :echeckSale, options)
     end
 
     def echeck_credit(options)
-      transaction = @litle_transaction.echeck_credit(options)
+      transaction = @cnp_transaction.echeck_credit(options)
 
       begin
         commit(transaction, :echeckCredit, options)
       rescue XML::MappingError => e
-        response = LitleOnlineResponse.new
+        response = CnpOnlineResponse.new
         response.message = "The content of element 'echeckCredit' is not complete"
         return response
       end
     end
 
     def echeck_verification(options)
-      transaction = @litle_transaction.echeck_verification(options)
+      transaction = @cnp_transaction.echeck_verification(options)
 
       commit(transaction, :echeckVerification, options)
     end
 
     def echeck_void(options)
-      transaction = @litle_transaction.echeck_void(options)
+      transaction = @cnp_transaction.echeck_void(options)
       
       commit(transaction, :echeckVoid, options)
     end
     
     def query_Transaction(options)      
-      transaction = @litle_transaction.query_Transaction(options)
+      transaction = @cnp_transaction.query_Transaction(options)
       
       commit(transaction, :queryTransaction, options)      
     end
     
     def fraud_check_request(options)
-      transaction = @litle_transaction.fraud_check_request(options)
+      transaction = @cnp_transaction.fraud_check_request(options)
             
       commit(transaction, :fraudCheck, options)
     end
@@ -283,9 +283,9 @@ module LitleOnline
 
       request.authentication  = authentication
       request.merchantId      = get_merchant_id(options)
-      request.version         = '11.0'
+      request.version         = '12.0'
       request.loggedInUser    = get_logged_in_user(options)
-      request.xmlns           = "http://www.litle.com/schema"
+      request.xmlns           = "http://www.vantivcnp.com/schema"
       request.merchantSdk     = get_merchant_sdk(options)
       request
     end
@@ -299,7 +299,7 @@ module LitleOnline
       request.send(:"#{type}=", transaction)
 
       xml = request.save_to_xml.to_s
-      LitleXmlMapper.request(xml, @config_hash)
+      CnpXmlMapper.request(xml, @config_hash)
     end
 
     def configure_connection(options={})
@@ -313,7 +313,7 @@ module LitleOnline
     end
 
     def get_merchant_sdk(options)
-      options['merchantSdk'] || 'Ruby;11.0'
+      options['merchantSdk'] || 'Ruby;12.0'
     end
 
     def get_report_group(options)

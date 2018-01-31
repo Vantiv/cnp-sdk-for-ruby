@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class TestCredit < Test::Unit::TestCase
     def test_simple_credit_with_card
       hash = {
@@ -41,7 +41,7 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -58,7 +58,7 @@ module LitleOnline
         'payerId'=>'1234',
         'transactionId'=>'1234',
         }}
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
     
@@ -76,7 +76,7 @@ module LitleOnline
         'payerId'=>'1234',
         'transactionId'=>'1234',
         }}
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
     
@@ -88,9 +88,9 @@ module LitleOnline
         'reportGroup'=>'Planets',
         'amount'=>'106',
         'secondaryAmount'=>'50',
-        'litleTxnId'=>'123456'
+        'cnpTxnId'=>'123456'
       }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -109,7 +109,7 @@ module LitleOnline
         'orderSource'=>'ecommerce',
         'amount'=>'106'
       }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -128,7 +128,7 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -147,27 +147,7 @@ module LitleOnline
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.credit(hash)
-      assert_equal('Valid Format', response.message)
-    end
-  
-    def test_processing_instructions_and_amex_data
-      hash = {
-        'merchantId' => '101',
-        'id' => '102',
-        'version'=>'8.8',
-        'reportGroup'=>'Planets',
-        'amount'=>'2000',
-        'orderId'=>'12344',
-        'orderSource'=>'ecommerce',
-        'processingInstuctions'=>{'bypassVelocityCheck'=>'yes'},
-        'card'=>{
-        'type'=>'VI',
-        'number' =>'4100000000000001',
-        'expDate' =>'1210'},
-        'amexAggregatorData'=>{'sellerMerchantCategoryCode'=>'1234','sellerId'=>'1234Id'}
-      }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
 
@@ -189,7 +169,7 @@ module LitleOnline
 		'track2Status'=>'0'
 		}
       }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
     
@@ -200,10 +180,10 @@ module LitleOnline
         'reportGroup'=>'Planets',
         'amount'=>'106',
         'secondaryAmount'=>'20',
-        'litleTxnId'=>'123456000',
+        'cnpTxnId'=>'123456000',
         'pin'=>'1234'
         }
-      response= LitleOnlineRequest.new.credit(hash)
+      response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
       assert_equal('000', response.creditResponse.response)
     end 

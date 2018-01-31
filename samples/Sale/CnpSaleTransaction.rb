@@ -1,4 +1,4 @@
-require_relative '../../lib/LitleOnline'
+require_relative '../../lib/CnpOnline'
 #Sale
 my_sale_info = {
   'orderId' => '1',
@@ -18,13 +18,13 @@ my_sale_info = {
   'cardValidationNum' => '349',
   'type' => 'MC'}
 }
-sale_response = LitleOnline::LitleOnlineRequest.new.sale(my_sale_info)
+sale_response = CnpOnline::CnpOnlineRequest.new.sale(my_sale_info)
  
 #display results
 puts "Response: " + sale_response.saleResponse.response
 puts "Message: " + sale_response.saleResponse.message
-puts "Litle Transaction ID: " + sale_response.saleResponse.litleTxnId
+puts "Cnp Transaction ID: " + sale_response.saleResponse.cnpTxnId
 
 if (!sale_response.saleResponse.message.eql?'Transaction Received')
-   raise ArgumentError, "LitleSaleTransaction has not been Approved", caller
+   raise ArgumentError, "CnpSaleTransaction has not been Approved", caller
 end

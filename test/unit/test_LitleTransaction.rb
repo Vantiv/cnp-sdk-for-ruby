@@ -22,18 +22,18 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   
-  class TestLitleTransaction < Test::Unit::TestCase
+  class TestCnpTransaction < Test::Unit::TestCase
     
 
     def test_authorization
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       authHash = {
         'reportGroup'=>'Planets',
         'id'=>'12345',
@@ -60,7 +60,7 @@ module LitleOnline
     end    
     
     def test_sale
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       saleHash = {
         'reportGroup'=>'Planets',
         'id'=>'12345',
@@ -87,7 +87,7 @@ module LitleOnline
     end
     
     def test_credit
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       creditHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -116,14 +116,14 @@ module LitleOnline
     end
     
     def test_auth_reversal
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       authReversalHash = {
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
         'id'=>'12345',
         'customerId'=>'0987',
-        'litleTxnId'=>'12345678000',
+        'cnpTxnId'=>'12345678000',
         'amount'=>'106',
         'payPalNotes'=>'Notes'
         }
@@ -132,13 +132,13 @@ module LitleOnline
       assert_equal 'Planets', result.reportGroup
       assert_equal '12345', result.transactionId
       assert_equal '0987', result.customerId
-      assert_equal '12345678000', result.litleTxnId
+      assert_equal '12345678000', result.cnpTxnId
       assert_equal '106', result.amount
       assert_equal 'Notes', result.payPalNotes
     end
     
     def test_register_token_request
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       registerTokenHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -158,7 +158,7 @@ module LitleOnline
     end
     
     def test_update_card_validation_num_on_token
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       updateCardHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -166,7 +166,7 @@ module LitleOnline
         'id'=>'12345',
         'customerId'=>'0987',
         'orderId'=>'12344',
-        'litleToken'=>'1233456789103801',
+        'cnpToken'=>'1233456789103801',
         'cardValidationNum'=>'123'
       }
       
@@ -175,12 +175,12 @@ module LitleOnline
       assert_equal '12345', result.transactionId
       assert_equal '0987', result.customerId
       assert_equal '12344', result.orderId
-      assert_equal '1233456789103801', result.litleToken
+      assert_equal '1233456789103801', result.cnpToken
       assert_equal '123', result.cardValidationNum
     end
     
     def test_force_capture
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       forceCaptHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -209,14 +209,14 @@ module LitleOnline
     end
     
     def test_capture
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       captHash = {
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
         'id'=>'12345',
         'customerId'=>'0987',
-        'litleTxnId'=>'123456000',
+        'cnpTxnId'=>'123456000',
         'amount'=>'106',
       }
       
@@ -224,12 +224,12 @@ module LitleOnline
       assert_equal 'Planets', result.reportGroup
       assert_equal '12345', result.transactionId
       assert_equal '0987', result.customerId
-      assert_equal '123456000', result.litleTxnId
+      assert_equal '123456000', result.cnpTxnId
       assert_equal '106', result.amount
     end
     
     def test_capture_given_auth
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       captGivenAuthHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -266,7 +266,7 @@ module LitleOnline
     end
     
     def test_echeck_verification
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       echeckVerificationHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -283,7 +283,7 @@ module LitleOnline
         'billToAddress'=>{'name'=>'Bob',
         'city'=>'lowell',
         'state'=>'MA',
-        'email'=>'litle.com'}
+        'email'=>'cnp.com'}
       }
       
       result = ltlTxn.echeck_verification(echeckVerificationHash)
@@ -300,18 +300,18 @@ module LitleOnline
       assert_equal 'Bob', result.billToAddress.name
       assert_equal 'lowell', result.billToAddress.city
       assert_equal 'MA', result.billToAddress.state
-      assert_equal 'litle.com', result.billToAddress.email
+      assert_equal 'cnp.com', result.billToAddress.email
     end
     
     def test_echeck_credit
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       echeckCreditHash = {
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
         'id'=>'12345',
         'customerId'=>'0987',
-        'litleTxnId'=>'123456789101112',
+        'cnpTxnId'=>'123456789101112',
         'amount'=>'12'
       }
       
@@ -319,30 +319,30 @@ module LitleOnline
       assert_equal 'Planets', result.reportGroup
       assert_equal '12345', result.transactionId
       assert_equal '0987', result.customerId
-      assert_equal '123456789101112', result.litleTxnId
+      assert_equal '123456789101112', result.cnpTxnId
       assert_equal '12', result.amount
     end
     
     def test_echeck_redeposit
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       echeckRedeopsitHash = {
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
         'id'=>'12345',
         'customerId'=>'0987',
-        'litleTxnId'=>'123456'
+        'cnpTxnId'=>'123456'
       }
       
       result = ltlTxn.echeck_redeposit(echeckRedeopsitHash)
       assert_equal 'Planets', result.reportGroup
       assert_equal '12345', result.transactionId
       assert_equal '0987', result.customerId
-      assert_equal '123456', result.litleTxnId
+      assert_equal '123456', result.cnpTxnId
     end
     
     def test_echeck_sale
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       echeckSaleHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -354,7 +354,7 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
       
       result = ltlTxn.echeck_sale(echeckSaleHash)
@@ -372,11 +372,11 @@ module LitleOnline
       assert_equal 'Bob', result.billToAddress.name
       assert_equal 'lowell', result.billToAddress.city
       assert_equal 'MA', result.billToAddress.state
-      assert_equal 'litle.com', result.billToAddress.email
+      assert_equal 'cnp.com', result.billToAddress.email
     end
     
     def test_account_update
-      ltlTxn = LitleTransaction.new
+      ltlTxn = CnpTransaction.new
       accountUpdateHash = {
         'reportGroup'=>'Planets',
         'id'=>'12345',
@@ -398,7 +398,7 @@ module LitleOnline
 
     
     def test_queryTransaction
-          ltlTxn = LitleTransaction.new
+          ltlTxn = CnpTransaction.new
       queryTransactionHash = {
             'merchantId' => '101',
             'version'=>'8.8',
@@ -407,7 +407,7 @@ module LitleOnline
             'customerId'=>'0987',
             'origId'=>'834262',
             'origActionType'=>'A',
-            'origLitleTxnId'=>'123456',
+            'origCnpTxnId'=>'123456',
             'origOrderId' => '65347567',
             'origAccountNumber'=>'4000000000000001'
           }
@@ -418,7 +418,7 @@ module LitleOnline
           assert_equal '0987', result.customerId
           assert_equal '834262', result.origId
           assert_equal 'A', result.origActionType
-          assert_equal '123456', result.origLitleTxnId
+          assert_equal '123456', result.origCnpTxnId
           #assert_equal '65347567', result.origOrderId
           #assert_equal '4000000000000001', result.origAccountNumber
         end 

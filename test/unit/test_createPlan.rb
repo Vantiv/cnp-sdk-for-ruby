@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
-module LitleOnline
+module CnpOnline
   class TestCreatePlan < Test::Unit::TestCase
 
     def test_simple
@@ -43,8 +43,8 @@ module LitleOnline
         'trialIntervalType'=>'MONTH',
         'active'=>'true'  
             }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<createPlan><planCode>planCodeString<\/planCode><name>nameString<\/name><description>descriptionString<\/description><intervalType>ANNUAL<\/intervalType><amount>500<\/amount><numberOfPayments>2<\/numberOfPayments><trialNumberOfIntervals>1<\/trialNumberOfIntervals><trialIntervalType>MONTH<\/trialIntervalType><active>true<\/active><\/createPlan>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.create_plan(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<createPlan><planCode>planCodeString<\/planCode><name>nameString<\/name><description>descriptionString<\/description><intervalType>ANNUAL<\/intervalType><amount>500<\/amount><numberOfPayments>2<\/numberOfPayments><trialNumberOfIntervals>1<\/trialNumberOfIntervals><trialIntervalType>MONTH<\/trialIntervalType><active>true<\/active><\/createPlan>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.create_plan(hash)
     end
 
    end

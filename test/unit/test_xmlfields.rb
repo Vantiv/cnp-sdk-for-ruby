@@ -22,28 +22,28 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   class TestXmlfields < Test::Unit::TestCase
     def test_custom_billing_with_two_choices
       hash = {
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
-        'customBilling'=>{'phone'=>'1234567890','url'=>'www.litle.com'},
+        'customBilling'=>{'phone'=>'1234567890','url'=>'www.cnp.com'},
         'card'=>{
         'type'=>'VI',
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
   
@@ -52,17 +52,17 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
-        'customBilling'=>{'phone'=>'123456789','url'=>'www.litle.com','city'=>'lowell'},
+        'customBilling'=>{'phone'=>'123456789','url'=>'www.cnp.com','city'=>'lowell'},
         'card'=>{
         'type'=>'VI',
         'number' =>'4100000000000001',
         'expDate' =>'1210'
         }}
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       assert_match /Entered an Invalid Amount of Choices for a Field, please only fill out one Choice!!!!/, exception.message
     end
   
@@ -80,8 +80,8 @@ module LitleOnline
         }
       }
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<enhancedData>.*<lineItemData>.*<itemSequenceNumber>1<\/itemSequenceNumber>.*<itemDescription>desc1<\/itemDescription>.*<\/lineItemData>.*<lineItemData>.*<itemSequenceNumber>2<\/itemSequenceNumber>.*<itemDescription>desc2<\/itemDescription>.*<\/lineItemData>.*<\/enhancedData>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<enhancedData>.*<lineItemData>.*<itemSequenceNumber>1<\/itemSequenceNumber>.*<itemDescription>desc1<\/itemDescription>.*<\/lineItemData>.*<lineItemData>.*<itemSequenceNumber>2<\/itemSequenceNumber>.*<itemDescription>desc2<\/itemDescription>.*<\/lineItemData>.*<\/enhancedData>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
   
     def test_detail_tax
@@ -98,8 +98,8 @@ module LitleOnline
         }
       }
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<enhancedData>.*<detailTax>.*<taxIncludedInTotal>true<\/taxIncludedInTotal>.*<taxTypeIdentifier>00<\/taxTypeIdentifier>.*<\/detailTax>.*<detailTax>.*<taxIncludedInTotal>false<\/taxIncludedInTotal>.*<taxTypeIdentifier>01<\/taxTypeIdentifier>.*<\/detailTax>.*<\/enhancedData>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<enhancedData>.*<detailTax>.*<taxIncludedInTotal>true<\/taxIncludedInTotal>.*<taxTypeIdentifier>00<\/taxTypeIdentifier>.*<\/detailTax>.*<detailTax>.*<taxIncludedInTotal>false<\/taxIncludedInTotal>.*<taxTypeIdentifier>01<\/taxTypeIdentifier>.*<\/detailTax>.*<\/enhancedData>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
   
     def test_detail_tax_in_lineItem
@@ -124,8 +124,8 @@ module LitleOnline
         ]}
       }
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<enhancedData>.*<detailTax>.*<taxAmount>5<\/taxAmount>.*<\/detailTax>.*<detailTax>.*<taxAmount>6<\/taxAmount>.*<\/detailTax>.*<lineItemData>.*<itemSequenceNumber>1<\/itemSequenceNumber>.*<itemDescription>desc1<\/itemDescription>.*<detailTax>.*<taxAmount>1<\/taxAmount>.*<\/detailTax>.*<detailTax>.*<taxAmount>2<\/taxAmount>.*<\/detailTax>.*<\/lineItemData>.*<lineItemData>.*<itemSequenceNumber>2<\/itemSequenceNumber>.*<itemDescription>desc2<\/itemDescription>.*<detailTax>.*<taxAmount>3<\/taxAmount>.*<\/detailTax>.*<detailTax>.*<taxAmount>4<\/taxAmount>.*<\/detailTax>.*<\/lineItemData>.*<\/enhancedData>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<enhancedData>.*<detailTax>.*<taxAmount>5<\/taxAmount>.*<\/detailTax>.*<detailTax>.*<taxAmount>6<\/taxAmount>.*<\/detailTax>.*<lineItemData>.*<itemSequenceNumber>1<\/itemSequenceNumber>.*<itemDescription>desc1<\/itemDescription>.*<detailTax>.*<taxAmount>1<\/taxAmount>.*<\/detailTax>.*<detailTax>.*<taxAmount>2<\/taxAmount>.*<\/detailTax>.*<\/lineItemData>.*<lineItemData>.*<itemSequenceNumber>2<\/itemSequenceNumber>.*<itemDescription>desc2<\/itemDescription>.*<detailTax>.*<taxAmount>3<\/taxAmount>.*<\/detailTax>.*<detailTax>.*<taxAmount>4<\/taxAmount>.*<\/detailTax>.*<\/lineItemData>.*<\/enhancedData>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
     
     def test_customerinfo_employerName_xml
@@ -139,8 +139,8 @@ module LitleOnline
         }
       }
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<customerInfo>.*<employerName>Greg<\/employerName>.*<\/customerInfo>.*.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<customerInfo>.*<employerName>Greg<\/employerName>.*<\/customerInfo>.*.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
   def test_billMeLaterRequest_bmlProductType_xml
@@ -154,8 +154,8 @@ module LitleOnline
       }
     }
   
-    LitleXmlMapper.expects(:request).with(regexp_matches(/.*<billMeLaterRequest>.*<bmlProductType>12<\/bmlProductType>.*<\/billMeLaterRequest>.*.*/m), is_a(Hash))
-    LitleOnlineRequest.new.authorization(hash)
+    CnpXmlMapper.expects(:request).with(regexp_matches(/.*<billMeLaterRequest>.*<bmlProductType>12<\/bmlProductType>.*<\/billMeLaterRequest>.*.*/m), is_a(Hash))
+    CnpOnlineRequest.new.authorization(hash)
   end
 
         
@@ -2050,58 +2050,58 @@ module LitleOnline
       assert_equal "If card cardValidationNum is specified, it must be between 1 and 4 characters long", exception.message                  
     end
     
-    def test_cardToken_litleToken
-      assert_equal("abcdefghijklm", CardToken.from_hash({'cardToken'=>{'litleToken'=>'abcdefghijklm'}}).litleToken)
-      assert_equal("1234567890123", CardToken.from_hash({'cardToken'=>{'litleToken'=>'1234567890123'}}).litleToken)
-      assert_equal("1234567890123456789012345", CardToken.from_hash({'cardToken'=>{'litleToken'=>'1234567890123456789012345'}}).litleToken)
+    def test_cardToken_cnpToken
+      assert_equal("abcdefghijklm", CardToken.from_hash({'cardToken'=>{'cnpToken'=>'abcdefghijklm'}}).cnpToken)
+      assert_equal("1234567890123", CardToken.from_hash({'cardToken'=>{'cnpToken'=>'1234567890123'}}).cnpToken)
+      assert_equal("1234567890123456789012345", CardToken.from_hash({'cardToken'=>{'cnpToken'=>'1234567890123456789012345'}}).cnpToken)
       exception = assert_raise(RuntimeError){
-        CardToken.from_hash({ 'cardToken'=>{'litleToken'=>'12345678901234567890123456'}})
+        CardToken.from_hash({ 'cardToken'=>{'cnpToken'=>'12345678901234567890123456'}})
       }
-      assert_equal "If cardToken litleToken is specified, it must be between 13 and 25 characters long", exception.message            
+      assert_equal "If cardToken cnpToken is specified, it must be between 13 and 25 characters long", exception.message            
       exception = assert_raise(RuntimeError){
         CardToken.from_hash({ 'cardToken'=>{}})
       }
-      assert_equal "If cardToken is specified, it must have a litleToken", exception.message            
+      assert_equal "If cardToken is specified, it must have a cnpToken", exception.message            
     end
     
     def test_cardToken_expDate
-      assert_equal(nil, CardToken.from_hash({'cardToken'=>{'litleToken'=>'1234567890123'}}).expDate)
-      assert_equal("abcd", CardToken.from_hash({'cardToken'=>{'expDate'=>'abcd','litleToken'=>'1234567890123'}}).expDate)
-      assert_equal("1234", CardToken.from_hash({'cardToken'=>{'expDate'=>'1234','litleToken'=>'1234567890123'}}).expDate)
+      assert_equal(nil, CardToken.from_hash({'cardToken'=>{'cnpToken'=>'1234567890123'}}).expDate)
+      assert_equal("abcd", CardToken.from_hash({'cardToken'=>{'expDate'=>'abcd','cnpToken'=>'1234567890123'}}).expDate)
+      assert_equal("1234", CardToken.from_hash({'cardToken'=>{'expDate'=>'1234','cnpToken'=>'1234567890123'}}).expDate)
       exception = assert_raise(RuntimeError){
-        CardToken.from_hash({ 'cardToken'=>{'expDate'=>'123','litleToken'=>'1234567890123'}})
+        CardToken.from_hash({ 'cardToken'=>{'expDate'=>'123','cnpToken'=>'1234567890123'}})
       }
       assert_equal "If cardToken expDate is specified, it must be between 4 and 4 characters long", exception.message            
       exception = assert_raise(RuntimeError){
-        CardToken.from_hash({ 'cardToken'=>{'expDate'=>'12345','litleToken'=>'1234567890123'}})
+        CardToken.from_hash({ 'cardToken'=>{'expDate'=>'12345','cnpToken'=>'1234567890123'}})
       }
       assert_equal "If cardToken expDate is specified, it must be between 4 and 4 characters long", exception.message            
     end
     
     def test_cardToken_cardValidationNum
-      assert_equal(nil, CardToken.from_hash({'cardToken'=>{'litleToken'=>'1234567890123'}}).cardValidationNum)
-      assert_equal("a", CardToken.from_hash({'cardToken'=>{'cardValidationNum'=>'a','litleToken'=>'1234567890123'}}).cardValidationNum)
-      assert_equal("1234", CardToken.from_hash({'cardToken'=>{'cardValidationNum'=>'1234','litleToken'=>'1234567890123'}}).cardValidationNum)      
+      assert_equal(nil, CardToken.from_hash({'cardToken'=>{'cnpToken'=>'1234567890123'}}).cardValidationNum)
+      assert_equal("a", CardToken.from_hash({'cardToken'=>{'cardValidationNum'=>'a','cnpToken'=>'1234567890123'}}).cardValidationNum)
+      assert_equal("1234", CardToken.from_hash({'cardToken'=>{'cardValidationNum'=>'1234','cnpToken'=>'1234567890123'}}).cardValidationNum)      
       exception = assert_raise(RuntimeError){
-        CardToken.from_hash({ 'cardToken'=>{'cardValidationNum'=>'12345','litleToken'=>'1234567890123'}})
+        CardToken.from_hash({ 'cardToken'=>{'cardValidationNum'=>'12345','cnpToken'=>'1234567890123'}})
       }
       assert_equal "If cardToken cardValidationNum is specified, it must be between 1 and 4 characters long", exception.message                  
     end
     
     def test_cardToken_mop
-      assert_equal(nil, CardToken.from_hash({'cardToken'=>{'litleToken'=>'1234567890123'}}).mop)
-      assert_equal("", CardToken.from_hash({'cardToken'=>{'type'=>'','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("MC", CardToken.from_hash({'cardToken'=>{'type'=>'MC','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("VI", CardToken.from_hash({'cardToken'=>{'type'=>'VI','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("AX", CardToken.from_hash({'cardToken'=>{'type'=>'AX','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("DC", CardToken.from_hash({'cardToken'=>{'type'=>'DC','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("DI", CardToken.from_hash({'cardToken'=>{'type'=>'DI','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("PP", CardToken.from_hash({'cardToken'=>{'type'=>'PP','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("JC", CardToken.from_hash({'cardToken'=>{'type'=>'JC','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("BL", CardToken.from_hash({'cardToken'=>{'type'=>'BL','litleToken'=>'1234567890123'}}).mop)
-      assert_equal("EC", CardToken.from_hash({'cardToken'=>{'type'=>'EC','litleToken'=>'1234567890123'}}).mop)
+      assert_equal(nil, CardToken.from_hash({'cardToken'=>{'cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("", CardToken.from_hash({'cardToken'=>{'type'=>'','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("MC", CardToken.from_hash({'cardToken'=>{'type'=>'MC','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("VI", CardToken.from_hash({'cardToken'=>{'type'=>'VI','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("AX", CardToken.from_hash({'cardToken'=>{'type'=>'AX','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("DC", CardToken.from_hash({'cardToken'=>{'type'=>'DC','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("DI", CardToken.from_hash({'cardToken'=>{'type'=>'DI','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("PP", CardToken.from_hash({'cardToken'=>{'type'=>'PP','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("JC", CardToken.from_hash({'cardToken'=>{'type'=>'JC','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("BL", CardToken.from_hash({'cardToken'=>{'type'=>'BL','cnpToken'=>'1234567890123'}}).mop)
+      assert_equal("EC", CardToken.from_hash({'cardToken'=>{'type'=>'EC','cnpToken'=>'1234567890123'}}).mop)
       exception = assert_raise(RuntimeError){
-        CardToken.from_hash({ 'cardToken'=>{'type'=>'ZZ','litleToken'=>'1234567890123'}})
+        CardToken.from_hash({ 'cardToken'=>{'type'=>'ZZ','cnpToken'=>'1234567890123'}})
       }
       assert_equal "If cardToken type is specified, it must be in [\"\", \"MC\", \"VI\", \"AX\", \"DC\", \"DI\", \"PP\", \"JC\", \"BL\", \"EC\"]", exception.message
     end
@@ -2431,61 +2431,61 @@ module LitleOnline
       assert_equal "If echeck checkNum is specified, it must be between 1 and 15 characters long", exception.message            
     end
     
-    def test_echeckToken_litleToken
-      assert_equal("abcdefhijklmn", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','litleToken'=>'abcdefhijklmn','routingNum'=>'123456789'}}).litleToken)
-      assert_equal("1234567890123456789012345", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','litleToken'=>'1234567890123456789012345','routingNum'=>'123456789'}}).litleToken)
+    def test_echeckToken_cnpToken
+      assert_equal("abcdefhijklmn", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','cnpToken'=>'abcdefhijklmn','routingNum'=>'123456789'}}).cnpToken)
+      assert_equal("1234567890123456789012345", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','cnpToken'=>'1234567890123456789012345','routingNum'=>'123456789'}}).cnpToken)
       exception = assert_raise(RuntimeError){
-        EcheckToken.from_hash({ 'echeckToken'=>{'litleToken'=>'123456789012','routingNum'=>'123456789','accType'=>'Checking'}})
+        EcheckToken.from_hash({ 'echeckToken'=>{'cnpToken'=>'123456789012','routingNum'=>'123456789','accType'=>'Checking'}})
       }
-      assert_equal "If echeckToken litleToken is specified, it must be between 13 and 25 characters long", exception.message            
+      assert_equal "If echeckToken cnpToken is specified, it must be between 13 and 25 characters long", exception.message            
       exception = assert_raise(RuntimeError){
-        EcheckToken.from_hash({ 'echeckToken'=>{'litleToken'=>'12345678901234567890123456','routingNum'=>'123456789','accType'=>'Checking'}})
+        EcheckToken.from_hash({ 'echeckToken'=>{'cnpToken'=>'12345678901234567890123456','routingNum'=>'123456789','accType'=>'Checking'}})
       }
-      assert_equal "If echeckToken litleToken is specified, it must be between 13 and 25 characters long", exception.message            
+      assert_equal "If echeckToken cnpToken is specified, it must be between 13 and 25 characters long", exception.message            
       exception = assert_raise(RuntimeError){
         EcheckToken.from_hash({ 'echeckToken'=>{'routingNum'=>'123456789','accType'=>'Checking'}})
       }
-      assert_equal "If echeckToken is specified, it must have a litleToken", exception.message            
+      assert_equal "If echeckToken is specified, it must have a cnpToken", exception.message            
     end
     
     def test_echeckToken_routingNum
-      assert_equal("abcdefghi", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','litleToken'=>'1234567890123','routingNum'=>'abcdefghi'}}).routingNum)
-      assert_equal("123456789", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','litleToken'=>'1234567890123','routingNum'=>'123456789'}}).routingNum)
+      assert_equal("abcdefghi", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','cnpToken'=>'1234567890123','routingNum'=>'abcdefghi'}}).routingNum)
+      assert_equal("123456789", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','cnpToken'=>'1234567890123','routingNum'=>'123456789'}}).routingNum)
       exception = assert_raise(RuntimeError){
-        EcheckToken.from_hash({ 'echeckToken'=>{'litleToken'=>'1234567890123','routingNum'=>'1234567890','accType'=>'Checking'}})
+        EcheckToken.from_hash({ 'echeckToken'=>{'cnpToken'=>'1234567890123','routingNum'=>'1234567890','accType'=>'Checking'}})
       }
       assert_equal "If echeckToken routingNum is specified, it must be between 9 and 9 characters long", exception.message            
       exception = assert_raise(RuntimeError){
-        EcheckToken.from_hash({ 'echeckToken'=>{'litleToken'=>'1234567890123','routingNum'=>'12345678','accType'=>'Checking'}})
+        EcheckToken.from_hash({ 'echeckToken'=>{'cnpToken'=>'1234567890123','routingNum'=>'12345678','accType'=>'Checking'}})
       }
       assert_equal "If echeckToken routingNum is specified, it must be between 9 and 9 characters long", exception.message            
       exception = assert_raise(RuntimeError){
-        EcheckToken.from_hash({ 'echeckToken'=>{'litleToken'=>'1234567890123','accType'=>'Checking'}})
+        EcheckToken.from_hash({ 'echeckToken'=>{'cnpToken'=>'1234567890123','accType'=>'Checking'}})
       }
       assert_equal "If echeckToken is specified, it must have a routingNum", exception.message            
     end
     
     def test_echeckToken_accType
-      assert_equal("Checking", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','litleToken'=>'1234567890123','routingNum'=>'123456789'}}).accType)
-      assert_equal("Savings", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Savings','litleToken'=>'1234567890123','routingNum'=>'123456789'}}).accType)
-      assert_equal("Corporate", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Corporate','litleToken'=>'1234567890123','routingNum'=>'123456789'}}).accType)
-      assert_equal("Corp Savings", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Corp Savings','litleToken'=>'1234567890123','routingNum'=>'123456789'}}).accType)
+      assert_equal("Checking", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','cnpToken'=>'1234567890123','routingNum'=>'123456789'}}).accType)
+      assert_equal("Savings", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Savings','cnpToken'=>'1234567890123','routingNum'=>'123456789'}}).accType)
+      assert_equal("Corporate", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Corporate','cnpToken'=>'1234567890123','routingNum'=>'123456789'}}).accType)
+      assert_equal("Corp Savings", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Corp Savings','cnpToken'=>'1234567890123','routingNum'=>'123456789'}}).accType)
       exception = assert_raise(RuntimeError){
-        EcheckToken.from_hash({ 'echeckToken'=>{'litleToken'=>'1234567890123','routingNum'=>'123456789','accType'=>'Other'}})
+        EcheckToken.from_hash({ 'echeckToken'=>{'cnpToken'=>'1234567890123','routingNum'=>'123456789','accType'=>'Other'}})
       }
       assert_equal "If echeckToken accType is specified, it must be in [\"Checking\", \"Savings\", \"Corporate\", \"Corp Savings\"]", exception.message            
       exception = assert_raise(RuntimeError){
-        EcheckToken.from_hash({ 'echeckToken'=>{'litleToken'=>'1234567890123','routingNum'=>'123456789'}})
+        EcheckToken.from_hash({ 'echeckToken'=>{'cnpToken'=>'1234567890123','routingNum'=>'123456789'}})
       }
       assert_equal "If echeckToken is specified, it must have a accType", exception.message            
     end
     
     def test_echeckToken_checkNum
-      assert_equal(nil, EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','litleToken'=>'1234567890123','routingNum'=>'abcdefghi'}}).checkNum)
-      assert_equal("a", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','litleToken'=>'1234567890123','routingNum'=>'abcdefghi','checkNum'=>'a'}}).checkNum)
-      assert_equal("123456789012345", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','litleToken'=>'1234567890123','routingNum'=>'123456789','checkNum'=>'123456789012345'}}).checkNum)
+      assert_equal(nil, EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','cnpToken'=>'1234567890123','routingNum'=>'abcdefghi'}}).checkNum)
+      assert_equal("a", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','cnpToken'=>'1234567890123','routingNum'=>'abcdefghi','checkNum'=>'a'}}).checkNum)
+      assert_equal("123456789012345", EcheckToken.from_hash({'echeckToken'=>{'accType'=>'Checking','cnpToken'=>'1234567890123','routingNum'=>'123456789','checkNum'=>'123456789012345'}}).checkNum)
       exception = assert_raise(RuntimeError){
-        EcheckToken.from_hash({ 'echeckToken'=>{'litleToken'=>'1234567890123','routingNum'=>'123456789','accType'=>'Checking','checkNum'=>'1234567890123456'}})
+        EcheckToken.from_hash({ 'echeckToken'=>{'cnpToken'=>'1234567890123','routingNum'=>'123456789','accType'=>'Checking','checkNum'=>'1234567890123456'}})
       }
       assert_equal "If echeckToken checkNum is specified, it must be between 1 and 15 characters long", exception.message            
     end
@@ -2493,12 +2493,12 @@ module LitleOnline
     def test_recyclingRequest_recycleBy
       assert_equal(nil, RecyclingRequest.from_hash({'recyclingRequest'=>{}}).recycleBy)
       assert_equal("Merchant", RecyclingRequest.from_hash({'recyclingRequest'=>{'recycleBy'=>'Merchant'}}).recycleBy)
-      assert_equal("Litle", RecyclingRequest.from_hash({'recyclingRequest'=>{'recycleBy'=>'Litle'}}).recycleBy)
+      assert_equal("Cnp", RecyclingRequest.from_hash({'recyclingRequest'=>{'recycleBy'=>'Cnp'}}).recycleBy)
       assert_equal("None", RecyclingRequest.from_hash({'recyclingRequest'=>{'recycleBy'=>'None'}}).recycleBy)
       exception = assert_raise(RuntimeError){
         RecyclingRequest.from_hash({ 'recyclingRequest'=>{'recycleBy'=>'Other' }})
       }
-      assert_equal "If recyclingRequest recycleBy is specified, it must be in [\"Merchant\", \"Litle\", \"None\"]", exception.message
+      assert_equal "If recyclingRequest recycleBy is specified, it must be in [\"Merchant\", \"Cnp\", \"None\"]", exception.message
     end
     
     def test_recyclingRequest_recycleId
@@ -2527,8 +2527,8 @@ module LitleOnline
            }
       }
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<subscription>.*<planCode>planCodeString<\/planCode><numberOfPayments>10<\/numberOfPayments><startDate>2014-03-07<\/startDate><amount>100<\/amount><\/subscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<subscription>.*<planCode>planCodeString<\/planCode><numberOfPayments>10<\/numberOfPayments><startDate>2014-03-07<\/startDate><amount>100<\/amount><\/subscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
 
     def test_subscription_type_discount_addOn
@@ -2570,8 +2570,8 @@ module LitleOnline
            }
       }
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<subscription>.*<planCode>planCodeString<\/planCode><numberOfPayments>10<\/numberOfPayments><startDate>2014-03-07<\/startDate><amount>100<\/amount><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><\/subscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<subscription>.*<planCode>planCodeString<\/planCode><numberOfPayments>10<\/numberOfPayments><startDate>2014-03-07<\/startDate><amount>100<\/amount><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><\/subscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end
     
     def test_cancel_subscription
@@ -2581,8 +2581,8 @@ module LitleOnline
               'reportGroup'=>'Planets',
               'subscriptionId' => '1000'
              }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<cancelSubscription><subscriptionId>1000<\/subscriptionId><\/cancelSubscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.cancel_subscription(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<cancelSubscription><subscriptionId>1000<\/subscriptionId><\/cancelSubscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.cancel_subscription(hash)
     end
 
     def test_update_subscription_card
@@ -2636,8 +2636,8 @@ module LitleOnline
 		'addOnCode'=>'addOnCode2',
               }],
              }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>1000<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><billingDate>2014-03-11<\/billingDate><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><updateDiscount><discountCode>discCode2<\/discountCode><\/updateDiscount><deleteDiscount><discountCode>discCode3<\/discountCode><\/deleteDiscount><deleteDiscount><discountCode>discCode33<\/discountCode><\/deleteDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><updateAddOn><addOnCode>addOnCode2<\/addOnCode><\/updateAddOn><\/updateSubscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_subscription(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>1000<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><billingDate>2014-03-11<\/billingDate><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><updateDiscount><discountCode>discCode2<\/discountCode><\/updateDiscount><deleteDiscount><discountCode>discCode3<\/discountCode><\/deleteDiscount><deleteDiscount><discountCode>discCode33<\/discountCode><\/deleteDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><updateAddOn><addOnCode>addOnCode2<\/addOnCode><\/updateAddOn><\/updateSubscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_subscription(hash)
     end
 
     def test_update_subscription_token
@@ -2653,7 +2653,7 @@ module LitleOnline
                 },
               'token'=>
                 {  
-		'litleToken'=>'litleTokenString'
+		'cnpToken'=>'cnpTokenString'
                 },
               'billingDate' =>'2014-03-11',
               'createDiscount'=>[
@@ -2689,8 +2689,8 @@ module LitleOnline
               }],
               'deleteAddOn'=>[{'addOnCode'=>'addOnCode3'}]
              }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>1000<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><token><litleToken>litleTokenString<\/litleToken><\/token><billingDate>2014-03-11<\/billingDate><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><updateDiscount><discountCode>discCode2<\/discountCode><\/updateDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><updateAddOn><addOnCode>addOnCode2<\/addOnCode><\/updateAddOn><deleteAddOn><addOnCode>addOnCode3<\/addOnCode><\/deleteAddOn><\/updateSubscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_subscription(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>1000<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><token><cnpToken>cnpTokenString<\/cnpToken><\/token><billingDate>2014-03-11<\/billingDate><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><updateDiscount><discountCode>discCode2<\/discountCode><\/updateDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><updateAddOn><addOnCode>addOnCode2<\/addOnCode><\/updateAddOn><deleteAddOn><addOnCode>addOnCode3<\/addOnCode><\/deleteAddOn><\/updateSubscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_subscription(hash)
     end
 
     def test_activate
@@ -2709,8 +2709,8 @@ module LitleOnline
                 }
       }
       
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<activate reportGroup="Planets"><orderId>11<\/orderId><amount>500<\/amount><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/activate>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.activate(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<activate reportGroup="Planets"><orderId>11<\/orderId><amount>500<\/amount><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/activate>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.activate(hash)
     end
 
     def test_deactivate
@@ -2728,8 +2728,8 @@ module LitleOnline
                 }
       }
       
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<deactivate reportGroup="Planets"><orderId>11<\/orderId><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/deactivate>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.deactivate(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<deactivate reportGroup="Planets"><orderId>11<\/orderId><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/deactivate>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.deactivate(hash)
     end
 
     def test_load
@@ -2748,8 +2748,8 @@ module LitleOnline
                 }
       }
       
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<load reportGroup="Planets"><orderId>11<\/orderId><amount>500<\/amount><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/load>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.load_request(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<load reportGroup="Planets"><orderId>11<\/orderId><amount>500<\/amount><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/load>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.load_request(hash)
     end
 
     def test_unload
@@ -2768,8 +2768,8 @@ module LitleOnline
                 }
       }
       
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<unload reportGroup="Planets"><orderId>11<\/orderId><amount>500<\/amount><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/unload>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.unload_request(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<unload reportGroup="Planets"><orderId>11<\/orderId><amount>500<\/amount><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/unload>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.unload_request(hash)
     end
 
     def test_balanceInquiry
@@ -2787,8 +2787,8 @@ module LitleOnline
                 }
       }
       
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<balanceInquiry reportGroup="Planets"><orderId>11<\/orderId><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/balanceInquiry>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.balance_inquiry(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<balanceInquiry reportGroup="Planets"><orderId>11<\/orderId><orderSource>ecommerce<\/orderSource><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><\/balanceInquiry>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.balance_inquiry(hash)
     end
 
     def test_createPlan
@@ -2806,8 +2806,8 @@ module LitleOnline
         'trialIntervalType'=>'MONTH',
         'active'=>'true'  
             }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<createPlan><planCode>planCodeString<\/planCode><name>nameString<\/name><description>descriptionString<\/description><intervalType>ANNUAL<\/intervalType><amount>500<\/amount><numberOfPayments>2<\/numberOfPayments><trialNumberOfIntervals>1<\/trialNumberOfIntervals><trialIntervalType>MONTH<\/trialIntervalType><active>true<\/active><\/createPlan>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.create_plan(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<createPlan><planCode>planCodeString<\/planCode><name>nameString<\/name><description>descriptionString<\/description><intervalType>ANNUAL<\/intervalType><amount>500<\/amount><numberOfPayments>2<\/numberOfPayments><trialNumberOfIntervals>1<\/trialNumberOfIntervals><trialIntervalType>MONTH<\/trialIntervalType><active>true<\/active><\/createPlan>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.create_plan(hash)
     end
 
     def test_updatePlan
@@ -2819,8 +2819,8 @@ module LitleOnline
         'active'=>'true'
            }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<updatePlan><planCode>planCodeString<\/planCode><active>true<\/active><\/updatePlan>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_plan(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<updatePlan><planCode>planCodeString<\/planCode><active>true<\/active><\/updatePlan>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_plan(hash)
     end	
 
     def test_virtualGiftCard
@@ -2832,8 +2832,8 @@ module LitleOnline
         'giftCardBin'=>'giftCardBinString'
            }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<virtualGiftCard><accountNumberLength>13<\/accountNumberLength><giftCardBin>giftCardBinString<\/giftCardBin><\/virtualGiftCard>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.virtual_giftcard(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<virtualGiftCard><accountNumberLength>13<\/accountNumberLength><giftCardBin>giftCardBinString<\/giftCardBin><\/virtualGiftCard>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.virtual_giftcard(hash)
     end	
 
     def test_activateReversal
@@ -2841,11 +2841,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'111'
+        'cnpTxnId'=>'111'
            }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<activateReversal reportGroup="Planets"><litleTxnId>111<\/litleTxnId><\/activateReversal>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.activate_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<activateReversal reportGroup="Planets"><cnpTxnId>111<\/cnpTxnId><\/activateReversal>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.activate_reversal(hash)
     end
 
     def test_depositReversal
@@ -2853,11 +2853,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'111'
+        'cnpTxnId'=>'111'
            }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<depositReversal reportGroup="Planets"><litleTxnId>111<\/litleTxnId><\/depositReversal>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.deposit_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<depositReversal reportGroup="Planets"><cnpTxnId>111<\/cnpTxnId><\/depositReversal>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.deposit_reversal(hash)
     end		
 
     def test_refundReversal
@@ -2865,11 +2865,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'111'
+        'cnpTxnId'=>'111'
            }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<refundReversal reportGroup="Planets"><litleTxnId>111<\/litleTxnId><\/refundReversal>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.refund_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<refundReversal reportGroup="Planets"><cnpTxnId>111<\/cnpTxnId><\/refundReversal>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.refund_reversal(hash)
     end		
 
     def test_deactivateReversal
@@ -2877,11 +2877,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'111'
+        'cnpTxnId'=>'111'
            }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<deactivateReversal reportGroup="Planets"><litleTxnId>111<\/litleTxnId><\/deactivateReversal>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.deactivate_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<deactivateReversal reportGroup="Planets"><cnpTxnId>111<\/cnpTxnId><\/deactivateReversal>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.deactivate_reversal(hash)
     end		
 
     def test_loadReversal
@@ -2889,11 +2889,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'111'
+        'cnpTxnId'=>'111'
            }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<loadReversal reportGroup="Planets"><litleTxnId>111<\/litleTxnId><\/loadReversal>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.load_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<loadReversal reportGroup="Planets"><cnpTxnId>111<\/cnpTxnId><\/loadReversal>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.load_reversal(hash)
     end		
 
     def test_unloadReversal
@@ -2901,11 +2901,11 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'111'
+        'cnpTxnId'=>'111'
            }
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<unloadReversal reportGroup="Planets"><litleTxnId>111<\/litleTxnId><\/unloadReversal>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.unload_reversal(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<unloadReversal reportGroup="Planets"><cnpTxnId>111<\/cnpTxnId><\/unloadReversal>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.unload_reversal(hash)
     end	
 
     def test_mpos_type
@@ -2923,8 +2923,8 @@ module LitleOnline
 		}
       }
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<mpos><ksn>ksnString<\/ksn><formatId>30<\/formatId><encryptedTrack>encryptedTrackString<\/encryptedTrack><track1Status>0<\/track1Status><track2Status>0<\/track2Status><\/mpos>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<mpos><ksn>ksnString<\/ksn><formatId>30<\/formatId><encryptedTrack>encryptedTrackString<\/encryptedTrack><track1Status>0<\/track1Status><track2Status>0<\/track2Status><\/mpos>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(hash)
     end	
   end
 end

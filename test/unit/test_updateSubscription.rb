@@ -22,11 +22,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
   class TestUpdateSubscription < Test::Unit::TestCase
 
     def test_simple
@@ -35,8 +35,8 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>100<\/subscriptionId><\/updateSubscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_subscription(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>100<\/subscriptionId><\/updateSubscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_subscription(hash)
     end
 
     def test_allFields
@@ -58,8 +58,8 @@ module LitleOnline
                 },
         'billingDate' =>'2014-03-11'        
             } 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>100<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><billingDate>2014-03-11<\/billingDate><\/updateSubscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_subscription(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>100<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><card><type>VI<\/type><number>4100000000000001<\/number><expDate>1210<\/expDate><\/card><billingDate>2014-03-11<\/billingDate><\/updateSubscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_subscription(hash)
     end 
 
      def test_update_subscription_token
@@ -75,7 +75,7 @@ module LitleOnline
                 },
               'token'=>
                 {  
-		'litleToken'=>'litleTokenString'
+		'cnpToken'=>'cnpTokenString'
                 },
               'billingDate' =>'2014-03-11',
               'createDiscount'=>[
@@ -111,8 +111,8 @@ module LitleOnline
               }],
               'deleteAddOn'=>[{'addOnCode'=>'addOnCode3'}]
              }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>1000<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><token><litleToken>litleTokenString<\/litleToken><\/token><billingDate>2014-03-11<\/billingDate><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><updateDiscount><discountCode>discCode2<\/discountCode><\/updateDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><updateAddOn><addOnCode>addOnCode2<\/addOnCode><\/updateAddOn><deleteAddOn><addOnCode>addOnCode3<\/addOnCode><\/deleteAddOn><\/updateSubscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_subscription(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>1000<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><token><cnpToken>cnpTokenString<\/cnpToken><\/token><billingDate>2014-03-11<\/billingDate><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><updateDiscount><discountCode>discCode2<\/discountCode><\/updateDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><updateAddOn><addOnCode>addOnCode2<\/addOnCode><\/updateAddOn><deleteAddOn><addOnCode>addOnCode3<\/addOnCode><\/deleteAddOn><\/updateSubscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_subscription(hash)
     end
 
      def test_update_subscription_paypage
@@ -164,8 +164,8 @@ module LitleOnline
 		'addOnCode'=>'addOnCode2',
               }],
              }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>1000<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><paypage><paypageRegistrationId>paypageString<\/paypageRegistrationId><\/paypage><billingDate>2014-03-11<\/billingDate><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><updateDiscount><discountCode>discCode2<\/discountCode><\/updateDiscount><deleteDiscount><discountCode>discCode3<\/discountCode><\/deleteDiscount><deleteDiscount><discountCode>discCode33<\/discountCode><\/deleteDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><updateAddOn><addOnCode>addOnCode2<\/addOnCode><\/updateAddOn><\/updateSubscription>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_subscription(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<updateSubscription><subscriptionId>1000<\/subscriptionId><planCode>planCodeString<\/planCode><billToAddress><name>nameString<\/name><\/billToAddress><paypage><paypageRegistrationId>paypageString<\/paypageRegistrationId><\/paypage><billingDate>2014-03-11<\/billingDate><createDiscount><discountCode>discCode1<\/discountCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><createDiscount><discountCode>discCode11<\/discountCode><name>name11<\/name><amount>5000<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createDiscount><updateDiscount><discountCode>discCode2<\/discountCode><\/updateDiscount><deleteDiscount><discountCode>discCode3<\/discountCode><\/deleteDiscount><deleteDiscount><discountCode>discCode33<\/discountCode><\/deleteDiscount><createAddOn><addOnCode>addOnCode1<\/addOnCode><name>name1<\/name><amount>500<\/amount><startDate>2014-03-12<\/startDate><endDate>2014-03-12<\/endDate><\/createAddOn><updateAddOn><addOnCode>addOnCode2<\/addOnCode><\/updateAddOn><\/updateSubscription>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_subscription(hash)
     end    
    end
 

@@ -19,15 +19,15 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'fileutils'
 
-module LitleOnline
-  class TestLitleRequest < Test::Unit::TestCase
+module CnpOnline
+  class TestCnpRequest < Test::Unit::TestCase
   
     def setup
-      dir = '/tmp/litle-sdk-for-ruby-test'
+      dir = '/tmp/cnp-sdk-for-ruby-test'
       FileUtils.rm_rf dir
       Dir.mkdir dir
     end
@@ -35,10 +35,10 @@ module LitleOnline
     def test_request_creation
       dir = '/tmp'
 
-      request = LitleRequest.new()
-      request.create_new_litle_request(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new()
+      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
 
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
 
       assert_equal 4, entries.size
@@ -49,25 +49,25 @@ module LitleOnline
     def test_commit_batch_with_path
       dir = '/tmp'
 
-      batch = LitleBatchRequest.new
-      batch.create_new_batch(dir + '/litle-sdk-for-ruby-test')
+      batch = CnpBatchRequest.new
+      batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
       batch.close_batch
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
 
       assert_equal 3, entries.length
       entries.sort!
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
 
-      request = LitleRequest.new
-      request.create_new_litle_request(dir+ '/litle-sdk-for-ruby-test')
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new
+      request.create_new_cnp_request(dir+ '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
       assert_not_nil entries[3] =~ /request_\d+\z/
       assert_not_nil entries[4] =~ /request_\d+_batches\z/
 
       request.commit_batch(batch.get_batch_name)
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
       assert_equal 4,entries.length
       assert_not_nil entries[2] =~ /request_\d+\z/
@@ -77,18 +77,18 @@ module LitleOnline
     def test_commit_batch_with_batch
       dir = '/tmp'
 
-      batch = LitleBatchRequest.new
-      batch.create_new_batch(dir + '/litle-sdk-for-ruby-test')
+      batch = CnpBatchRequest.new
+      batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
       batch.close_batch
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
 
       assert_equal 3, entries.length
       entries.sort!
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
 
-      request = LitleRequest.new
-      request.create_new_litle_request(dir+ '/litle-sdk-for-ruby-test')
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new
+      request.create_new_cnp_request(dir+ '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
       assert_equal 5, entries.length
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
@@ -96,7 +96,7 @@ module LitleOnline
       assert_not_nil entries[4] =~ /request_\d+_batches\z/
 
       request.commit_batch(batch)
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
       assert_equal 4, entries.length
       assert_not_nil entries[2] =~ /request_\d+\z/
@@ -106,8 +106,8 @@ module LitleOnline
     def test_commit_batch_with_batch_and_au
       dir = '/tmp'
 
-      batch = LitleBatchRequest.new
-      batch.create_new_batch(dir + '/litle-sdk-for-ruby-test')
+      batch = CnpBatchRequest.new
+      batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
       accountUpdateHash = {
         'reportGroup'=>'Planets',
         'id'=>'12345',
@@ -120,16 +120,16 @@ module LitleOnline
       batch.account_update(accountUpdateHash)
       batch.close_batch
 
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
 
       assert_equal 4, entries.length
       entries.sort!
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
       assert_not_nil entries[3] =~ /batch_\d+.closed-1\z/
 
-      request = LitleRequest.new
-      request.create_new_litle_request(dir+ '/litle-sdk-for-ruby-test')
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new
+      request.create_new_cnp_request(dir+ '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
       assert_equal 6, entries.length
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
@@ -138,7 +138,7 @@ module LitleOnline
       assert_not_nil entries[5] =~ /request_\d+_batches\z/
 
       request.commit_batch(batch)
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
       assert_equal 4, entries.length
       assert_not_nil entries[2] =~ /request_\d+\z/
@@ -148,10 +148,10 @@ module LitleOnline
     def test_finish_request
       dir = '/tmp'
 
-      request = LitleRequest.new()
-      request.create_new_litle_request(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new()
+      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
 
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
 
       assert_equal 4, entries.size
@@ -160,7 +160,7 @@ module LitleOnline
 
       request.finish_request
 
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
 
       assert_equal 3, entries.size
@@ -171,10 +171,10 @@ module LitleOnline
       @config_hash = Configuration.new.config
       
       dir = '/tmp'
-      temp = dir + '/litle-sdk-for-ruby-test/'
+      temp = dir + '/cnp-sdk-for-ruby-test/'
       
-      request = LitleRequest.new()
-      request.add_rfr_request({'litleSessionId' => '137813712'}, temp)
+      request = CnpRequest.new()
+      request.add_rfr_request({'cnpSessionId' => '137813712'}, temp)
       
       entries = Dir.entries(temp)
       entries.sort!
@@ -183,17 +183,17 @@ module LitleOnline
       assert_not_nil entries[2] =~ /request_\d+.complete\z/
     end
 
-    def test_send_to_litle
+    def test_send_to_cnp
       @config_hash = Configuration.new.config
 
       dir = '/tmp'
 
-      request = LitleRequest.new()
-      request.create_new_litle_request(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new()
+      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
       request.finish_request
-      request.send_to_litle
+      request.send_to_cnp
 
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
       assert_equal 3, entries.size
       assert_not_nil entries[2] =~ /request_\d+.complete.sent\z/
@@ -221,24 +221,24 @@ module LitleOnline
       end
     end
 
-    def test_send_to_litle_stream
+    def test_send_to_cnp_stream
       @config_hash = Configuration.new.config
 
       dir = '/tmp'
 
-      request = LitleRequest.new()
-      request.create_new_litle_request(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new()
+      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
       request.finish_request
-      request.send_to_litle_stream
+      request.send_to_cnp_stream
 
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
 
       assert_equal 4, entries.size
       assert_not_nil entries[2] =~ /request_\d+.complete.sent\z/
-      File.delete(dir + '/litle-sdk-for-ruby-test/' + entries[2])
+      File.delete(dir + '/cnp-sdk-for-ruby-test/' + entries[2])
    
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test/responses')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test/responses')
       entries.sort!
       
       assert_equal 3, entries.size
@@ -261,10 +261,10 @@ module LitleOnline
 
       dir = '/tmp'
 
-      request = LitleRequest.new()
-      request.create_new_litle_request(dir + '/litle-sdk-for-ruby-test')
+      request = CnpRequest.new()
+      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
 
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
 
       assert_equal 4, entries.size
@@ -273,10 +273,10 @@ module LitleOnline
 
       #create five batches, each with 10 sales
       5.times{
-        batch = LitleBatchRequest.new
-        batch.create_new_batch(dir + '/litle-sdk-for-ruby-test')
+        batch = CnpBatchRequest.new
+        batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
         
-        entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+        entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
         
         assert_equal 6, entries.length
         entries.sort!
@@ -293,7 +293,7 @@ module LitleOnline
          
         #close the batch, indicating we plan to add no more transactions
         batch.close_batch()
-        entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+        entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
         
         assert_equal 5, entries.length
         entries.sort!
@@ -301,39 +301,39 @@ module LitleOnline
         assert_not_nil entries[3] =~ /request_\d+\z/
         assert_not_nil entries[4] =~ /request_\d+_batches\z/
         
-        #add the batch to the LitleRequest
+        #add the batch to the CnpRequest
         request.commit_batch(batch)
-        entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+        entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
         assert_equal 4, entries.length
         entries.sort!
         assert_not_nil entries[2] =~ /request_\d+\z/
         assert_not_nil entries[3] =~ /request_\d+_batches\z/
       }
-      #finish the Litle Request, indicating we plan to add no more batches
+      #finish the Cnp Request, indicating we plan to add no more batches
       request.finish_request
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       assert_equal 3, entries.length
       entries.sort!
       assert_not_nil entries[2] =~ /request_\d+.complete\z/
       
       #send the batch files at the given directory over sFTP
-      request.send_to_litle
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
+      request.send_to_cnp
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       assert_equal entries.length, 3
       entries.sort!
       assert_not_nil entries[2] =~ /request_\d+.complete.sent\z/
       #grab the expected number of responses from the sFTP server and save them to the given path
       request.get_responses_from_server()
       #process the responses from the server with a listener which applies the given block
-      request.process_responses({:transaction_listener => LitleOnline::DefaultLitleListener.new do |transaction| end})
+      request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction| end})
         
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test')
-      assert_equal 4, entries.length
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      assert_equal 4, entries.length # 3 -> 4
       entries.sort!
       assert_not_nil entries[2] =~ /request_\d+.complete.sent\z/
-      File.delete(dir + '/litle-sdk-for-ruby-test/' + entries[2])
+      File.delete(dir + '/cnp-sdk-for-ruby-test/' + entries[2])
       
-      entries = Dir.entries(dir + '/litle-sdk-for-ruby-test/' + entries[3])
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test/' + entries[3])
       entries.sort!
       assert_equal 3, entries.length
       assert_not_nil entries[2] =~ /response_\d+.complete.asc.received.processed\z/

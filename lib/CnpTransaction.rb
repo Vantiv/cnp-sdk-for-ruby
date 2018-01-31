@@ -22,12 +22,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 require_relative 'Configuration'
 
 #
-# This class does all the heavy lifting of mapping the Ruby hash into Litle XML format
+# This class does all the heavy lifting of mapping the Ruby hash into Cnp XML format
 # It also handles validation looking for missing or incorrect fields
 # contains the methods to properly create each transaction type
 #
-module LitleOnline
-  class LitleTransaction
+module CnpOnline
+  class CnpTransaction
     def authorization(options)
       transaction = Authorization.new
       transaction.secondaryAmount = options['secondaryAmount']
@@ -158,7 +158,7 @@ module LitleOnline
 
     def activate_reversal(options)
       transaction = ActivateReversal.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.card = GiftCardCardType.from_hash(options,'card')
       transaction.originalRefCode = options['originalRefCode']
       transaction.originalAmount = options['originalAmount']
@@ -170,7 +170,7 @@ module LitleOnline
 
     def deposit_reversal(options)
       transaction = DepositReversal.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.card = GiftCardCardType.from_hash(options,'card')
       transaction.originalRefCode = options['originalRefCode']
       transaction.originalAmount = options['originalAmount']
@@ -180,11 +180,11 @@ module LitleOnline
       return transaction
     end
     
-    #XML 11.0
+    #XML 12.0
     
     def giftCardAuth_reversal(options)
       transaction = GiftCardAuthReversal.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.card = GiftCardCardType.from_hash(options,'card')
       transaction.originalRefCode = options['originalRefCode']
       transaction.originalAmount = options['originalAmount']
@@ -193,10 +193,10 @@ module LitleOnline
       transaction.originalSequenceNumber = options['originalSequenceNumber']
       return transaction
     end
-    
-     def giftCardCapture(options)
+
+    def giftCardCapture(options)
       transaction = GiftCardCapture.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.captureAmount = options['captureAmount']
       transaction.card = GiftCardCardType.from_hash(options,'card')
       transaction.originalRefCode = options['originalRefCode']
@@ -207,9 +207,9 @@ module LitleOnline
       return transaction
     end
     
-     def giftCardCredit(options)
+    def giftCardCredit(options)
       transaction = GiftCardCredit.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.creditAmount = options['creditAmount']
       transaction.orderId = options['orderId']
       transaction.orderSource = options['orderSource']
@@ -219,7 +219,7 @@ module LitleOnline
 
     def refund_reversal(options)
       transaction = RefundReversal.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.card = GiftCardCardType.from_hash(options,'card')
       transaction.originalRefCode = options['originalRefCode']
       transaction.originalAmount = options['originalAmount']
@@ -231,7 +231,7 @@ module LitleOnline
 
     def deactivate_reversal(options)
       transaction = DeactivateReversal.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.card = GiftCardCardType.from_hash(options,'card')
       transaction.originalRefCode = options['originalRefCode']
       transaction.originalAmount = options['originalAmount']
@@ -243,7 +243,7 @@ module LitleOnline
 
     def load_reversal(options)
       transaction = LoadReversal.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.card = GiftCardCardType.from_hash(options,'card')
       transaction.originalRefCode = options['originalRefCode']
       transaction.originalAmount = options['originalAmount']
@@ -255,7 +255,7 @@ module LitleOnline
 
     def unload_reversal(options)
       transaction = UnloadReversal.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       transaction.card = GiftCardCardType.from_hash(options,'card')
       transaction.originalRefCode = options['originalRefCode']
       transaction.originalAmount = options['originalAmount']
@@ -274,7 +274,7 @@ module LitleOnline
       transaction.payPalOrderComplete = options['payPalOrderComplete']
       transaction.payPalNotes         = options['payPalNotes']
       transaction.recurringRequest    = RecurringRequest.from_hash(options,'recurringRequest')
-      transaction.litleInternalRecurringRequest = LitleInternalRecurringRequest.from_hash(options,'litleInternalRecurringRequest')
+      transaction.cnpInternalRecurringRequest = CnpInternalRecurringRequest.from_hash(options,'cnpInternalRecurringRequest')
       transaction.debtRepayment      = options['debtRepayment']
       transaction.advancedFraudChecks = AdvancedFraudChecks.from_hash(options, 'advancedFraudChecks')
       #SDK XML 11
@@ -289,8 +289,8 @@ module LitleOnline
 
     def credit(options)
       transaction = Credit.new
-      transaction.litleTxnId              = options['litleTxnId']
-      if(transaction.litleTxnId.nil?)
+      transaction.cnpTxnId              = options['cnpTxnId']
+      if(transaction.cnpTxnId.nil?)
         transaction.orderId               = options['orderId']
         transaction.orderSource           = options['orderSource']
         transaction.taxType               = options['taxType']
@@ -322,7 +322,7 @@ module LitleOnline
     def auth_reversal(options)
       transaction = AuthReversal.new
 
-      transaction.litleTxnId      = options['litleTxnId']
+      transaction.cnpTxnId      = options['cnpTxnId']
       transaction.amount          = options['amount']
       transaction.surchargeAmount = options['surchargeAmount']
       transaction.payPalNotes     = options['payPalNotes']
@@ -348,10 +348,10 @@ module LitleOnline
       transaction = UpdateCardValidationNumOnToken.new
 
       transaction.orderId               = options['orderId']
-      transaction.litleToken            = options['litleToken']
+      transaction.cnpToken            = options['cnpToken']
       transaction.cardValidationNum     = options['cardValidationNum']
 
-      SchemaValidation.validate_length(transaction.litleToken, true, 13, 25, "updateCardValidationNumOnToken", "litleToken")
+      SchemaValidation.validate_length(transaction.cnpToken, true, 13, 25, "updateCardValidationNumOnToken", "cnpToken")
       SchemaValidation.validate_length(transaction.cardValidationNum, true, 1, 4, "updateCardValidationNumOnToken", "cardValidationNum")
 
       add_account_info(transaction, options)
@@ -376,7 +376,7 @@ module LitleOnline
       transaction = Capture.new
 
       transaction.partial                 = options['partial']
-      transaction.litleTxnId              = options['litleTxnId']
+      transaction.cnpTxnId              = options['cnpTxnId']
       transaction.amount                  = options['amount']
       transaction.surchargeAmount         = options['surchargeAmount']
       transaction.enhancedData            = EnhancedData.from_hash(options)
@@ -411,7 +411,7 @@ module LitleOnline
     def void(options)
       transaction = Void.new
 
-      transaction.litleTxnId             = options['litleTxnId']
+      transaction.cnpTxnId             = options['cnpTxnId']
       transaction.processingInstructions = ProcessingInstructions.from_hash(options)
 
       add_account_info(transaction, options)
@@ -422,7 +422,7 @@ module LitleOnline
       transaction = EcheckRedeposit.new
       add_echeck(transaction, options)
 
-      transaction.litleTxnId        = options['litleTxnId']
+      transaction.cnpTxnId        = options['cnpTxnId']
       transaction.merchantData      = MerchantData.from_hash(options)
       transaction.customIdentifier  = options['customIdentifier']
       return transaction
@@ -516,7 +516,7 @@ module LitleOnline
     
     def funding_txn_void(options)
       transaction = FundingInstructionVoid.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
       add_account_info(transaction, options)
               
       return transaction
@@ -527,7 +527,7 @@ module LitleOnline
       transaction = QueryTransaction.new
       transaction.origId = options['origId']
       transaction.origActionType = options['origActionType']
-      transaction.origLitleTxnId = options['origLitleTxnId']
+      transaction.origCnpTxnId = options['origCnpTxnId']
      # transaction.origOrderId = options['origOrderId']
      # transaction.origAccountNumber = options['origAccountNumber']
       add_account_info(transaction, options)
@@ -610,7 +610,7 @@ module LitleOnline
     def echeck_credit(options)
       transaction = EcheckCredit.new
       transaction.customBilling = CustomBilling.from_hash(options)
-      transaction.litleTxnId    = options['litleTxnId']
+      transaction.cnpTxnId    = options['cnpTxnId']
       transaction.secondaryAmount = options['secondaryAmount']
       transaction.customIdentifier = options['customIdentifier']
       add_echeck_order_info(transaction, options)
@@ -628,7 +628,7 @@ module LitleOnline
 
     def echeck_void(options)
       transaction = EcheckVoid.new
-      transaction.litleTxnId = options['litleTxnId']
+      transaction.cnpTxnId = options['cnpTxnId']
 
       add_account_info(transaction, options)
       return transaction
@@ -664,7 +664,7 @@ module LitleOnline
     end
 
     def add_transaction_info(transaction, options)
-      transaction.litleTxnId                = options['litleTxnId']
+      transaction.cnpTxnId                = options['cnpTxnId']
       transaction.customerInfo              = CustomerInfo.from_hash(options)
       transaction.shipToAddress             = Contact.from_hash(options,'shipToAddress')
       transaction.billMeLaterRequest        = BillMeLaterRequest.from_hash(options)
@@ -704,7 +704,7 @@ module LitleOnline
     end
 
     def add_echeck_order_info(transaction, options)
-      #transaction.litleTxnId    = options['litleTxnId']
+      #transaction.cnpTxnId    = options['cnpTxnId']
       transaction.orderId       = options['orderId']
       transaction.amount        = options['amount']
       transaction.orderSource   = options['orderSource']

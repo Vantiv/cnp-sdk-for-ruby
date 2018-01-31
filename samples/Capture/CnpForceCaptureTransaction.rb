@@ -1,11 +1,11 @@
-require_relative '../../lib/LitleOnline'
+require_relative '../../lib/CnpOnline'
 #Force Capture
 force_capture_info = {
   'merchantId' => '101',
     'id'=>'test',
   'version'=>'8.8',
   'reportGroup'=>'Planets',
-  'litleTxnId'=>'123456',
+  'cnpTxnId'=>'123456',
   'orderId'=>'12344',
   'amount'=>'106',
   'orderSource'=>'ecommerce',
@@ -15,13 +15,13 @@ force_capture_info = {
     'expDate' =>'1210'
   }
 }
-response= LitleOnline::LitleOnlineRequest.new.force_capture(force_capture_info)
+response= CnpOnline::CnpOnlineRequest.new.force_capture(force_capture_info)
  
 #display results
 puts "Response: " + response.forceCaptureResponse.response
 puts "Message: " + response.forceCaptureResponse.message
-puts "Litle Transaction ID: " + response.forceCaptureResponse.litleTxnId
+puts "Cnp Transaction ID: " + response.forceCaptureResponse.cnpTxnId
 
 if (!response.forceCaptureResponse.message.eql?'Transaction Received')
-   raise ArgumentError, "LitleForceCaptureTransaction has not been Approved", caller
+   raise ArgumentError, "CnpForceCaptureTransaction has not been Approved", caller
 end

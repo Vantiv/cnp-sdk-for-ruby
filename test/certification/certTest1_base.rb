@@ -1,12 +1,13 @@
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
-#require 'Litle_activemerchant'
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
+#require 'Cnp_activemerchant'
 require 'test/unit'
 
-module LitleOnline
-  class Litle_certTest < Test::Unit::TestCase
+module CnpOnline
+  class Cnp_certTest < Test::Unit::TestCase
     @@merchant_hash = {'reportGroup'=>'Planets',
-      'merchantId'=>'101',
-      'id'=>'test'
+      'merchantId'=>'1288791',
+      'id'=>'test',
+      'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
     }
   
     def test_1_auth
@@ -28,7 +29,7 @@ module LitleOnline
         'type' => 'VI'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
       assert_equal('11111 ', auth_response.authorizationResponse.authCode)
@@ -36,23 +37,23 @@ module LitleOnline
       assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
   
       #test 1A
-      capture_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId}
+      capture_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId}
       hash1a = capture_hash.merge(@@merchant_hash)
-      capture_response = LitleOnlineRequest.new.capture(hash1a)
+      capture_response = CnpOnlineRequest.new.capture(hash1a)
       assert_equal('000', capture_response.captureResponse.response)
       
   
       #test 1B
-      credit_hash =  {'litleTxnId' => capture_response.captureResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => capture_response.captureResponse.cnpTxnId}
       hash1b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash1b)
+      credit_response = CnpOnlineRequest.new.credit(hash1b)
       assert_equal('000', credit_response.creditResponse.response)
      
   
       #test1C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash1c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash1c)
+      void_response = CnpOnlineRequest.new.void(hash1c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -76,7 +77,7 @@ module LitleOnline
         'type' => 'VI'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
       assert_equal('11111 ', auth_response.authorizationResponse.authCode)
@@ -103,7 +104,7 @@ module LitleOnline
         'type' => 'VI'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      sale_response = LitleOnlineRequest.new.sale(hash)
+      sale_response = CnpOnlineRequest.new.sale(hash)
       assert_equal('000', sale_response.saleResponse.response)
       assert_equal('Approved', sale_response.saleResponse.message)
       assert_equal('11111 ', sale_response.saleResponse.authCode)
@@ -111,16 +112,16 @@ module LitleOnline
       assert_equal('M', sale_response.saleResponse.fraudResult.cardValidationResult)
   
       #test 1B
-      credit_hash =  {'litleTxnId' => sale_response.saleResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => sale_response.saleResponse.cnpTxnId}
       hash1b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash1b)
+      credit_response = CnpOnlineRequest.new.credit(hash1b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test1C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash1c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash1c)
+      void_response = CnpOnlineRequest.new.void(hash1c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -147,31 +148,31 @@ module LitleOnline
         'cardholderAuthentication' => {'authenticationValue'=> 'BwABBJQ1AgAAAAAgJDUCAAAAAAA=' }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('22222', auth_response.authorizationResponse.authCode)
+      assert_equal('22222 ', auth_response.authorizationResponse.authCode)
       assert_equal('10', auth_response.authorizationResponse.fraudResult.avsResult)
       assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
   
       #test 2A
-      capture_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId}
+      capture_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId}
       hash2a = capture_hash.merge(@@merchant_hash)
-      capture_response = LitleOnlineRequest.new.capture(hash2a)
+      capture_response = CnpOnlineRequest.new.capture(hash2a)
       assert_equal('000', capture_response.captureResponse.response)
       
   
       #test 2B
-      credit_hash =  {'litleTxnId' => capture_response.captureResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => capture_response.captureResponse.cnpTxnId}
       hash2b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash2b)
+      credit_response = CnpOnlineRequest.new.credit(hash2b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test 2C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash2c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash2c)
+      void_response = CnpOnlineRequest.new.void(hash2c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -198,10 +199,10 @@ module LitleOnline
         'cardholderAuthentication' => {'authenticationValue'=> 'BwABBJQ1AgAAAAAgJDUCAAAAAAA=' }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('22222', auth_response.authorizationResponse.authCode)
+      assert_equal('22222 ', auth_response.authorizationResponse.authCode)
       assert_equal('10', auth_response.authorizationResponse.fraudResult.avsResult)
       assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
     end
@@ -228,24 +229,24 @@ module LitleOnline
         'cardholderAuthentication' => {'authenticationValue'=> 'BwABBJQ1AgAAAAAgJDUCAAAAAAA=' }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      sale_response = LitleOnlineRequest.new.sale(hash)
+      sale_response = CnpOnlineRequest.new.sale(hash)
       assert_equal('000', sale_response.saleResponse.response)
       assert_equal('Approved', sale_response.saleResponse.message)
-      assert_equal('22222', sale_response.saleResponse.authCode)
+      assert_equal('22222 ', sale_response.saleResponse.authCode)
       assert_equal('10', sale_response.saleResponse.fraudResult.avsResult)
       assert_equal('M', sale_response.saleResponse.fraudResult.cardValidationResult)
   
       #test 2B
-      credit_hash =  {'litleTxnId' => sale_response.saleResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => sale_response.saleResponse.cnpTxnId}
       hash2b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash2b)
+      credit_response = CnpOnlineRequest.new.credit(hash2b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test 2C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash2c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash2c)
+      void_response = CnpOnlineRequest.new.void(hash2c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -269,31 +270,31 @@ module LitleOnline
         'cardValidationNum' => '758'},
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('33333', auth_response.authorizationResponse.authCode)
+      assert_equal('33333 ', auth_response.authorizationResponse.authCode)
       assert_equal('10', auth_response.authorizationResponse.fraudResult.avsResult)
       assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
   
       #test 3A
-      capture_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId}
+      capture_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId}
       hash2a = capture_hash.merge(@@merchant_hash)
-      capture_response = LitleOnlineRequest.new.capture(hash2a)
+      capture_response = CnpOnlineRequest.new.capture(hash2a)
       assert_equal('000', capture_response.captureResponse.response)
       
   
       #test 3B
-      credit_hash =  {'litleTxnId' => capture_response.captureResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => capture_response.captureResponse.cnpTxnId}
       hash2b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash2b)
+      credit_response = CnpOnlineRequest.new.credit(hash2b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test 3C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash2c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash2c)
+      void_response = CnpOnlineRequest.new.void(hash2c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -317,10 +318,10 @@ module LitleOnline
         'cardValidationNum' => '758'},
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('33333', auth_response.authorizationResponse.authCode)
+      assert_equal('33333 ', auth_response.authorizationResponse.authCode)
       assert_equal('10', auth_response.authorizationResponse.fraudResult.avsResult)
       assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
     end
@@ -344,24 +345,24 @@ module LitleOnline
         'cardValidationNum' => '758'},
       }
       hash = customer_hash.merge(@@merchant_hash)
-      sale_response = LitleOnlineRequest.new.sale(hash)
+      sale_response = CnpOnlineRequest.new.sale(hash)
       assert_equal('000', sale_response.saleResponse.response)
       assert_equal('Approved', sale_response.saleResponse.message)
-      assert_equal('33333', sale_response.saleResponse.authCode)
+      assert_equal('33333 ', sale_response.saleResponse.authCode)
       assert_equal('10', sale_response.saleResponse.fraudResult.avsResult)
       assert_equal('M', sale_response.saleResponse.fraudResult.cardValidationResult)
   
       #test 3B
-      credit_hash =  {'litleTxnId' => sale_response.saleResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => sale_response.saleResponse.cnpTxnId}
       hash2b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash2b)
+      credit_response = CnpOnlineRequest.new.credit(hash2b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test 3C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash2c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash2c)
+      void_response = CnpOnlineRequest.new.void(hash2c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -385,29 +386,29 @@ module LitleOnline
         },
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('44444', auth_response.authorizationResponse.authCode)
-      assert_equal('12', auth_response.authorizationResponse.fraudResult.avsResult)
+      assert_equal('44444 ', auth_response.authorizationResponse.authCode)
+      assert_equal('13', auth_response.authorizationResponse.fraudResult.avsResult)
   
       #test 4A
-      capture_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId}
+      capture_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId}
       hash2a = capture_hash.merge(@@merchant_hash)
-      capture_response = LitleOnlineRequest.new.capture(hash2a)
+      capture_response = CnpOnlineRequest.new.capture(hash2a)
       assert_equal('Approved', capture_response.captureResponse.message)
   
       #test 4B
-      credit_hash =  {'litleTxnId' => capture_response.captureResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => capture_response.captureResponse.cnpTxnId}
       hash2b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash2b)
+      credit_response = CnpOnlineRequest.new.credit(hash2b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test 4C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash2c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash2c)
+      void_response = CnpOnlineRequest.new.void(hash2c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -431,11 +432,11 @@ module LitleOnline
         },
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('44444', auth_response.authorizationResponse.authCode)
-      assert_equal('12', auth_response.authorizationResponse.fraudResult.avsResult)
+      assert_equal('44444 ', auth_response.authorizationResponse.authCode)
+      assert_equal('13', auth_response.authorizationResponse.fraudResult.avsResult)
     end
   
     def test_4_sale
@@ -457,23 +458,23 @@ module LitleOnline
         },
       }
       hash = customer_hash.merge(@@merchant_hash)
-      sale_response = LitleOnlineRequest.new.sale(hash)
+      sale_response = CnpOnlineRequest.new.sale(hash)
       assert_equal('000', sale_response.saleResponse.response)
       assert_equal('Approved', sale_response.saleResponse.message)
-      assert_equal('44444', sale_response.saleResponse.authCode)
-      assert_equal('12', sale_response.saleResponse.fraudResult.avsResult)
+      assert_equal('44444 ', sale_response.saleResponse.authCode)
+      assert_equal('13', sale_response.saleResponse.fraudResult.avsResult)
   
       #test 4B
-      credit_hash =  {'litleTxnId' => sale_response.saleResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => sale_response.saleResponse.cnpTxnId}
       hash2b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash2b)
+      credit_response = CnpOnlineRequest.new.credit(hash2b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test 4C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash2c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash2c)
+      void_response = CnpOnlineRequest.new.void(hash2c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -491,31 +492,31 @@ module LitleOnline
         'cardholderAuthentication' => {'authenticationValue'=> 'BwABBJQ1AgAAAAAgJDUCAAAAAAA=' }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
       assert_equal('55555 ', auth_response.authorizationResponse.authCode)
       assert_equal('32', auth_response.authorizationResponse.fraudResult.avsResult)
-      assert_equal('N', auth_response.authorizationResponse.fraudResult.cardValidationResult)
+      assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
   
       #test 5A
-      capture_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId}
+      capture_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId}
       hash2a = capture_hash.merge(@@merchant_hash)
-      capture_response = LitleOnlineRequest.new.capture(hash2a)
+      capture_response = CnpOnlineRequest.new.capture(hash2a)
       assert_equal('000', capture_response.captureResponse.response)
       
   
       #test 5B
-      credit_hash =  {'litleTxnId' => capture_response.captureResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => capture_response.captureResponse.cnpTxnId}
       hash2b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash2b)
+      credit_response = CnpOnlineRequest.new.credit(hash2b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test 5C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash2c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash2c)
+      void_response = CnpOnlineRequest.new.void(hash2c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -533,12 +534,12 @@ module LitleOnline
         'cardholderAuthentication' => {'authenticationValue'=> 'BwABBJQ1AgAAAAAgJDUCAAAAAAA=' }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
       assert_equal('55555 ', auth_response.authorizationResponse.authCode)
       assert_equal('32', auth_response.authorizationResponse.fraudResult.avsResult)
-      assert_equal('N', auth_response.authorizationResponse.fraudResult.cardValidationResult)
+      assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
     end
   
     def test_5_sale
@@ -554,24 +555,24 @@ module LitleOnline
         'cardholderAuthentication' => {'authenticationValue'=> 'BwABBJQ1AgAAAAAgJDUCAAAAAAA=' }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      sale_response = LitleOnlineRequest.new.sale(hash)
+      sale_response = CnpOnlineRequest.new.sale(hash)
       assert_equal('000', sale_response.saleResponse.response)
       assert_equal('Approved', sale_response.saleResponse.message)
       assert_equal('55555 ', sale_response.saleResponse.authCode)
       assert_equal('32', sale_response.saleResponse.fraudResult.avsResult)
-      assert_equal('N', sale_response.saleResponse.fraudResult.cardValidationResult)
+      assert_equal('M', sale_response.saleResponse.fraudResult.cardValidationResult)
   
       #test 5B
-      credit_hash =  {'litleTxnId' => sale_response.saleResponse.litleTxnId}
+      credit_hash =  {'cnpTxnId' => sale_response.saleResponse.cnpTxnId}
       hash2b = credit_hash.merge(@@merchant_hash)
-      credit_response = LitleOnlineRequest.new.credit(hash2b)
+      credit_response = CnpOnlineRequest.new.credit(hash2b)
       assert_equal('000', credit_response.creditResponse.response)
       
   
       #test 5C
-      void_hash =  {'litleTxnId' => credit_response.creditResponse.litleTxnId}
+      void_hash =  {'cnpTxnId' => credit_response.creditResponse.cnpTxnId}
       hash2c = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash2c)
+      void_response = CnpOnlineRequest.new.void(hash2c)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -595,7 +596,7 @@ module LitleOnline
         'cardValidationNum' => '992'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('110', auth_response.authorizationResponse.response)
       assert_equal('Insufficient Funds', auth_response.authorizationResponse.message)
       assert_equal('34', auth_response.authorizationResponse.fraudResult.avsResult)
@@ -621,16 +622,16 @@ module LitleOnline
         'cardValidationNum' => '992'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      sale_response = LitleOnlineRequest.new.sale(hash)
+      sale_response = CnpOnlineRequest.new.sale(hash)
       assert_equal('110', sale_response.saleResponse.response)
       assert_equal('Insufficient Funds', sale_response.saleResponse.message)
       assert_equal('34', sale_response.saleResponse.fraudResult.avsResult)
       assert_equal('P', sale_response.saleResponse.fraudResult.cardValidationResult)
   
       #test 6A
-      void_hash =  {'litleTxnId' => '123456789000' }
+      void_hash =  {'cnpTxnId' => '123456789000' }
       hash6A = void_hash.merge(@@merchant_hash)
-      void_response = LitleOnlineRequest.new.void(hash6A)
+      void_response = CnpOnlineRequest.new.void(hash6A)
       assert_equal('000', void_response.voidResponse.response)
       
     end
@@ -654,7 +655,7 @@ module LitleOnline
         'type' => 'MC'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      authorization_response = LitleOnlineRequest.new.authorization(hash)
+      authorization_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('301', authorization_response.authorizationResponse.response)
       assert_equal('Invalid Account Number', authorization_response.authorizationResponse.message)
       assert_equal('34', authorization_response.authorizationResponse.fraudResult.avsResult)
@@ -680,7 +681,7 @@ module LitleOnline
         'type' => 'MC'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      authorization_response = LitleOnlineRequest.new.authorization(hash)
+      authorization_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('301', authorization_response.authorizationResponse.response)
       assert_equal('Invalid Account Number', authorization_response.authorizationResponse.message)
       assert_equal('34', authorization_response.authorizationResponse.fraudResult.avsResult)
@@ -706,7 +707,7 @@ module LitleOnline
         'type' => 'MC'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      sale_response = LitleOnlineRequest.new.sale(hash)
+      sale_response = CnpOnlineRequest.new.sale(hash)
       assert_equal('301', sale_response.saleResponse.response)
       assert_equal('Invalid Account Number', sale_response.saleResponse.message)
       assert_equal('34', sale_response.saleResponse.fraudResult.avsResult)
@@ -732,7 +733,7 @@ module LitleOnline
         'cardValidationNum' => '184'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('123', auth_response.authorizationResponse.response)
       assert_equal('Call Discover', auth_response.authorizationResponse.message)
       assert_equal('P', auth_response.authorizationResponse.fraudResult.cardValidationResult)
@@ -758,7 +759,7 @@ module LitleOnline
         'cardValidationNum' => '184'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('123', auth_response.authorizationResponse.response)
       assert_equal('Call Discover', auth_response.authorizationResponse.message)
       assert_equal('P', auth_response.authorizationResponse.fraudResult.cardValidationResult)
@@ -784,7 +785,7 @@ module LitleOnline
         'cardValidationNum' => '184'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      sale_response = LitleOnlineRequest.new.sale(hash)
+      sale_response = CnpOnlineRequest.new.sale(hash)
       assert_equal('123', sale_response.saleResponse.response)
       assert_equal('Call Discover', sale_response.saleResponse.message)
       assert_equal('P', sale_response.saleResponse.fraudResult.cardValidationResult)
@@ -811,7 +812,7 @@ module LitleOnline
         }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      response = LitleOnlineRequest.new.authorization(hash)
+      response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('303', response.authorizationResponse.response)
       assert_equal('Pick Up Card', response.authorizationResponse.message)
       assert_equal('34', response.authorizationResponse.fraudResult.avsResult)
@@ -837,7 +838,7 @@ module LitleOnline
         }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      response = LitleOnlineRequest.new.authorization(hash)
+      response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('303', response.authorizationResponse.response)
       assert_equal('Pick Up Card', response.authorizationResponse.message)
       assert_equal('34', response.authorizationResponse.fraudResult.avsResult)
@@ -863,7 +864,7 @@ module LitleOnline
         }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      response = LitleOnlineRequest.new.sale(hash)
+      response = CnpOnlineRequest.new.sale(hash)
       assert_equal('303', response.saleResponse.response)
       assert_equal('Pick Up Card', response.saleResponse.message)
       assert_equal('34', response.saleResponse.fraudResult.avsResult)
@@ -882,7 +883,7 @@ module LitleOnline
         'allowPartialAuth' => 'true'
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('010', auth_response.authorizationResponse.response)
       assert_equal('Partially Approved', auth_response.authorizationResponse.message)
       assert_equal('32000', auth_response.authorizationResponse.approvedAmount)
@@ -901,7 +902,7 @@ module LitleOnline
         'allowPartialAuth' => 'true'
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('010', auth_response.authorizationResponse.response)
       assert_equal('Partially Approved', auth_response.authorizationResponse.message)
       assert_equal('48000', auth_response.authorizationResponse.approvedAmount)
@@ -919,7 +920,7 @@ module LitleOnline
         'allowPartialAuth' => 'true'
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('010', auth_response.authorizationResponse.response)
       assert_equal('Partially Approved', auth_response.authorizationResponse.message)
       assert_equal('40000', auth_response.authorizationResponse.approvedAmount)
@@ -937,7 +938,7 @@ module LitleOnline
         'allowPartialAuth' => 'true'
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('010', auth_response.authorizationResponse.response)
       assert_equal('Partially Approved', auth_response.authorizationResponse.message)
       assert_equal('12000', auth_response.authorizationResponse.approvedAmount)

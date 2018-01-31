@@ -22,45 +22,45 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
-module LitleOnline
+module CnpOnline
   class TestUpdateCardValidationNumOnToken < Test::Unit::TestCase
     def test_simple
       hash = {
         'orderId'=>'12344',
-        'litleToken'=>'1233456789101112',
+        'cnpToken'=>'1233456789101112',
         'cardValidationNum'=>'123'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<orderId>1.*<litleToken>1233456789101112.*<cardValidationNum>123.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_card_validation_num_on_token(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<orderId>1.*<cnpToken>1233456789101112.*<cardValidationNum>123.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_card_validation_num_on_token(hash)
     end
     
     def test_order_id_is_optional
       hash = {
-        'litleToken'=>'1233456789101112',
+        'cnpToken'=>'1233456789101112',
         'cardValidationNum'=>'123'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<litleToken>1233456789101112.*<cardValidationNum>123.*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_card_validation_num_on_token(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<cnpToken>1233456789101112.*<cardValidationNum>123.*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_card_validation_num_on_token(hash)
     end
     
-    def test_litle_token_is_required
+    def test_cnp_token_is_required
       hash = {
         'orderId'=>'12344',
         'cardValidationNum'=>'123'
       }
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.update_card_validation_num_on_token(hash)}
-      assert_match /If updateCardValidationNumOnToken is specified, it must have a litleToken/, exception.message
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.update_card_validation_num_on_token(hash)}
+      assert_match /If updateCardValidationNumOnToken is specified, it must have a cnpToken/, exception.message
     end
     
     def test_card_validation_num_is_required
       hash = {
         'orderId'=>'12344',
-        'litleToken'=>'1233456789101112'
+        'cnpToken'=>'1233456789101112'
       }
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.update_card_validation_num_on_token(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.update_card_validation_num_on_token(hash)}
       assert_match /If updateCardValidationNumOnToken is specified, it must have a cardValidationNum/, exception.message
     end
 
@@ -69,11 +69,11 @@ module LitleOnline
       	'loggedInUser' => 'gdake',
       	'merchantSdk' => 'Ruby;8.14.0',
         'orderId'=>'12344',
-        'litleToken'=>'1233456789101112',
+        'cnpToken'=>'1233456789101112',
         'cardValidationNum'=>'123'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
-      LitleOnlineRequest.new.update_card_validation_num_on_token(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
+      CnpOnlineRequest.new.update_card_validation_num_on_token(hash)
     end
   end
 

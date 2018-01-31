@@ -22,20 +22,20 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
-module LitleOnline
+module CnpOnline
   class Test_echeckVoid < Test::Unit::TestCase
     def test_echeck_void
       hash = {
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<echeckVoid.*<litleTxnId>123456<\/litleTxnId>.*/m), is_a(Hash))
-      LitleOnlineRequest.new.echeck_void(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<echeckVoid.*<cnpTxnId>123456<\/cnpTxnId>.*/m), is_a(Hash))
+      CnpOnlineRequest.new.echeck_void(hash)
     end
     def test_logged_in_user
       hash = {
@@ -44,10 +44,10 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
-      LitleOnlineRequest.new.echeck_void(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*(loggedInUser="gdake".*merchantSdk="Ruby;8.14.0")|(merchantSdk="Ruby;8.14.0".*loggedInUser="gdake").*/m), is_a(Hash))
+      CnpOnlineRequest.new.echeck_void(hash)
     end
     
   end

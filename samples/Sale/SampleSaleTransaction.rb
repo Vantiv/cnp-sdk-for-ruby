@@ -1,6 +1,6 @@
-require_relative '../../lib/LitleOnline'
+require_relative '../../lib/CnpOnline'
 # Visa $10 Sale
-litleSaleTxn = {
+cnpSaleTxn = {
     'merchantId' => '087900',
     'id' => 'test',
     'reportGroup'=>'rpt_grp',
@@ -13,12 +13,12 @@ litleSaleTxn = {
         'amount'=>'1000'
     }
  
-# Peform the transaction on the Litle Platform
-response = LitleOnline::LitleOnlineRequest.new.sale(litleSaleTxn)
+# Peform the transaction on the Cnp Platform
+response = CnpOnline::CnpOnlineRequest.new.sale(cnpSaleTxn)
  
 # display results
 puts "Message: "+ response.message
-puts "Litle Transaction ID: "+ response.saleResponse.litleTxnId  
+puts "Cnp Transaction ID: "+ response.saleResponse.cnpTxnId  
 
 if (!response.saleResponse.message.eql?'Transaction Received')
    raise ArgumentError, "SampleSaleTransaction has not been Approved", caller

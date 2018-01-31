@@ -1,12 +1,14 @@
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
-  class Litle_certTest4 < Test::Unit::TestCase
+module CnpOnline
+  class Cnp_certTest4 < Test::Unit::TestCase
     # test echeck
     @@merchant_hash = {'reportGroup'=>'Planets',
-      'merchantId'=>'101',
-      'id'=>'test'
+      'merchantId'=>'1288791',
+      'id'=>'test',
+                       'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
+
     }
   
   #  test 37-49 merchant authorizate to do echeck using 087901 with same username IMPTEST, password cert3d6Z
@@ -26,7 +28,7 @@ module LitleOnline
           'routingNum' => '053100300'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_verification(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_verification(hash)
         assert_equal('301', echeck_response.echeckVerificationResponse.response)
         assert_equal('Invalid Account Number', echeck_response.echeckVerificationResponse.message)
       end
@@ -48,7 +50,7 @@ module LitleOnline
         'routingNum' => '053000219'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      echeck_response = LitleOnlineRequest.new.echeck_verification(hash)
+      echeck_response = CnpOnlineRequest.new.echeck_verification(hash)
       assert_equal('000', echeck_response.echeckVerificationResponse.response)
       assert_equal('Approved', echeck_response.echeckVerificationResponse.message)
     end
@@ -71,7 +73,7 @@ module LitleOnline
           'routingNum' => '053100300'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_verification(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_verification(hash)
         assert_equal('950', echeck_response.echeckVerificationResponse.response)
         # assert_equal('Declined - Negative Information on File', echeck_response.echeckVerificationResponse.message)
       end
@@ -94,7 +96,7 @@ module LitleOnline
           'routingNum' => '063102152'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_verification(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_verification(hash)
         assert_equal('951', echeck_response.echeckVerificationResponse.response)
         assert_equal('Absolute Decline', echeck_response.echeckVerificationResponse.message)
       end
@@ -116,7 +118,7 @@ module LitleOnline
           'routingNum' => '053100300'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_sale(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_sale(hash)
     
         assert_equal('301', echeck_response.echeckSalesResponse.response)
         assert_equal('Invalid Account Number', echeck_response.echeckSalesResponse.message)
@@ -137,7 +139,7 @@ module LitleOnline
           'routingNum' => '211370545'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_sale(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_sale(hash)
     
         assert_equal('000', echeck_response.echeckSalesResponse.response)
         assert_equal('Approved', echeck_response.echeckSalesResponse.message)
@@ -160,7 +162,7 @@ module LitleOnline
           'routingNum' => '211370545'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_sale(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_sale(hash)
     
         assert_equal('000', echeck_response.echeckSalesResponse.response)
         assert_equal('Approved', echeck_response.echeckSalesResponse.message)
@@ -183,7 +185,7 @@ module LitleOnline
           'routingNum' => '053133052'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_sale(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_sale(hash)
     
         assert_equal('900', echeck_response.echeckSalesResponse.response)
         assert_equal('Invalid Bank Routing Number', echeck_response.echeckSalesResponse.message)
@@ -205,7 +207,7 @@ module LitleOnline
           'routingNum' => '053100300'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_credit(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_credit(hash)
     
         # assert_equal('301', echeck_response.echeckCreditResponse.response)
       end
@@ -226,7 +228,7 @@ module LitleOnline
           'routingNum' => '063102152'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_credit(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_credit(hash)
     
         assert_equal('000', echeck_response.echeckCreditResponse.response)
         
@@ -248,7 +250,7 @@ module LitleOnline
           'routingNum' => '211370545'}
         }
         hash = customer_hash.merge(@@merchant_hash)
-        echeck_response = LitleOnlineRequest.new.echeck_credit(hash)
+        echeck_response = CnpOnlineRequest.new.echeck_credit(hash)
     
         assert_equal('000', echeck_response.echeckCreditResponse.response)
         
@@ -256,10 +258,10 @@ module LitleOnline
       
     def test_48
       customer_hash = {
-        'litleTxnId' => '430000000000000000'
+        'cnpTxnId' => '430000000000000000'
       }
       hash = customer_hash.merge(@@merchant_hash)
-      echeck_response = LitleOnlineRequest.new.echeck_credit(hash)
+      echeck_response = CnpOnlineRequest.new.echeck_credit(hash)
   
       assert_equal('000', echeck_response.echeckCreditResponse.response)
       
@@ -272,11 +274,11 @@ module LitleOnline
         'version'=>'8.8',
         'id'=>'test',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456789101000',
+        'cnpTxnId'=>'123456789101000',
         'amount'=>'12'
       }
       hash = customer_hash.merge(@@merchant_hash)
-      echeck_response = LitleOnlineRequest.new.echeck_credit(hash)
+      echeck_response = CnpOnlineRequest.new.echeck_credit(hash)
   
       assert_equal('000', echeck_response.echeckCreditResponse.response)
       

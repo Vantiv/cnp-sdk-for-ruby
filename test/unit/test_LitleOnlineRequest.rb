@@ -22,18 +22,18 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
 
-  class TestLitleOnlineRequest < Test::Unit::TestCase
+  class TestCnpOnlineRequest < Test::Unit::TestCase
     def test_set_merchant_id
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}})
-      litle = LitleOnlineRequest.new
-      assert_equal '2', litle.send(:get_merchant_id, {'merchantId'=>'2'})
-      assert_equal '1', litle.send(:get_merchant_id, {'NotMerchantId'=>'2'})
+      cnp = CnpOnlineRequest.new
+      assert_equal '2', cnp.send(:get_merchant_id, {'merchantId'=>'2'})
+      assert_equal '1', cnp.send(:get_merchant_id, {'NotMerchantId'=>'2'})
     end
   
     def test_simple
@@ -49,8 +49,8 @@ module LitleOnline
         'expDate' =>'1210'
         }}
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/<litleOnlineRequest .*/m), is_a(Hash))
-      response = LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/<cnpOnlineRequest .*/m), is_a(Hash))
+      response = CnpOnlineRequest.new.authorization(hash)
     end
   
     def test_authorization_attributes
@@ -67,8 +67,8 @@ module LitleOnline
         'expDate' =>'1210'
         }}
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<authorization ((reportGroup="Planets" id="003")|(id="003" reportGroup="Planets")).*/m), is_a(Hash))
-      response = LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<authorization ((reportGroup="Planets" id="003")|(id="003" reportGroup="Planets")).*/m), is_a(Hash))
+      response = CnpOnlineRequest.new.authorization(hash)
     end
   
     def test_authorization_elements
@@ -85,8 +85,8 @@ module LitleOnline
         'expDate' =>'1210'
         }}
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<authorization.*<orderId>12344.*<amount>106.*<orderSource>ecommerce.*/m), is_a(Hash))
-      response = LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<authorization.*<orderId>12344.*<amount>106.*<orderSource>ecommerce.*/m), is_a(Hash))
+      response = CnpOnlineRequest.new.authorization(hash)
     end
   
     def test_authorization_card_field
@@ -103,8 +103,8 @@ module LitleOnline
         'expDate' =>'1210'
         }}
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*<authorization.*<card>.*<number>4100000000000001.*<expDate>1210.*/m), is_a(Hash))
-      response = LitleOnlineRequest.new.authorization(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*<authorization.*<card>.*<number>4100000000000001.*<expDate>1210.*/m), is_a(Hash))
+      response = CnpOnlineRequest.new.authorization(hash)
     end
   
     def test_sale_card_field
@@ -121,8 +121,8 @@ module LitleOnline
         'expDate' =>'1210'
         }}
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/<litleOnlineRequest.*<sale.*<card>.*<number>4100000000000001.*<expDate>1210.*/m), is_a(Hash))
-      response = LitleOnlineRequest.new.sale(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/<cnpOnlineRequest.*<sale.*<card>.*<number>4100000000000001.*<expDate>1210.*/m), is_a(Hash))
+      response = CnpOnlineRequest.new.sale(hash)
     end
   
     def test_capture_amount_unset_should_not_be_in_xml
@@ -130,11 +130,11 @@ module LitleOnline
       hash={
         'id' => '006',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456789012345678'
+        'cnpTxnId'=>'123456789012345678'
       }
       
-      LitleXmlMapper.expects(:request).with(Not(regexp_matches(/.*amount.*/m)), is_a(Hash))
-      response = LitleOnlineRequest.new.capture(hash)
+      CnpXmlMapper.expects(:request).with(Not(regexp_matches(/.*amount.*/m)), is_a(Hash))
+      response = CnpOnlineRequest.new.capture(hash)
     end
   
     def test_force_capture_amount_unset_should_not_be_in_xml
@@ -144,11 +144,11 @@ module LitleOnline
         'orderId'=>'12344',
         'reportGroup'=>'Planets',
         'orderSource'=>'ecommerce',
-        'litleTxnId'=>'123456789012345678'
+        'cnpTxnId'=>'123456789012345678'
       }
   
-      LitleXmlMapper.expects(:request).with(Not(regexp_matches(/.*amount.*/m)), is_a(Hash))
-      response = LitleOnlineRequest.new.force_capture(hash)
+      CnpXmlMapper.expects(:request).with(Not(regexp_matches(/.*amount.*/m)), is_a(Hash))
+      response = CnpOnlineRequest.new.force_capture(hash)
     end
   
     def test_amount_is_not_required_in_echeck_credit
@@ -158,12 +158,12 @@ module LitleOnline
         'orderId'=>'12344',
         'reportGroup'=>'Planets',
         'orderSource'=>'ecommerce',
-        'litleTxnId'=>'123456789012345678',
+        'cnpTxnId'=>'123456789012345678',
       }
   
-      LitleXmlMapper.expects(:request).with(Not(regexp_matches(/.*amount.*/m)), is_a(Hash))
+      CnpXmlMapper.expects(:request).with(Not(regexp_matches(/.*amount.*/m)), is_a(Hash))
   
-      response = LitleOnlineRequest.new.echeck_credit(hash)
+      response = CnpOnlineRequest.new.echeck_credit(hash)
     end
   
     def test_amount_is_not_required_in_echeck_sale
@@ -173,11 +173,11 @@ module LitleOnline
         'orderId'=>'12344',
         'reportGroup'=>'Planets',
         'orderSource'=>'ecommerce',
-        'litleTxnId'=>'123456789012345678',
+        'cnpTxnId'=>'123456789012345678',
       }
   
-      LitleXmlMapper.expects(:request).with(Not(regexp_matches(/.*amount.*/m)), is_a(Hash))
-      response = LitleOnlineRequest.new.echeck_sale(hash)
+      CnpXmlMapper.expects(:request).with(Not(regexp_matches(/.*amount.*/m)), is_a(Hash))
+      response = CnpOnlineRequest.new.echeck_sale(hash)
     end
   
     def test_choice_between_card_token
@@ -196,8 +196,8 @@ module LitleOnline
         }
       }
   
-      LitleXmlMapper.expects(:request).with(regexp_matches(/.*card.*/m), is_a(Hash))
-      LitleOnlineRequest.new.authorization(start_hash.merge(card_only))
+      CnpXmlMapper.expects(:request).with(regexp_matches(/.*card.*/m), is_a(Hash))
+      CnpOnlineRequest.new.authorization(start_hash.merge(card_only))
     end
     
   def test_choice_between_card_token2
@@ -211,12 +211,12 @@ module LitleOnline
     
     token_only = {
       'token'=> {
-      'litleToken' => '1111222233334444'
+      'cnpToken' => '1111222233334444'
       }
     }
   
-    LitleXmlMapper.expects(:request).with(regexp_matches(/.*token.*/m), is_a(Hash))
-    LitleOnlineRequest.new.authorization(start_hash.merge(token_only))
+    CnpXmlMapper.expects(:request).with(regexp_matches(/.*token.*/m), is_a(Hash))
+    CnpOnlineRequest.new.authorization(start_hash.merge(token_only))
   end
   
 
@@ -236,17 +236,17 @@ module LitleOnline
           'expDate' =>'1210'
         }}
 
-      LitleXmlMapper.expects(:request).with(regexp_matches(/<litleOnlineRequest.*<sale.*<payPalOrderComplete>true<\/payPalOrderComplete>.*/m), is_a(Hash))
-      response = LitleOnlineRequest.new.sale(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/<cnpOnlineRequest.*<sale.*<payPalOrderComplete>true<\/payPalOrderComplete>.*/m), is_a(Hash))
+      response = CnpOnlineRequest.new.sale(hash)
     end
 
     def test_version_matches_sdk_major_and_minor_version_ignoring_config
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'})
       hash={
-        'litleTxnId' => '006'
+        'cnpTxnId' => '006'
       }
-      LitleXmlMapper.expects(:request).with(regexp_matches(/<litleOnlineRequest.*version="11\.0".*/m), is_a(Hash))
-      response = LitleOnlineRequest.new.void(hash)
+      CnpXmlMapper.expects(:request).with(regexp_matches(/<cnpOnlineRequest.*version="12\.0".*/m), is_a(Hash))
+      response = CnpOnlineRequest.new.void(hash)
     end
     
   end

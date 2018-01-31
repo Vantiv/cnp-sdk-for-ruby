@@ -1,4 +1,4 @@
-require_relative '../../lib/LitleOnline'
+require_relative '../../lib/CnpOnline'
  @@merchant_hash = {'reportGroup'=>'Planets','id'=>'321','customerId'=>'123',
       'merchantId'=>'101',
       'id'=>'test'
@@ -22,14 +22,14 @@ auth_info = {
   'type' => 'VI'}
 } 
 hash = auth_info.merge(@@merchant_hash)
-auth_response = LitleOnline::LitleOnlineRequest.new.authorization(hash)
+auth_response = CnpOnline::CnpOnlineRequest.new.authorization(hash)
  
 #display results
 puts "Response: " + auth_response.authorizationResponse.response
 puts "Message: " + auth_response.authorizationResponse.message
-puts "Litle Transaction ID: " + auth_response.authorizationResponse.litleTxnId
+puts "Cnp Transaction ID: " + auth_response.authorizationResponse.cnpTxnId
 puts "AVS Match: " + auth_response.authorizationResponse.fraudResult.avsResult
 
  if (!auth_response.authorizationResponse.message.eql?'Approved')
-   raise ArgumentError, "LitleAvsTransaction has not been Approved", caller
+   raise ArgumentError, "CnpAvsTransaction has not been Approved", caller
  end

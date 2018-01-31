@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class TestAuthReversal < Test::Unit::TestCase
     def test_simple_echeck_void
       hash = {
@@ -33,9 +33,9 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'12345678000',
+        'cnpTxnId'=>'12345678000',
       }
-      response= LitleOnlineRequest.new.echeck_void(hash)
+      response= CnpOnlineRequest.new.echeck_void(hash)
       assert_equal('0', response.response)
     end  
   end

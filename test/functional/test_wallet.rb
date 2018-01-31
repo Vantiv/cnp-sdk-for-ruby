@@ -22,11 +22,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 
 #test Authorization Transaction
-module LitleOnline
+module CnpOnline
   class TestAuth < Test::Unit::TestCase
     def test_simple_auth_with_wallet
      hash = {
@@ -45,7 +45,7 @@ module LitleOnline
          'walletSourceType' => 'MasterPass',
          'walletSourceTypeId' => '102'                  
      }}
-     response= LitleOnlineRequest.new.authorization(hash)
+     response= CnpOnlineRequest.new.authorization(hash)
      assert_equal 'Valid Format', response.message
     end    
            
@@ -55,7 +55,7 @@ module LitleOnline
        'id' => 'test',
        'version'=>'8.8',
        'reportGroup'=>'Planets',
-       'litleTxnId'=>'123456',
+       'cnpTxnId'=>'123456',
        'orderId'=>'12344',
        'amount'=>'106',
        'orderSource'=>'ecommerce',
@@ -67,7 +67,7 @@ module LitleOnline
          'walletSourceType' => 'MasterPass',
          'walletSourceTypeId' => '102'                  
       }}
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal 'Valid Format', response.message
     end
   end

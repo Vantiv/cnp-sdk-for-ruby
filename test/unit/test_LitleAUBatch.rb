@@ -22,20 +22,20 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'mocha/setup'
 
-module LitleOnline
+module CnpOnline
 
-  class TestLitleAUBatch < Test::Unit::TestCase
+  class TestCnpAUBatch < Test::Unit::TestCase
     def test_create_new_batch
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).once
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').twice
       Dir.expects(:mkdir).with('/usr/local/Batches/').once
       File.expects(:directory?).returns(false).once
       
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       batch.create_new_batch('/usr/local/Batches/')
     end
     
@@ -56,7 +56,7 @@ module LitleOnline
         'expDate' =>'1210'
       }}
       
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       batch.create_new_batch('D:\Batches\\')
       batch.account_update(accountUpdateHash)
       
@@ -74,7 +74,7 @@ module LitleOnline
       File.expects(:delete).once
       File.expects(:directory?).returns(true).once
 
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       batch.create_new_batch('D:\Batches\\')      
 
       batch.close_batch()
@@ -97,8 +97,8 @@ module LitleOnline
       File.expects(:rename).once.in_sequence(open)
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.closed.*/), 'w').once.in_sequence(open)
       File.expects(:delete).with(regexp_matches(/.*batch_.*\d_txns.*/)).once.in_sequence(open)
-      batch1 = LitleAUBatch.new
-      batch2 = LitleAUBatch.new
+      batch1 = CnpAUBatch.new
+      batch2 = CnpAUBatch.new
       batch1.create_new_batch('/usr/local/Batches/')
       
       batch2.open_existing_batch(batch1.get_batch_name)
@@ -114,7 +114,7 @@ module LitleOnline
       File.expects(:delete).once
       File.expects(:directory?).returns(true).once
       
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       batch.get_counts_and_amounts.expects(:[]).returns(hash = Hash.new).at_least(5)
       
       batch.create_new_batch('/usr/local/batches')
@@ -126,7 +126,7 @@ module LitleOnline
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').once
       File.expects(:open).with(regexp_matches(/.*batch_.*\d_txns.*/), 'a+').once
       
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       batch.create_new_batch('/usr/local')
       
       assert batch.get_batch_name.include?('/usr/local/')
@@ -144,14 +144,14 @@ module LitleOnline
       File.expects(:open).with(regexp_matches(/.*batch_.*\d_txns.*/), 'a+').in_sequence(fileExists)
       
       
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       batch.create_new_batch('/usr/local/')
     end
     
     def test_create_new_batch_when_full
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'8.10'}).once
       
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       addTxn = sequence('addTxn')
       
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').in_sequence(addTxn)
@@ -190,7 +190,7 @@ module LitleOnline
       Dir.expects(:mkdir).with('/usr/local/Batches/').once
       File.expects(:directory?).returns(false).once      
       
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       batch.create_new_batch('/usr/local/Batches/')
       
       accountUpdateHash = {
@@ -223,14 +223,14 @@ module LitleOnline
       Dir.expects(:mkdir).with('/usr/local/Batches/').once
       File.expects(:directory?).returns(false).once      
       
-      batch = LitleAUBatch.new
+      batch = CnpAUBatch.new
       batch.create_new_batch('/usr/local/Batches/')
       
       accountUpdateHash = {
         'reportGroup'=>'Planets',
         'id'=>'12345',
         'customerId'=>'0987',
-        'token'=>{'litleToken'=>'1234567890123'
+        'token'=>{'cnpToken'=>'1234567890123'
       }}
       
       5.times(){ batch.account_update(accountUpdateHash ) }

@@ -1,4 +1,4 @@
-require_relative '../../lib/LitleOnline'
+require_relative '../../lib/CnpOnline'
 #Stand alone credit
 credit_info = {
   'orderId' => '1',
@@ -18,13 +18,13 @@ credit_info = {
   'cardValidationNum' => '349',
   'type' => 'VI'}
 }
-credit_response= LitleOnline::LitleOnlineRequest.new.credit(credit_info)
+credit_response= CnpOnline::CnpOnlineRequest.new.credit(credit_info)
  
 #display results
 puts "Response: " + credit_response.creditResponse.response
 puts "Message: " + credit_response.creditResponse.response
-puts "Litle Transaction ID: " + credit_response.creditResponse.litleTxnId
+puts "Cnp Transaction ID: " + credit_response.creditResponse.cnpTxnId
 
  if (!credit_response.creditResponse.message.eql?'Transaction Received')
-   raise ArgumentError, "LitleRefundTransaction has not been Approved", caller
+   raise ArgumentError, "CnpRefundTransaction has not been Approved", caller
  end

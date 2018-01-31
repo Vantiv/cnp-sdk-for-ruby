@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class TestSale < Test::Unit::TestCase
     def test_simple_sale_with_card
       hash = {
@@ -33,7 +33,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -43,7 +43,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
      
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal('000', response.saleResponse.response)
     end
 
@@ -53,7 +53,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -63,7 +63,7 @@ module LitleOnline
         'transactionId'=>'123456'
         }}
       
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal 'Valid Format', response.message
     end
 
@@ -73,7 +73,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'110',
         'secondaryAmount'=>'50',
@@ -90,9 +90,9 @@ module LitleOnline
         #'version'=>'1'   
          'version'=>'10000'
         }}
-      response= LitleOnlineRequest.new.sale(hash)
-      assert_equal('Insufficient Funds', response.saleResponse.message)
-      assert_equal('110', response.saleResponse.applepayResponse.transactionAmount)
+      response= CnpOnlineRequest.new.sale(hash)
+      assert_equal('Approved', response.saleResponse.message)
+      assert_equal('0', response.saleResponse.applepayResponse.transactionAmount)
     end
 
     def test_illegal_order_source
@@ -101,7 +101,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecomerce',
@@ -111,7 +111,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -122,7 +122,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -131,7 +131,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal('000', response.saleResponse.response)
     end
 
@@ -141,7 +141,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'orderSource'=>'ecommerce',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'amount'=>'106',
         'card'=>{
         'type'=>'VI',
@@ -151,7 +151,7 @@ module LitleOnline
         'reportGroup'=>'Planets',
         'orderId'=>'12344'
       }
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal('000', response.saleResponse.response)
     end
 
@@ -161,7 +161,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -171,7 +171,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal('000', response.saleResponse.response)
     end
 
@@ -181,7 +181,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -190,7 +190,7 @@ module LitleOnline
         'number' =>'4100000000000000',
         'expDate' =>'1210'
         }}
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal('000', response.saleResponse.response)
     end
 
@@ -200,7 +200,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
         'card'=>{
@@ -209,7 +209,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -220,7 +220,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'orderSource'=>'ecommerce',
         'card'=>{
@@ -229,7 +229,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -240,7 +240,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'card'=>{
@@ -249,7 +249,7 @@ module LitleOnline
         'expDate' =>'1210'
         }}
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.sale(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.sale(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -260,7 +260,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -273,7 +273,7 @@ module LitleOnline
         'track2Status'=>'0'
         }
       }
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal('000', response.saleResponse.response)
     end
     
@@ -284,7 +284,7 @@ module LitleOnline
          'id' => 'test',
          'version'=>'8.8',
          'reportGroup'=>'Planets',
-         'litleTxnId'=>'123456',
+         'cnpTxnId'=>'123456',
          'orderId'=>'12344',
          'amount'=>'110',
          'secondaryAmount'=>'50',
@@ -303,9 +303,9 @@ module LitleOnline
          'signature' =>'1',
          'version'=>'100000'
         }}
-      response= LitleOnlineRequest.new.sale(hash)
-      assert_equal('Insufficient Funds', response.saleResponse.message)
-      assert_equal('110', response.saleResponse.applepayResponse.transactionAmount)
+      response= CnpOnlineRequest.new.sale(hash)
+      assert_equal('Approved', response.saleResponse.message)
+      assert_equal('0', response.saleResponse.applepayResponse.transactionAmount)
     end
         
     #SDK Ruby XML 10
@@ -316,7 +316,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -331,7 +331,7 @@ module LitleOnline
             'walletSourceType' => 'MasterPass',
              'walletSourceTypeId' => '102'                  
         }}
-        response= LitleOnlineRequest.new.sale(hash)
+        response= CnpOnlineRequest.new.sale(hash)
         assert_equal 'Valid Format', response.message
      end
      
@@ -341,7 +341,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -352,7 +352,7 @@ module LitleOnline
         'expDate' =>'1210'
         }
       }
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal 'Valid Format', response.message
     end
 
@@ -362,7 +362,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -374,7 +374,7 @@ module LitleOnline
         'originalNetworkTransactionId'=>'98765432109876543210',
         'originalTransactionAmount'=>'7001'
       }
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal 'Valid Format', response.message
       assert_equal('63225578415568556365452427825', response.saleResponse.networkTransactionId)
     end
@@ -385,7 +385,7 @@ module LitleOnline
         'id' => 'test',
         'version'=>'8.8',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -394,7 +394,7 @@ module LitleOnline
         'sequenceType'=>'FirstRecurring',
         'iban'=>'123456789123456789'
         }}
-      response= LitleOnlineRequest.new.sale(hash)
+      response= CnpOnlineRequest.new.sale(hash)
       assert_equal 'Valid Format', response.message
       assert_equal('http://redirect.url.vantiv.com', response.saleResponse.sepaDirectDebitResponse.redirectUrl)
       assert_equal('jj2d1d372osmmt7tb8epm0a99q', response.saleResponse.sepaDirectDebitResponse.redirectToken)

@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class TestAuthReversal < Test::Unit::TestCase
     def test_simple_auth_reversal
       hash = {
@@ -33,11 +33,11 @@ module LitleOnline
         'version'=>'8.8',
         'id'=>'test',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'12345678000',
+        'cnpTxnId'=>'12345678000',
         'amount'=>'106',
         'payPalNotes'=>'Notes'
       }
-      response= LitleOnlineRequest.new.auth_reversal(hash)
+      response= CnpOnlineRequest.new.auth_reversal(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -46,16 +46,16 @@ module LitleOnline
         'merchantId' => '101',
         'version'=>'8.8',
         'id'=>'test',
-        'litleTxnId'=>'12345000',
+        'cnpTxnId'=>'12345000',
         'payPalNotes'=>'Notes',
         'amount'=>'106',
         'reportGroup'=>'Planets',
       }
-      response= LitleOnlineRequest.new.auth_reversal(hash)
+      response= CnpOnlineRequest.new.auth_reversal(hash)
       assert_equal('Valid Format', response.message)
     end
   
-    def test_no_litle_txn_id
+    def test_no_cnp_txn_id
       hash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -65,7 +65,7 @@ module LitleOnline
         'payPalNotes'=>'Notes'
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.auth_reversal(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.auth_reversal(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)     
     end

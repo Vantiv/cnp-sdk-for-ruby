@@ -1,4 +1,4 @@
-require_relative '../../lib/LitleOnline'
+require_relative '../../lib/CnpOnline'
 #Capture Given Auth
 capture_given_auth_info = {
   'merchantId' => '101',
@@ -19,13 +19,13 @@ capture_given_auth_info = {
     'expDate' =>'1210'
     }
 }
-response = LitleOnline::LitleOnlineRequest.new.capture_given_auth(capture_given_auth_info)
+response = CnpOnline::CnpOnlineRequest.new.capture_given_auth(capture_given_auth_info)
  
 #display results
 puts "Response: " + response.captureGivenAuthResponse.response
 puts "Message: " + response.captureGivenAuthResponse.message
-puts "Litle Transaction ID: " + response.captureGivenAuthResponse.litleTxnId
+puts "Cnp Transaction ID: " + response.captureGivenAuthResponse.cnpTxnId
 
 if (!response.captureGivenAuthResponse.message.eql?'Transaction Received')
-   raise ArgumentError, "LitleCaptureGivenAuthTransaction has not been Approved", caller
+   raise ArgumentError, "CnpCaptureGivenAuthTransaction has not been Approved", caller
 end

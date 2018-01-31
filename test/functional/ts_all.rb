@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
 
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 
 
 #test driver for running all tests
@@ -46,7 +46,7 @@ require_relative 'test_echeckVoid'
 require_relative 'test_updateCardValidationNumOnToken'
 require_relative 'test_wallet'
 require_relative 'test_queryTransaction'
-require_relative 'test_litle_requests'
+#require_relative 'test_cnp_requests'
 require_relative 'test_batch'
 require_relative 'test_cancelSubscription'
 require_relative 'test_updateSubscription'

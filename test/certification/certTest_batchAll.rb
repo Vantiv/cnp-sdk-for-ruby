@@ -22,19 +22,19 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__)
+require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'fileutils'
 
-module LitleOnline
-  class LitleBatchCertTest < Test::Unit::TestCase
+module CnpOnline
+  class CnpBatchCertTest < Test::Unit::TestCase
     def setup
-      path = "/tmp/litle-sdk-for-ruby"
+      path = "/tmp/cnp-sdk-for-ruby"
       FileUtils.rm_rf path
       if(!File.directory?(path))
         Dir.mkdir(path)
       end
-      path = "/tmp/litle-sdk-for-ruby/cert/"
+      path = "/tmp/cnp-sdk-for-ruby/cert/"
       if(!File.directory?(path))
         Dir.mkdir(path)
       end
@@ -84,7 +84,7 @@ module LitleOnline
         'version'=>'8.8',
         'id' => '006',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'12345678000',
+        'cnpTxnId'=>'12345678000',
         'amount'=>'106',
         'payPalNotes'=>'Notes'
       }
@@ -105,7 +105,7 @@ module LitleOnline
         'id'=>'12345',
         'customerId'=>'0987',
         'orderId'=>'12344',
-        'litleToken'=>'1233456789103801',
+        'cnpToken'=>'1233456789103801',
         'cardValidationNum'=>'123'
       }
 
@@ -114,7 +114,7 @@ module LitleOnline
         'version'=>'8.8',
         'id' => '006',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456',
+        'cnpTxnId'=>'123456',
         'orderId'=>'12344',
         'amount'=>'106',
         'orderSource'=>'ecommerce',
@@ -129,7 +129,7 @@ module LitleOnline
         'version'=>'8.8',
         'id' => '006',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456000',
+        'cnpTxnId'=>'123456000',
         'amount'=>'106',
       }
 
@@ -160,7 +160,7 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
 
       echeckCreditHash = {
@@ -168,7 +168,7 @@ module LitleOnline
         'version'=>'8.8',
         'id' => '006',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456789101112',
+        'cnpTxnId'=>'123456789101112',
         'amount'=>'12'
       }
 
@@ -177,7 +177,7 @@ module LitleOnline
         'version'=>'8.8',
         'id' => '006',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456'
+        'cnpTxnId'=>'123456'
       }
 
       echeckSaleHash = {
@@ -190,7 +190,7 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
 
       accountUpdateHash = {
@@ -204,12 +204,12 @@ module LitleOnline
         'expDate' =>'1210'
         }}
 
-      path = "/tmp/litle-sdk-for-ruby/cert/"
+      path = "/tmp/cnp-sdk-for-ruby/cert/"
 
-      request = LitleRequest.new({'sessionId'=>'8675309'})
+      request = CnpRequest.new({'sessionId'=>'8675309'})
 
-      request.create_new_litle_request(path)
-      batch = LitleBatchRequest.new
+      request.create_new_cnp_request(path)
+      batch = CnpBatchRequest.new
       batch.create_new_batch(path)
 
       batch.account_update(accountUpdateHash)
@@ -229,21 +229,21 @@ module LitleOnline
 
       #close the batch, indicating we plan to add no more transactions
       batch.close_batch()
-      #add the batch to the LitleRequest
+      #add the batch to the CnpRequest
       request.commit_batch(batch)
-      #finish the Litle Request, indicating we plan to add no more batches
+      #finish the Cnp Request, indicating we plan to add no more batches
       request.finish_request
 
       #send the batch files at the given directory over sFTP
-      request.send_to_litle
+      request.send_to_cnp
 
       #grab the expected number of responses from the sFTP server and save them to the given path
       request.get_responses_from_server()
 
       count = 0
       #process the responses from the server with a listener which applies the given block
-      request.process_responses({:transaction_listener => LitleOnline::DefaultLitleListener.new do |transaction|
-        assert_not_nil transaction["litleTxnId"] =~ /\d+/
+      request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
+        assert_not_nil transaction["cnpTxnId"] =~ /\d+/
         assert_not_nil transaction["response"] =~ /\d+/
         assert_not_nil transaction["message"]
         count+=1
@@ -262,15 +262,15 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
 
-      path = "/tmp/litle-sdk-for-ruby/cert/"
+      path = "/tmp/cnp-sdk-for-ruby/cert/"
 
-      request = LitleRequest.new({'sessionId'=>'8675309'})
+      request = CnpRequest.new({'sessionId'=>'8675309'})
 
-      request.create_new_litle_request(path)
-      batch = LitleBatchRequest.new
+      request.create_new_cnp_request(path)
+      batch = CnpBatchRequest.new
       batch.create_new_batch(path)
 
       batch.echeck_sale(echeckSaleHash)
@@ -279,21 +279,21 @@ module LitleOnline
       batch.get_counts_and_amounts[:sale][:numSales] += 1
       #close the batch, indicating we plan to add no more transactions
       batch.close_batch()
-      #add the batch to the LitleRequest
+      #add the batch to the CnpRequest
       request.commit_batch(batch)
 
-      #finish the Litle Request, indicating we plan to add no more batches
+      #finish the Cnp Request, indicating we plan to add no more batches
       request.finish_request
 
       #send the batch files at the given directory over sFTP
-      request.send_to_litle
+      request.send_to_cnp
 
       #grab the expected number of responses from the sFTP server and save them to the given path
       request.get_responses_from_server()
 
       assert_raise RuntimeError do
         #process the responses from the server with a listener which applies the given block
-        request.process_responses({:transaction_listener => LitleOnline::DefaultLitleListener.new do |transaction|
+        request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
           end})
       end
     end
@@ -309,15 +309,15 @@ module LitleOnline
         'orderId'=>'12345',
         'orderSource'=>'ecommerce',
         'echeck' => {'accType'=>'Checking','accNum'=>'12345657890','routingNum'=>'123456789','checkNum'=>'123455'},
-        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}
+        'billToAddress'=>{'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}
       }
 
-      path = "/tmp/litle-sdk-for-ruby/cert/"
+      path = "/tmp/cnp-sdk-for-ruby/cert/"
 
-      request = LitleRequest.new({'sessionId'=>'8675309'})
+      request = CnpRequest.new({'sessionId'=>'8675309'})
 
-      request.create_new_litle_request(path)
-      batch = LitleBatchRequest.new
+      request.create_new_cnp_request(path)
+      batch = CnpBatchRequest.new
       batch.create_new_batch(path)
 
       batch.echeck_sale(echeckSaleHash)
@@ -326,22 +326,22 @@ module LitleOnline
       batch.get_counts_and_amounts[:sale][:saleAmount] += 1
       #close the batch, indicating we plan to add no more transactions
       batch.close_batch()
-      #add the batch to the LitleRequest
+      #add the batch to the CnpRequest
       request.commit_batch(batch)
 
-      #finish the Litle Request, indicating we plan to add no more batches
+      #finish the Cnp Request, indicating we plan to add no more batches
       request.finish_request
 
       #send the batch files at the given directory over sFTP
-      request.send_to_litle
+      request.send_to_cnp
 
       #grab the expected number of responses from the sFTP server and save them to the given path
       request.get_responses_from_server()
 
-      # we are checking the litleResponse header for a filed response code and raising it as an error
+      # we are checking the cnpResponse header for a filed response code and raising it as an error
       assert_raise RuntimeError do
         #process the responses from the server with a listener which applies the given block
-        request.process_responses({:transaction_listener => LitleOnline::DefaultLitleListener.new do |transaction|
+        request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
           end})
       end
     end
@@ -453,11 +453,11 @@ module LitleOnline
         
       }
 
-      path = "/tmp/litle-sdk-for-ruby/cert/"
+      path = "/tmp/cnp-sdk-for-ruby/cert/"
 
-      request = LitleRequest.new({'sessionId'=>'8675309'})
-      request.create_new_litle_request(path)
-      batch = LitleBatchRequest.new
+      request = CnpRequest.new({'sessionId'=>'8675309'})
+      request.create_new_cnp_request(path)
+      batch = CnpBatchRequest.new
       batch.create_new_batch(path)
 
       batch.submerchant_credit(submerchantCreditHash)
@@ -473,21 +473,21 @@ module LitleOnline
 
       #close the batch, indicating we plan to add no more transactions
       batch.close_batch()
-      #add the batch to the LitleRequest
+      #add the batch to the CnpRequest
       request.commit_batch(batch)
-      #finish the Litle Request, indicating we plan to add no more batches
+      #finish the Cnp Request, indicating we plan to add no more batches
       request.finish_request
 
       #send the batch files at the given directory over sFTP
-      request.send_to_litle
+      request.send_to_cnp
 
       #grab the expected number of responses from the sFTP server and save them to the given path
       request.get_responses_from_server()
 
       count = 0
       #process the responses from the server with a listener which applies the given block
-      request.process_responses({:transaction_listener => LitleOnline::DefaultLitleListener.new do |transaction|
-        assert_not_nil transaction["litleTxnId"] =~ /\d+/
+      request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
+        assert_not_nil transaction["cnpTxnId"] =~ /\d+/
         assert_not_nil transaction["response"] =~ /\d+/
         assert_not_nil transaction["message"]
         count+=1
@@ -497,7 +497,7 @@ module LitleOnline
     
     def test_echeck_pre_note_all 
       
-      billToAddress = {'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'litle.com'}        
+      billToAddress = {'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}        
       echeckSuccess = {'accType'=>'Corporate','accNum'=>'1092969901','routingNum'=>'011075150'}
       echeckRoutErr = {'accType'=>'Checking','accNum'=>'6099999992','routingNum'=>'053133052'}
       echeckAccErr = {'accType'=>'Corporate','accNum'=>'10@2969901','routingNum'=>'011100012'}
@@ -568,12 +568,12 @@ module LitleOnline
         'echeck' => echeckAccErr
       }
   
-      path = "/tmp/litle-sdk-for-ruby/cert/"
+      path = "/tmp/cnp-sdk-for-ruby/cert/"
   
-      request = LitleRequest.new({'sessionId'=>'8675309'})
+      request = CnpRequest.new({'sessionId'=>'8675309'})
   
-      request.create_new_litle_request(path)
-      batch = LitleBatchRequest.new
+      request.create_new_cnp_request(path)
+      batch = CnpBatchRequest.new
       batch.create_new_batch(path)
   
       batch.echeck_pre_note_sale(echeckPreNoteSaleHashSuccess)
@@ -585,20 +585,20 @@ module LitleOnline
   
       #close the batch, indicating we plan to add no more transactions
       batch.close_batch()
-      #add the batch to the LitleRequest
+      #add the batch to the CnpRequest
       request.commit_batch(batch)
-      #finish the Litle Request, indicating we plan to add no more batches
+      #finish the Cnp Request, indicating we plan to add no more batches
       request.finish_request
   
       #send the batch files at the given directory over sFTP
-      request.send_to_litle
+      request.send_to_cnp
   
       request.get_responses_from_server()
   
       count = 0
       #process the responses from the server with a listener which applies the given block
-      request.process_responses({:transaction_listener => LitleOnline::DefaultLitleListener.new do |transaction|
-        assert_not_nil transaction["litleTxnId"] =~ /\d+/
+      request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
+        assert_not_nil transaction["cnpTxnId"] =~ /\d+/
         assert_not_nil transaction["message"]
         assert_not_nil transaction["response"]
         count+=1

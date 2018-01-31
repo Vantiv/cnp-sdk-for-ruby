@@ -1,12 +1,13 @@
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
-  class Litle_certTest3 < Test::Unit::TestCase
+module CnpOnline
+  class Cnp_certTest3 < Test::Unit::TestCase
     #test auth reversal
     @@merchant_hash = {'reportGroup'=>'Planets','id'=>'321','customerId'=>'123',
-      'merchantId'=>'101',
-      'id'=>'test'
+      'merchantId'=>'1288791',
+                       'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
+
     }
   
     def test_32
@@ -28,7 +29,7 @@ module LitleOnline
         'type' => 'VI'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
       assert_equal('11111 ', auth_response.authorizationResponse.authCode)
@@ -36,16 +37,16 @@ module LitleOnline
       assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
   
       #test 32A
-      capture_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId, 'amount' => '5005'}
+      capture_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId, 'amount' => '5005'}
       hash1a = capture_hash.merge(@@merchant_hash)
-      capture_response = LitleOnlineRequest.new.capture(hash1a)
+      capture_response = CnpOnlineRequest.new.capture(hash1a)
       assert_equal('000', capture_response.captureResponse.response)
       
   
       #test 32B
-      auth_r_hash =  {'litleTxnId' => '123456789000' }
+      auth_r_hash =  {'cnpTxnId' => '123456789000' }
       hash1b = auth_r_hash.merge(@@merchant_hash)
-      auth_r_response = LitleOnlineRequest.new.auth_reversal(hash1b)
+      auth_r_response = CnpOnlineRequest.new.auth_reversal(hash1b)
       assert_equal('000', auth_r_response.authReversalResponse.response)
       
     end
@@ -71,17 +72,17 @@ module LitleOnline
         'cardholderAuthentication' => {'authenticationValue'=> 'BwABBJQ1AgAAAAAgJDUCAAAAAAA=' }
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('22222', auth_response.authorizationResponse.authCode)
+      assert_equal('22222 ', auth_response.authorizationResponse.authCode)
       assert_equal('10', auth_response.authorizationResponse.fraudResult.avsResult)
       assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
   
       #test 33A
-      auth_reversal_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId}
+      auth_reversal_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId}
       hash1a = auth_reversal_hash.merge(@@merchant_hash)
-      auth_reversal_response = LitleOnlineRequest.new.auth_reversal(hash1a)
+      auth_reversal_response = CnpOnlineRequest.new.auth_reversal(hash1a)
       assert_equal('000', auth_reversal_response.authReversalResponse.response)
       
     end
@@ -105,17 +106,17 @@ module LitleOnline
         'type' => 'DI'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('33333', auth_response.authorizationResponse.authCode)
+      assert_equal('33333 ', auth_response.authorizationResponse.authCode)
       assert_equal('10', auth_response.authorizationResponse.fraudResult.avsResult)
       assert_equal('M', auth_response.authorizationResponse.fraudResult.cardValidationResult)
   
       #test 34A
-      auth_reversal_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId}
+      auth_reversal_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId}
       hash1a = auth_reversal_hash.merge(@@merchant_hash)
-      auth_reversal_response = LitleOnlineRequest.new.auth_reversal(hash1a)
+      auth_reversal_response = CnpOnlineRequest.new.auth_reversal(hash1a)
       assert_equal('000', auth_reversal_response.authReversalResponse.response)
       
     end
@@ -138,23 +139,23 @@ module LitleOnline
         'type' => 'AX'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      assert_equal('44444', auth_response.authorizationResponse.authCode)
-      assert_equal('12', auth_response.authorizationResponse.fraudResult.avsResult)
+      assert_equal('44444 ', auth_response.authorizationResponse.authCode)
+      assert_equal('13', auth_response.authorizationResponse.fraudResult.avsResult)
   
       #    #test 35A
-      capture_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId, 'amount' => '20020'}
+      capture_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId, 'amount' => '20020'}
       hash1a = capture_hash.merge(@@merchant_hash)
-      capture_response = LitleOnlineRequest.new.capture(hash1a)
+      capture_response = CnpOnlineRequest.new.capture(hash1a)
       assert_equal('000', capture_response.captureResponse.response)
       
   
       #    #test 35B
-      auth_reversal_hash =  {'litleTxnId' => auth_response.authorizationResponse.litleTxnId, 'amount' => '20020'}
+      auth_reversal_hash =  {'cnpTxnId' => auth_response.authorizationResponse.cnpTxnId, 'amount' => '20020'}
       hash2a = auth_reversal_hash.merge(@@merchant_hash)
-      auth_reversal_response = LitleOnlineRequest.new.auth_reversal(hash2a)
+      auth_reversal_response = CnpOnlineRequest.new.auth_reversal(hash2a)
       assert_equal('000', auth_reversal_response.authReversalResponse.response)
       
     end
@@ -170,14 +171,14 @@ module LitleOnline
         'type' => 'AX'}
       }
       hash = customer_hash.merge(@@merchant_hash)
-      auth_response = LitleOnlineRequest.new.authorization(hash)
+      auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
   
       #test 36A
-      auth_reversal_hash =  {'litleTxnId' => '123456789000', 'amount' => '10000'}
+      auth_reversal_hash =  {'cnpTxnId' => '123456789000', 'amount' => '10000'}
       hash1a = auth_reversal_hash.merge(@@merchant_hash)
-      auth_reversal_response = LitleOnlineRequest.new.auth_reversal(hash1a)
+      auth_reversal_response = CnpOnlineRequest.new.auth_reversal(hash1a)
       assert_equal('000', auth_reversal_response.authReversalResponse.response)
       
     end

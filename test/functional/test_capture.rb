@@ -22,10 +22,10 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 =end
-require File.expand_path("../../../lib/LitleOnline",__FILE__) 
+require File.expand_path("../../../lib/CnpOnline",__FILE__) 
 require 'test/unit'
 
-module LitleOnline
+module CnpOnline
   class Test_capture < Test::Unit::TestCase
     def test_simple_capture
       hash = {
@@ -33,10 +33,10 @@ module LitleOnline
         'version'=>'8.8',
         'id'=>'test',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456000',
+        'cnpTxnId'=>'123456000',
         'amount'=>'106',
       }
-      response= LitleOnlineRequest.new.capture(hash)
+      response= CnpOnlineRequest.new.capture(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -47,10 +47,10 @@ module LitleOnline
         'id'=>'test',
         'reportGroup'=>'Planets',
         'partial'=>'true',
-        'litleTxnId'=>'123456000',
+        'cnpTxnId'=>'123456000',
         'amount'=>'106',
       }
-      response= LitleOnlineRequest.new.capture(hash)
+      response= CnpOnlineRequest.new.capture(hash)
       assert_equal('Valid Format', response.message)
     end
   
@@ -60,15 +60,15 @@ module LitleOnline
         'version'=>'8.8',
         'id'=>'test',
         'reportGroup'=>'Planets',
-        'litleTxnId'=>'123456000',
+        'cnpTxnId'=>'123456000',
         'amount'=>'106',
         'enhancedData'=>{
-        'customerReference'=>'Litle',
+        'customerReference'=>'Cnp',
         'salesTax'=>'50',
         'deliveryType'=>'TBD'},
         'payPalOrderComplete'=>'true'
       }
-      response= LitleOnlineRequest.new.capture(hash)
+      response= CnpOnlineRequest.new.capture(hash)
       assert_equal('Valid Format', response.message)
     end
     
@@ -81,7 +81,7 @@ module LitleOnline
         'pin'=>'3333'
       }
       #Get exceptions
-      exception = assert_raise(RuntimeError){LitleOnlineRequest.new.capture(hash)}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.capture(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
@@ -93,12 +93,12 @@ module LitleOnline
         'reportGroup'=>'Planets',
         'amount'=>'106',
         'secondaryAmount'=>'20',
-        'litleTxnId'=>'1234',
+        'cnpTxnId'=>'1234',
         'customBilling'=>{
         'city' =>'boston',
         'descriptor' => 'card was present',
         }}
-      response= LitleOnlineRequest.new.capture(hash)
+      response= CnpOnlineRequest.new.capture(hash)
       assert_equal('Valid Format', response.message)   
     end
     
@@ -109,10 +109,10 @@ module LitleOnline
         'reportGroup'=>'Planets',
         'amount'=>'106',
         'secondaryAmount'=>'20',
-        'litleTxnId'=>'123456000',
+        'cnpTxnId'=>'123456000',
         'pin'=>'1234'
       }
-      response= LitleOnlineRequest.new.capture(hash)
+      response= CnpOnlineRequest.new.capture(hash)
       assert_equal('Valid Format', response.message) 
     end
     

@@ -45,7 +45,7 @@ class Setup
       f.puts '  DEFAULT: ' + gets
       f.puts "default_report_group: 'Default Report Group'"
       puts "Please choose Vantiv eCommerce url from the following list (example: 'prelive') or directly input another URL:
-sandbox => https://www.testvantivcnp.com/sandbox/communicator/online
+sandbox => hhttps://www.testvantivcnp.com/sandbox/new/sandbox/communicator/online
 prelive => https://payments.vantivprelive.com/vap/communicator/online
 postlive => https://payments.vantivpostlive.com/vap/communicator/online
 production => https://payments.vantivcnp.com/vap/communicator/online
@@ -77,22 +77,22 @@ transact_production => https://transact.vantivcnp.com/vap/communicator/online"
     @handle.close
   end
 
-  def Setup.choice(litle_env)
-    litle_online_ctx = 'vap/communicator/online'
-    if litle_env == "sandbox\n"
+  def Setup.choice(cnp_env)
+    cnp_online_ctx = 'vap/communicator/online'
+    if cnp_env == "sandbox\n"
       return 'https://www.testvantivcnp.com/sandbox/communicator/online'
-    elsif litle_env == "prelive\n"
-      return 'https://payments.vantivprelive.com/' + litle_online_ctx
-    elsif litle_env == "postlive\n"
-      return 'https://payments.vantivpostlive.com/' + litle_online_ctx
-    elsif litle_env == "production\n"
-      return 'https://payments.vantivcnp.com/' + litle_online_ctx
-    elsif litle_env == "transact_production\n"
-      return 'https://transact.vantivcnp.com/' + litle_online_ctx
-    elsif litle_env == "transact_prelive\n"
-      return 'https://transact.vantivprelive.com/' + litle_online_ctx
-    elsif litle_env == "transact_postlive\n"
-      return 'https://transact.vantivpostlive.com/' + litle_online_ctx
+    elsif cnp_env == "prelive\n"
+      return 'https://payments.vantivprelive.com/' + cnp_online_ctx
+    elsif cnp_env == "postlive\n"
+      return 'https://payments.vantivpostlive.com/' + cnp_online_ctx
+    elsif cnp_env == "production\n"
+      return 'https://payments.vantivcnp.com/' + cnp_online_ctx
+    elsif cnp_env == "transact_production\n"
+      return 'https://transact.vantivcnp.com/' + cnp_online_ctx
+    elsif cnp_env == "transact_prelive\n"
+      return 'https://transact.vantivprelive.com/' + cnp_online_ctx
+    elsif cnp_env == "transact_postlive\n"
+      return 'https://transact.vantivpostlive.com/' + cnp_online_ctx
     else
       return 'https://www.testvantivcnp.com/sandbox/communicator/online'
     end
@@ -102,19 +102,19 @@ end
 #
 #
 # Optionally enable the configuration to reside in a custom location
-# if the $LITLE_CONFIG_DIR directory is set
+# if the $CNP_CONFIG_DIR directory is set
 #
 
-# make the config.yml file in the LITLE_CONFIG_DIR directory or HOME directory
-if !(ENV['LITLE_CONFIG_DIR'].nil?)
-  path = ENV['LITLE_CONFIG_DIR']
+# make the config.yml file in the CNP_CONFIG_DIR directory or HOME directory
+if !(ENV['CNP_CONFIG_DIR'].nil?)
+  path = ENV['CNP_CONFIG_DIR']
 else
   path = ENV['HOME']
 end
 
 # make the config.yml file hidden
 # create a config file contain all the configuration data
-config_file = path + '/.litle_SDK_config.yml'
+config_file = path + '/.cnp_SDK_config.yml'
 f = Setup.new(config_file)
 
 # return the path of the config file and the path file
