@@ -17,7 +17,7 @@ This SDK was implemented to support the Ruby programming language and was create
 
 See LICENSE file for details on using this software.
 
-Source Code available from : https://github.com/Vantiv/cnp-sdk-for-ruby
+Source Code available from : [https://github.com/Vantiv/cnp-sdk-for-ruby](https://github.com/Vantiv/cnp-sdk-for-ruby)
 
 Please contact [Vantiv eCommerce](http://www.vantiv.com) to receive valid merchant credentials in order to run tests successfully or if you require assistance in any way. We are reachable at sdksupport@vantiv.com
 
