@@ -24,6 +24,8 @@ require 'net/sftp'
 require 'libxml'
 require 'crack/xml'
 require 'socket'
+require 'iostreams'
+require 'open3'
 
 include Socket::Constants
 #
@@ -229,8 +231,16 @@ module CnpOnline
     # +options+:: An (option) +Hash+ containing the username, password, and URL to attempt to sFTP to.
     # If not provided, the values will be populated from the configuration file.
     def send_to_cnp(path = (File.dirname(@path_to_batches)), options = {})
+      use_encryption = get_config(:useEncryption, options)
+
+      if use_encryption then
+        send_to_cnp_with_encryption(path, options)
+        return
+      end
+
       username = get_config(:sftp_username, options)
       password = get_config(:sftp_password, options)
+      deleteBatchFiles = get_config(:deleteBatchFiles, options)
     
       url = get_config(:sftp_url, options)
     
@@ -241,31 +251,88 @@ module CnpOnline
       if(path[-1,1] != '/' && path[-1,1] != '\\') then
         path = path + File::SEPARATOR
       end
-      
-      begin 
+
+      begin
         Net::SFTP.start(url, username, :password => password) do |sftp|
-         
+          @responses_expected = 0
           # our folder is /SHORTNAME/SHORTNAME/INBOUND
           Dir.foreach(path) do |filename|
             #we have a complete report according to filename regex
-            if((filename =~ /request_\d+.complete\z/) != nil) then
-              # adding .prg extension per the XML 
-              File.rename(path + filename, path + filename + '.prg')
-            end
-          end
-          
-          @responses_expected = 0
-          Dir.foreach(path) do |filename|
-            if((filename =~ /request_\d+.complete.prg\z/) != nil) then
+            if((filename =~ /request_\d+.complete\z/) != nil)
+              # adding .prg extension per the XML
+              new_filename = filename + '.prg'
+              File.rename(path + filename, path + new_filename)
               # upload the file
-              sftp.upload!(path + filename, '/inbound/' + filename)
+              sftp.upload!(path + new_filename, '/inbound/' + new_filename)
               @responses_expected += 1
               # rename now that we're done
-              sftp.rename!('/inbound/'+ filename, '/inbound/' + filename.gsub('prg', 'asc'))
-              File.rename(path + filename, path + filename.gsub('prg','sent'))
+              sftp.rename!('/inbound/'+ new_filename, '/inbound/' + new_filename.gsub('prg', 'asc'))
+              File.rename(path + new_filename, path + new_filename.gsub('prg','sent'))
+            end
+          end
+
+
+          if deleteBatchFiles
+            Dir.foreach(path) do |filename|
+              if((filename =~ /request_\d+.complete.sent\z/)) != nil then
+                File.delete(path + filename)
+              end
             end
           end
         end
+      rescue Net::SSH::AuthenticationFailed
+        raise ArgumentError, "The sFTP credentials provided were incorrect. Try again!"
+      end
+    end
+
+    def send_to_cnp_with_encryption(path, options)
+      username = get_config(:sftp_username, options)
+      password = get_config(:sftp_password, options)
+      deleteBatchFiles = get_config(:deleteBatchFiles, options)
+
+      url = get_config(:sftp_url, options)
+
+      if(username == nil or password == nil or url == nil) then
+        raise ArgumentError, "You are not configured to use sFTP for batch processing. Please run /bin/Setup.rb again!"
+      end
+
+      if(path[-1,1] != '/' && path[-1,1] != '\\') then
+        path = path + File::SEPARATOR
+      end
+
+      encrypted_path = path + 'encrypted/'
+
+      if !File.directory?(encrypted_path)
+        Dir.mkdir(encrypted_path)
+      end
+
+      begin
+        Net::SFTP.start(url, username, :password => password) do |sftp|
+          @responses_expected = 0
+          Dir.foreach(path) do |filename|
+            if((filename =~ /request_\d+.complete\z/) != nil)
+              encrypted_filename = filename + '.encrypted.prg'
+              encrypt_batch_file_request(encrypted_path + encrypted_filename, path + filename, options)
+              # upload the file
+              sftp.upload!(encrypted_path + encrypted_filename, '/inbound/' + encrypted_filename)
+              @responses_expected += 1
+              # rename now that we're done
+              sftp.rename!('/inbound/'+ encrypted_filename, '/inbound/' + encrypted_filename.gsub('prg', 'asc'))
+              File.rename(encrypted_path + encrypted_filename, encrypted_path + encrypted_filename.gsub('prg','sent'))
+              File.rename(path + filename, path + filename + '.sent')
+            end
+          end
+
+          if deleteBatchFiles
+            Dir.foreach(encrypted_path) do |filename|
+              if((filename =~ /request_\d+.complete.encrypted.sent\z/)) != nil then
+                File.delete(encrypted_path + filename)
+                File.delete(path + filename.gsub('.encrypted',""))
+              end
+            end
+          end
+        end
+
       rescue Net::SSH::AuthenticationFailed
         raise ArgumentError, "The sFTP credentials provided were incorrect. Try again!"
       end
@@ -332,10 +399,13 @@ module CnpOnline
     # password with which to connect ot the sFTP server, and the URL to connect over sFTP. Values not
     # provided in the hash will be populate automatically based on our best guess
     def get_responses_from_server(args = {})
+      use_encryption = get_config(:useEncryption, args)
+
       @responses_expected = args[:responses_expected] ||= @responses_expected
       response_path = args[:response_path] ||= (File.dirname(@path_to_batches) + '/responses/')
       username = get_config(:sftp_username, args)
       password = get_config(:sftp_password, args)
+
       url = get_config(:sftp_url, args)
 
       if(username == nil or password == nil or url == nil) then
@@ -349,26 +419,18 @@ module CnpOnline
       if(!File.directory?(response_path)) then
         Dir.mkdir(response_path)
       end
+
+      if use_encryption
+        response_path = response_path + 'encrypted/'
+
+        if(!File.directory?(response_path)) then
+          Dir.mkdir(response_path)
+        end
+      end
+
       begin
         responses_grabbed = 0
-        Net::SFTP.start(url, username, :password => password) do |sftp|
-          # clear out the sFTP outbound dir prior to checking for new files, avoids leaving files on the server
-          # if files are left behind we are not counting then towards the expected total
-          sftp.dir.foreach('/outbound/') do |entry|
-            if((entry.name =~ /request_\d+.complete.asc\z/) != nil) then
-              sftp.download!('/outbound/' + entry.name, response_path + entry.name.gsub('request', 'response') + '.received')
-              3.times{
-                begin
-                  sftp.remove!('/outbound/' + entry.name)
-                  break
-                rescue Net::SFTP::StatusException
-                #try, try, try again
-                  puts "We couldn't remove it! Try again"
-                end
-              }
-            end
-          end
-        end
+
         #wait until a response has a possibility of being there
         sleep(@POLL_DELAY)
         time_begin = Time.now
@@ -376,22 +438,9 @@ module CnpOnline
           while((Time.now - time_begin) < @RESPONSE_TIME_OUT && responses_grabbed < @responses_expected)
             #sleep for 60 seconds, ¿no es bueno?
             sleep(60)
-            sftp.dir.foreach('/outbound/') do |entry|
-              if((entry.name =~ /request_\d+.complete.asc\z/) != nil) then
-                sftp.download!('/outbound/' + entry.name, response_path + entry.name.gsub('request', 'response') + '.received')
-                responses_grabbed += 1
-                3.times{
-                  begin
-                    sftp.remove!('/outbound/' + entry.name)
-                    break
-                  rescue Net::SFTP::StatusException
-                  #try, try, try again
-                    puts "We couldn't remove it! Try again"
-                  end
-                }
-              end
-            end
+            responses_grabbed += grab_responses(sftp, response_path, use_encryption, args)
           end
+
           #if our timeout timed out, we're having problems
           if responses_grabbed < @responses_expected then
             raise RuntimeError, "We timed out in waiting for a response from the server. :("
@@ -401,7 +450,35 @@ module CnpOnline
         raise ArgumentError, "The sFTP credentials provided were incorrect. Try again!"
       end
     end
-    
+
+
+    def grab_responses(sftp, response_path, useEncryption, args)
+      responses_grabbed = 0
+      sftp.dir.foreach('/outbound/') do |entry|
+        if((entry.name =~ /request_\d+.complete.?\w*.asc\z/) != nil) then
+
+          response_filename = response_path + entry.name.gsub('request', 'response') + '.received'
+          sftp.download!('/outbound/' + entry.name, response_filename)
+          if useEncryption
+            decrypt_batch_file_response(response_filename, args)
+          end
+          responses_grabbed += 1
+          3.times{
+            begin
+              sftp.remove!('/outbound/' + entry.name)
+              break
+            rescue Net::SFTP::StatusException
+              #try, try, try again
+              puts "We couldn't remove it! Try again"
+            end
+          }
+        end
+      end
+
+      return responses_grabbed
+    end
+
+
     # Params:
     # +args+:: A +Hash+ containing arguments for the processing process. This hash MUST contain an entry
     # for a transaction listener (see +DefaultCnpListener+). It may also include a batch listener and a
@@ -415,12 +492,22 @@ module CnpOnline
       transaction_listener = args[:transaction_listener]
       batch_listener = args[:batch_listener] ||= nil
       path_to_responses = args[:path_to_responses] ||= (File.dirname(@path_to_batches) + '/responses/')
+      deleteBatchFiles = args[:deleteBatchFiles] ||= get_config(:deleteBatchFiles, args)
+      #deleteBatchFiles = get_config(:deleteBatchFiles, args)
       
       Dir.foreach(path_to_responses) do |filename|
         if ((filename =~ /response_\d+.complete.asc.received\z/) != nil) then
           process_response(path_to_responses + filename, transaction_listener, batch_listener)
           File.rename(path_to_responses + filename, path_to_responses + filename + '.processed')
         end 
+      end
+
+      if deleteBatchFiles
+        Dir.foreach(path_to_responses) do |filename|
+          if ((filename =~ /response_\d+.complete.asc.received.processed\z/) != nil) then
+            File.delete(path_to_responses + filename)
+          end
+        end
       end
     end
     
@@ -518,5 +605,62 @@ module CnpOnline
         return options[field]
       end
     end
+
+    # Encrypt the request file for a PGP enabled account
+    # +cipher_filename+:: Name of File that would contain encrypted batch
+    # +plain_filename+:: Name of File containing batch in XML markup
+    # +options+:: An (option) +Hash+ containing the public key to attempt to encrypt the file.
+    # If not provided, the values will be populated from the configuration file.
+    def encrypt_batch_file_request(cipher_filename, plain_filename, options)
+      pgpkeyID = get_config(:vantivPublicKeyID, options)
+      if pgpkeyID == ""
+        raise RuntimeError, "The public key to encrypt batch file requests is missing from the config"
+      end
+
+      IOStreams::Pgp::Writer.open(
+          cipher_filename,
+          recipient: pgpkeyID
+      ) do |output|
+        File.open(plain_filename, "r").readlines.each do |line|
+          output.puts(line)
+        end
+      end
+
+    rescue IOStreams::Pgp::Failure => e
+      raise ArgumentError, "#{e.message}"
+    end
+
+
+    # Decrypt the encrypted batch response file
+    # +response_filename+:: Filename of encrypted batch response file
+    #     The decrypted response would be placed in +response_filename+.gsub("encrypted", "")
+    # +args+:: An (arg) +Hash+ containing the passphrase to atempt to decrypt the file
+    # If not provided, the values will be populated from the configuration file.
+    def decrypt_batch_file_response(response_filename, args)
+      passphrase = get_config(:passphrase, args)
+      delete_batch_files = get_config(:deleteBatchFiles, args)
+      if passphrase == ""
+        raise RuntimeError, "The passphrase to decrypt the batch file responses is missing from the config"
+      end
+      decrypted_response_filename = response_filename.gsub('/encrypted', '').gsub(".encrypted", "")
+
+      decrypted_file = File.open(decrypted_response_filename, "w")
+      IOStreams::Pgp::Reader.open(
+          response_filename,
+          passphrase: passphrase
+      ) do |stream|
+        while !stream.eof?
+          decrypted_file.puts(stream.readline())
+          #puts stream.readline()
+        end
+      end
+      decrypted_file.close()
+      if delete_batch_files
+        File.delete(response_filename)
+      end
+    rescue IOStreams::Pgp::Failure => e
+      raise ArgumentError, "#{e.message}"
+    end
+
   end
 end

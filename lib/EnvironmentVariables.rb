@@ -16,6 +16,10 @@ module CnpOnline
       @fast_port = ''
       @printxml = false
       @timeout = 65
+      @deleteBatchFiles = false
+      @useEncryption = false
+      @vantivPublicKeyID = ''
+      @passphrase = ''
     end
   end
 end
