@@ -10,19 +10,25 @@ module CnpOnline
       FileUtils.rm_rf dir
       Dir.mkdir dir
 
-
     end
 
     def test_send_to_cnp
       ENV['cnp_deleteBatchFiles'] = 'false'
+      config_dir = ENV['CNP_CONFIG_DIR']
+      ENV['CNP_CONFIG_DIR'] = '/tmp/pgp_ruby'
+
       @config_hash = Configuration.new.config
 
       dir = '/tmp'
 
       request = CnpRequest.new()
+      ENV['CNP_CONFIG_DIR'] = config_dir
       request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
       request.finish_request
-      request.send_to_cnp
+
+
+
+      request.send_to_cnp()
 
       entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       encrypted_entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test' + '/encrypted')
@@ -58,6 +64,8 @@ module CnpOnline
 
     def test_full_flow
       ENV['cnp_deleteBatchFiles'] = 'false'
+      config_dir = ENV['CNP_CONFIG_DIR']
+      ENV['CNP_CONFIG_DIR'] = '/tmp/pgp_ruby'
 
       saleHash = {
           'reportGroup'=>'Planets',
@@ -74,6 +82,7 @@ module CnpOnline
       dir = '/tmp'
 
       request = CnpRequest.new()
+      ENV['CNP_CONFIG_DIR'] = config_dir
       request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
 
       entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
@@ -129,7 +138,8 @@ module CnpOnline
       assert_not_nil entries[2] =~ /request_\d+.complete\z/
 
       #send the batch files at the given directory over sFTP
-      request.send_to_cnp
+
+      request.send_to_cnp()
       entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       encrypted_entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test' + '/encrypted')
 
@@ -162,6 +172,9 @@ module CnpOnline
 
     def test_full_flow_with_deleteBatchFiles
       ENV['cnp_deleteBatchFiles'] = 'true'
+      config_dir = ENV['CNP_CONFIG_DIR']
+      ENV['CNP_CONFIG_DIR'] = '/tmp/pgp_ruby'
+
       saleHash = {
           'reportGroup'=>'Planets',
           'id' => '006',
@@ -177,6 +190,8 @@ module CnpOnline
       dir = '/tmp'
 
       request = CnpRequest.new()
+      ENV['CNP_CONFIG_DIR'] = config_dir
+      ENV['cnp_deleteBatchFiles'] = 'false'
       request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
 
       entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
@@ -232,7 +247,8 @@ module CnpOnline
       assert_not_nil entries[2] =~ /request_\d+.complete\z/
 
       #send the batch files at the given directory over sFTP
-      request.send_to_cnp
+
+      request.send_to_cnp()
       entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       encrypted_entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test' + '/encrypted')
 

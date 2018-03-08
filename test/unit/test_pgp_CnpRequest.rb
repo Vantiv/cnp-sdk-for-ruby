@@ -32,14 +32,17 @@ module CnpOnline
       dir = '/tmp/cnp-sdk-for-ruby-test'
       FileUtils.rm_rf dir
       Dir.mkdir dir
-      
+
     end
 
     def test_noPublicKey
+      config_dir = ENV['CNP_CONFIG_DIR']
+      ENV['CNP_CONFIG_DIR'] = '/tmp/pgp_ruby'
       dir = '/tmp'
 
       test = ''
       request = CnpRequest.new()
+      ENV['CNP_CONFIG_DIR'] = config_dir
       request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
       request.finish_request
       request.send_to_cnp(dir + '/cnp-sdk-for-ruby-test', {'vantivPublicKeyID' => ''})
@@ -47,15 +50,18 @@ module CnpOnline
     rescue RuntimeError => e
       test = e.message
 
-
+    clear_outbound
     assert_equal "The public key to encrypt batch file requests is missing from the config", test
     end
 
     def test_incorrectPublicKey
+      config_dir = ENV['CNP_CONFIG_DIR']
+      ENV['CNP_CONFIG_DIR'] = '/tmp/pgp_ruby'
       dir = '/tmp'
 
       test = ''
       request = CnpRequest.new()
+      ENV['CNP_CONFIG_DIR'] = config_dir
       request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
       request.finish_request
       request.send_to_cnp(dir + '/cnp-sdk-for-ruby-test', {'vantivPublicKeyID' => '7E25EB2X'})
@@ -63,15 +69,18 @@ module CnpOnline
 
     rescue ArgumentError => e
       test = e.message
-
+    clear_outbound
     assert_match(/GPG Failed to create encrypted file:/, test)
     end
 
     def test_noPassphrase
+      config_dir = ENV['CNP_CONFIG_DIR']
+      ENV['CNP_CONFIG_DIR'] = '/tmp/pgp_ruby'
       dir = '/tmp'
 
       test = ''
       request = CnpRequest.new()
+      ENV['CNP_CONFIG_DIR'] = config_dir
       request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
       request.finish_request
       request.send_to_cnp
@@ -79,16 +88,19 @@ module CnpOnline
 
     rescue RuntimeError => e
       test = e.message
-      clear_outbound
+    clear_outbound
     assert_equal "The passphrase to decrypt the batch file responses is missing from the config", test
 
     end
 
     def test_incorrectPassphrase
+      config_dir = ENV['CNP_CONFIG_DIR']
+      ENV['CNP_CONFIG_DIR'] = '/tmp/pgp_ruby'
       dir = '/tmp'
 
       test = ''
       request = CnpRequest.new()
+      ENV['CNP_CONFIG_DIR'] = config_dir
       request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
       request.finish_request
       request.send_to_cnp
@@ -96,16 +108,19 @@ module CnpOnline
 
     rescue ArgumentError => e
       test = e.message
-      clear_outbound
+    clear_outbound
     assert_match(/GPG Failed to decrypt file:/, test)
     end
 
 
     def clear_outbound
+      config_dir = ENV['CNP_CONFIG_DIR']
+      ENV['CNP_CONFIG_DIR'] = '/tmp/pgp_ruby'
       options = Configuration.new.config
       sftp_username = options['sftp_username']
       sftp_password = options['sftp_password']
       sftp_url = options['sftp_url']
+      ENV['CNP_CONFIG_DIR'] = config_dir
 
       Net::SFTP.start(sftp_url, sftp_username, :password => sftp_password) do |sftp|
         handle = sftp.opendir!('/outbound/')

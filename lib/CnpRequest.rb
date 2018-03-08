@@ -234,6 +234,7 @@ module CnpOnline
       use_encryption = get_config(:useEncryption, options)
 
       if use_encryption then
+        puts path
         send_to_cnp_with_encryption(path, options)
         return
       end
@@ -286,6 +287,7 @@ module CnpOnline
     end
 
     def send_to_cnp_with_encryption(path, options)
+      puts "encryption " + path
       username = get_config(:sftp_username, options)
       password = get_config(:sftp_password, options)
       deleteBatchFiles = get_config(:deleteBatchFiles, options)
