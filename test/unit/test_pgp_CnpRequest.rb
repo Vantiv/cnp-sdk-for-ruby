@@ -70,7 +70,7 @@ module CnpOnline
     rescue ArgumentError => e
       test = e.message
     clear_outbound
-    assert_match(/GPG Failed to create encrypted file:/, test)
+    assert_match(/Please check if you have entered correct vantivePublicKeyID to config and that vantiv's public key is added to your gpg keyring and is trusted/, test)
     end
 
     def test_noPassphrase
@@ -109,7 +109,7 @@ module CnpOnline
     rescue ArgumentError => e
       test = e.message
     clear_outbound
-    assert_match(/GPG Failed to decrypt file:/, test)
+    assert_match(/Please check if you have entered correct passphrase to config and that your merchant private key is added to your gpg keyring and is trusted/, test)
     end
 
 

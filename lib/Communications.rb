@@ -29,6 +29,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #
 # URL and proxy server settings are derived from the configuration file
 #
+
 module CnpOnline
   class Communications
     ##For http or https post with or without a proxy
