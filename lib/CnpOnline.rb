@@ -34,6 +34,7 @@ require 'yaml'
 require 'uri'
 require 'net/https'
 require 'xml/mapping'
+require 'iostreams'
 
 unless Kernel.respond_to?(:require_relative)
   module Kernel

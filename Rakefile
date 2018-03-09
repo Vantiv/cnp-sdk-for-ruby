@@ -47,6 +47,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('net-sftp')
   s.add_dependency('libxml-ruby')
   s.add_dependency('crack')
+  s.add_dependency('iostreams')
   s.add_development_dependency('mocha')
 end
 
