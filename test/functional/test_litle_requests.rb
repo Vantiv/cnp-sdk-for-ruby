@@ -23,11 +23,13 @@ require File.expand_path("../../../lib/CnpOnline",__FILE__)
 require 'test/unit'
 require 'fileutils'
 
+CNP_SDK_TEST_FOLDER = '/cnp-sdk-for-ruby-test'
+
 module CnpOnline
   class TestCnpRequest < Test::Unit::TestCase
   
     def setup
-      dir = '/tmp/cnp-sdk-for-ruby-test'
+      dir = '/tmp' + CNP_SDK_TEST_FOLDER
       FileUtils.rm_rf dir
       Dir.mkdir dir
     end
@@ -36,78 +38,78 @@ module CnpOnline
       dir = '/tmp'
 
       request = CnpRequest.new()
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
 
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
 
       assert_equal 4, entries.size
-      assert_not_nil entries[2] =~ /request_\d+\z/
-      assert_not_nil entries[3] =~ /request_\d+_batches\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
     end
 
     def test_commit_batch_with_path
       dir = '/tmp'
 
       batch = CnpBatchRequest.new
-      batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
+      batch.create_new_batch(dir + CNP_SDK_TEST_FOLDER)
       batch.close_batch
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
 
       assert_equal 3, entries.length
       entries.sort!
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
 
       request = CnpRequest.new
-      request.create_new_cnp_request(dir+ '/cnp-sdk-for-ruby-test')
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir+ CNP_SDK_TEST_FOLDER)
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
-      assert_not_nil entries[3] =~ /request_\d+\z/
-      assert_not_nil entries[4] =~ /request_\d+_batches\z/
+      assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[4] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
 
       request.commit_batch(batch.get_batch_name)
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
       assert_equal 4,entries.length
-      assert_not_nil entries[2] =~ /request_\d+\z/
-      assert_not_nil entries[3] =~ /request_\d+_batches\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
     end
 
     def test_commit_batch_with_batch
       dir = '/tmp'
 
       batch = CnpBatchRequest.new
-      batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
+      batch.create_new_batch(dir + CNP_SDK_TEST_FOLDER)
       batch.close_batch
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
 
       assert_equal 3, entries.length
       entries.sort!
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
 
       request = CnpRequest.new
-      request.create_new_cnp_request(dir+ '/cnp-sdk-for-ruby-test')
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir+ CNP_SDK_TEST_FOLDER)
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
       assert_equal 5, entries.length
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
-      assert_not_nil entries[3] =~ /request_\d+\z/
-      assert_not_nil entries[4] =~ /request_\d+_batches\z/
+      assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[4] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
 
       request.commit_batch(batch)
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
       assert_equal 4, entries.length
-      assert_not_nil entries[2] =~ /request_\d+\z/
-      assert_not_nil entries[3] =~ /request_\d+_batches\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
     end
     
     def test_commit_batch_with_batch_and_au
       dir = '/tmp'
 
       batch = CnpBatchRequest.new
-      batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
+      batch.create_new_batch(dir + CNP_SDK_TEST_FOLDER)
       accountUpdateHash = {
         'reportGroup'=>'Planets',
         'id'=>'12345',
@@ -120,7 +122,7 @@ module CnpOnline
       batch.account_update(accountUpdateHash)
       batch.close_batch
 
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
 
       assert_equal 4, entries.length
       entries.sort!
@@ -128,50 +130,50 @@ module CnpOnline
       assert_not_nil entries[3] =~ /batch_\d+.closed-1\z/
 
       request = CnpRequest.new
-      request.create_new_cnp_request(dir+ '/cnp-sdk-for-ruby-test')
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir+ CNP_SDK_TEST_FOLDER)
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
       assert_equal 6, entries.length
       assert_not_nil entries[2] =~ /batch_\d+.closed-0\z/
       assert_not_nil entries[3] =~ /batch_\d+.closed-1\z/
-      assert_not_nil entries[4] =~ /request_\d+\z/
-      assert_not_nil entries[5] =~ /request_\d+_batches\z/
+      assert_not_nil entries[4] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[5] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
 
       request.commit_batch(batch)
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
       assert_equal 4, entries.length
-      assert_not_nil entries[2] =~ /request_\d+\z/
-      assert_not_nil entries[3] =~ /request_\d+_batches\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
     end
 
     def test_finish_request
       dir = '/tmp'
 
       request = CnpRequest.new()
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
 
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
 
       assert_equal 4, entries.size
-      assert_not_nil entries[2] =~ /request_\d+\z/
-      assert_not_nil entries[3] =~ /request_\d+_batches\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
 
       request.finish_request
 
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
 
       assert_equal 3, entries.size
-      assert_not_nil entries[2] =~ /request_\d+.complete\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}\z/
     end
     
     def test_add_rfr
       @config_hash = Configuration.new.config
       
       dir = '/tmp'
-      temp = dir + '/cnp-sdk-for-ruby-test/'
+      temp = dir + CNP_SDK_TEST_FOLDER + '/'
       
       request = CnpRequest.new()
       request.add_rfr_request({'cnpSessionId' => '137813712'}, temp)
@@ -180,7 +182,7 @@ module CnpOnline
       entries.sort!
       
       assert_equal 3, entries.size
-      assert_not_nil entries[2] =~ /request_\d+.complete\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}\z/
     end
 
     def test_send_to_cnp
@@ -189,14 +191,15 @@ module CnpOnline
       dir = '/tmp'
 
       request = CnpRequest.new()
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
       request.finish_request
       request.send_to_cnp
 
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
       assert_equal 3, entries.size
-      assert_not_nil entries[2] =~ /request_\d+.complete.sent\z/
+      puts entries[2]
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{SENT_FILE_SUFFIX}\z/
 
       uploaded_file = entries[2]
       
@@ -216,7 +219,7 @@ module CnpOnline
         }
         assert_equal 3,ents.size
         ents.sort!
-        assert_equal ents[2], uploaded_file.gsub('sent', 'asc')
+        assert_equal ents[2], uploaded_file.gsub(SENT_FILE_SUFFIX, '.asc')
         sftp.remove('/inbound/' + ents[2])  
       end
     end
@@ -227,22 +230,22 @@ module CnpOnline
       dir = '/tmp'
 
       request = CnpRequest.new()
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
       request.finish_request
       request.send_to_cnp_stream
 
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
 
       assert_equal 4, entries.size
-      assert_not_nil entries[2] =~ /request_\d+.complete.sent\z/
-      File.delete(dir + '/cnp-sdk-for-ruby-test/' + entries[2])
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{SENT_FILE_SUFFIX}\z/
+      File.delete(dir + CNP_SDK_TEST_FOLDER + '/' + entries[2])
    
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test/responses')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER + '/' + RESPONSE_PATH_DIR)
       entries.sort!
       
       assert_equal 3, entries.size
-      assert_not_nil entries[2] =~ /response_\d+.complete.asc.received\z/
+      assert_not_nil entries[2] =~ /#{RESPONSE_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}.asc#{RECEIVED_FILE_SUFFIX}\z/
       
     end
 
@@ -262,28 +265,28 @@ module CnpOnline
       dir = '/tmp'
 
       request = CnpRequest.new()
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
 
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       entries.sort!
 
       assert_equal 4, entries.size
-      assert_not_nil entries[2] =~ /request_\d+\z/
-      assert_not_nil entries[3] =~ /request_\d+_batches\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+      assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
 
       #create five batches, each with 10 sales
       5.times{
         batch = CnpBatchRequest.new
-        batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
+        batch.create_new_batch(dir + CNP_SDK_TEST_FOLDER)
         
-        entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+        entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
         
         assert_equal 6, entries.length
         entries.sort!
         assert_not_nil entries[2] =~ /batch_\d+\z/
         assert_not_nil entries[3] =~ /batch_\d+_txns\z/ 
-        assert_not_nil entries[4] =~ /request_\d+\z/
-        assert_not_nil entries[5] =~ /request_\d+_batches\z/
+        assert_not_nil entries[4] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+        assert_not_nil entries[5] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
         #add the same sale ten times
         10.times{
         #batch.account_update(accountUpdateHash)
@@ -293,50 +296,50 @@ module CnpOnline
          
         #close the batch, indicating we plan to add no more transactions
         batch.close_batch()
-        entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+        entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
         
         assert_equal 5, entries.length
         entries.sort!
         assert_not_nil entries[2] =~ /batch_\d+.closed-\d+\z/
-        assert_not_nil entries[3] =~ /request_\d+\z/
-        assert_not_nil entries[4] =~ /request_\d+_batches\z/
+        assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+        assert_not_nil entries[4] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
         
         #add the batch to the CnpRequest
         request.commit_batch(batch)
-        entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+        entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
         assert_equal 4, entries.length
         entries.sort!
-        assert_not_nil entries[2] =~ /request_\d+\z/
-        assert_not_nil entries[3] =~ /request_\d+_batches\z/
+        assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+\z/
+        assert_not_nil entries[3] =~ /#{REQUEST_FILE_PREFIX}\d+_batches\z/
       }
       #finish the Cnp Request, indicating we plan to add no more batches
       request.finish_request
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       assert_equal 3, entries.length
       entries.sort!
-      assert_not_nil entries[2] =~ /request_\d+.complete\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+.complete\z/
       
       #send the batch files at the given directory over sFTP
       request.send_to_cnp
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       assert_equal entries.length, 3
       entries.sort!
-      assert_not_nil entries[2] =~ /request_\d+.complete.sent\z/
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{SENT_FILE_SUFFIX}\z/
       #grab the expected number of responses from the sFTP server and save them to the given path
       request.get_responses_from_server()
       #process the responses from the server with a listener which applies the given block
       request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction| end})
         
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER)
       assert_equal 4, entries.length # 3 -> 4
       entries.sort!
-      assert_not_nil entries[2] =~ /request_\d+.complete.sent\z/
-      File.delete(dir + '/cnp-sdk-for-ruby-test/' + entries[2])
+      assert_not_nil entries[2] =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{SENT_FILE_SUFFIX}\z/
+      File.delete(dir + CNP_SDK_TEST_FOLDER + '/' + entries[2])
       
-      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test/' + entries[3])
+      entries = Dir.entries(dir + CNP_SDK_TEST_FOLDER + '/' + entries[3])
       entries.sort!
       assert_equal 3, entries.length
-      assert_not_nil entries[2] =~ /response_\d+.complete.asc.received.processed\z/
+      assert_not_nil entries[2] =~ /#{RESPONSE_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}.asc#{RECEIVED_FILE_SUFFIX}.processed\z/
     end
 
     def get_config(field, options)

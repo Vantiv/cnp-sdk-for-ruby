@@ -24,12 +24,14 @@ require 'test/unit'
 require 'mocha/setup'
 require 'fileutils'
 
+CNP_SDK_TEST_FOLDER = '/cnp-sdk-for-ruby-test'
+
 module CnpOnline
 
   class TestPgpCnpRequest < Test::Unit::TestCase
 
     def setup
-      dir = '/tmp/cnp-sdk-for-ruby-test'
+      dir = '/tmp' + CNP_SDK_TEST_FOLDER
       FileUtils.rm_rf dir
       Dir.mkdir dir
 
@@ -43,9 +45,9 @@ module CnpOnline
       test = ''
       request = CnpRequest.new()
       ENV['CNP_CONFIG_DIR'] = config_dir
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
       request.finish_request
-      request.send_to_cnp(dir + '/cnp-sdk-for-ruby-test', {'vantivPublicKeyID' => ''})
+      request.send_to_cnp(dir + CNP_SDK_TEST_FOLDER, {'vantivPublicKeyID' => ''})
 
     rescue RuntimeError => e
       test = e.message
@@ -62,9 +64,9 @@ module CnpOnline
       test = ''
       request = CnpRequest.new()
       ENV['CNP_CONFIG_DIR'] = config_dir
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
       request.finish_request
-      request.send_to_cnp(dir + '/cnp-sdk-for-ruby-test', {'vantivPublicKeyID' => '7E25EB2X'})
+      request.send_to_cnp(dir + CNP_SDK_TEST_FOLDER, {'vantivPublicKeyID' => '7E25EB2X'})
 
 
     rescue ArgumentError => e
@@ -81,7 +83,7 @@ module CnpOnline
       test = ''
       request = CnpRequest.new()
       ENV['CNP_CONFIG_DIR'] = config_dir
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
       request.finish_request
       request.send_to_cnp
       request.get_responses_from_server({'passphrase' => ''})
@@ -101,7 +103,7 @@ module CnpOnline
       test = ''
       request = CnpRequest.new()
       ENV['CNP_CONFIG_DIR'] = config_dir
-      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+      request.create_new_cnp_request(dir + CNP_SDK_TEST_FOLDER)
       request.finish_request
       request.send_to_cnp
       request.get_responses_from_server({'passphrase' => 'gameover:('})
@@ -126,7 +128,7 @@ module CnpOnline
         handle = sftp.opendir!('/outbound/')
         files_on_srv = sftp.readdir!(handle)
         files_on_srv.each {|file|
-          if (file.name =~ /request_\d+.complete.encrypted.asc\z/) != nil
+          if (file.name =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{ENCRYPTED_FILE_SUFFIX}.asc\z/) != nil
             sftp.remove('/outbound/' + file.name)
           end
         }

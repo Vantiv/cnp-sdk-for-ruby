@@ -37,6 +37,18 @@ SFTP_PASSWORD_CONFIG_NAME = :sftp_password
 SFTP_URL_CONFIG_NAME = :sftp_url
 SFTP_USE_ENCRYPTION_CONFIG_NAME = :useEncryption
 SFTP_DELETE_BATCH_FILES_CONFIG_NAME = :deleteBatchFiles
+
+REQUEST_PATH_DIR = 'requests/'
+REQUEST_FILE_PREFIX = 'request_'
+ENCRYPTED_PATH_DIR = 'encrypted/'
+ENCRYPTED_FILE_SUFFIX = '.encrypted'
+RESPONSE_PATH_DIR = 'responses/'
+RESPONSE_FILE_PREFIX = 'response_'
+
+SENT_FILE_SUFFIX = '.sent'
+RECEIVED_FILE_SUFFIX = '.received'
+COMPLETE_FILE_SUFFIX = '.complete'
+
 module CnpOnline
   class CnpRequest
     include XML::Mapping
@@ -80,7 +92,7 @@ module CnpOnline
         Dir.mkdir(path)
       end
       
-      @path_to_request = path + 'request_' + ts
+      @path_to_request = path + REQUEST_FILE_PREFIX + ts
       @path_to_batches = @path_to_request + '_batches'
 
       if File.file?(@path_to_request) or File.file?(@path_to_batches) then
@@ -219,12 +231,12 @@ module CnpOnline
         Dir.mkdir(path)
       end
       
-      path_to_request = path + 'request_' + ts
+      path_to_request = path + REQUEST_FILE_PREFIX + ts
 
       File.open(path_to_request, 'a+') do |file|
         file.write xml
       end
-      File.rename(path_to_request, path_to_request + '.complete')
+      File.rename(path_to_request, path_to_request + COMPLETE_FILE_SUFFIX)
       @RESPONSE_TIME_OUT += 90   
     end
 
@@ -248,16 +260,16 @@ module CnpOnline
       path = path_to_requests = prepare_for_sftp(path, use_encryption)
 
       if use_encryption
-        encrypted_path = path_to_requests + 'encrypted/'
+        encrypted_path = path_to_requests + ENCRYPTED_PATH_DIR
         encrypt_request_files(path, encrypted_path, options)
         path_to_requests = encrypted_path
       end
 
       @responses_expected = upload_to_sftp(path_to_requests, url, username, password, use_encryption)
       if delete_batch_files
-        delete_files_in_path(path_to_requests, /request_\d+.complete.?\w*.sent\z/)
+        delete_files_in_path(path_to_requests, /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{ENCRYPTED_FILE_SUFFIX}?#{SENT_FILE_SUFFIX}\z/)
         if use_encryption
-          delete_files_in_path(path, /request_\d+.complete.?\w*.sent\z/)
+          delete_files_in_path(path, /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{SENT_FILE_SUFFIX}\z/)
         end
       end
     end
@@ -282,12 +294,12 @@ module CnpOnline
         path = path + File::SEPARATOR
       end
       
-      if (!File.directory?(path + 'responses/')) then
-        Dir.mkdir(path + 'responses/')
+      if (!File.directory?(path + RESPONSE_PATH_DIR)) then
+        Dir.mkdir(path + RESPONSE_PATH_DIR)
       end
           
       Dir.foreach(path) do |filename|
-        if((filename =~ /request_\d+.complete\z/) != nil) then
+        if((filename =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}\z/) != nil) then
           begin 
             socket = TCPSocket.open(url,port.to_i)
             ssl_context = OpenSSL::SSL::SSLContext.new()
@@ -304,8 +316,8 @@ module CnpOnline
               ssl_socket.puts li
               
             end
-            File.rename(path + filename, path + filename + '.sent')
-            File.open(path + 'responses/' + (filename + '.asc.received').gsub("request", "response"), 'a+') do |fo|
+            File.rename(path + filename, path + filename + SENT_FILE_SUFFIX)
+            File.open(path + RESPONSE_PATH_DIR + (filename + '.asc' + RECEIVED_FILE_SUFFIX).gsub("request", "response"), 'a+') do |fo|
             while line = ssl_socket.gets
                  fo.puts(line)
             end
@@ -324,7 +336,7 @@ module CnpOnline
     def get_responses_from_server(args = {})
       use_encryption = get_config(SFTP_USE_ENCRYPTION_CONFIG_NAME, args)
       @responses_expected = args[:responses_expected] ||= @responses_expected
-      response_path = args[:response_path] ||= (File.dirname(@path_to_batches) + '/responses/')
+      response_path = args[:response_path] ||= (File.dirname(@path_to_batches) + '/' + RESPONSE_PATH_DIR)
       username = get_config(SFTP_USERNAME_CONFIG_NAME, args)
       password = get_config(SFTP_PASSWORD_CONFIG_NAME, args)
       url = get_config(SFTP_URL_CONFIG_NAME, args)
@@ -334,7 +346,7 @@ module CnpOnline
       end
       response_path = prepare_for_sftp(response_path, use_encryption)
       if use_encryption
-        response_path += 'encrypted/'
+        response_path += ENCRYPTED_PATH_DIR
       end
 
       download_from_sftp(response_path, url, username, password)
@@ -356,19 +368,19 @@ module CnpOnline
       
       transaction_listener = args[:transaction_listener]
       batch_listener = args[:batch_listener] ||= nil
-      path_to_responses = args[:path_to_responses] ||= (File.dirname(@path_to_batches) + '/responses/')
+      path_to_responses = args[:path_to_responses] ||= (File.dirname(@path_to_batches) + '/' + RESPONSE_PATH_DIR)
       delete_batch_files = args[:deleteBatchFiles] ||= get_config(:deleteBatchFiles, args)
       #deleteBatchFiles = get_config(:deleteBatchFiles, args)
       
       Dir.foreach(path_to_responses) do |filename|
-        if ((filename =~ /response_\d+.complete.asc.received\z/) != nil) then
+        if ((filename =~ /#{RESPONSE_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}.asc#{RECEIVED_FILE_SUFFIX}\z/) != nil) then
           process_response(path_to_responses + filename, transaction_listener, batch_listener)
           File.rename(path_to_responses + filename, path_to_responses + filename + '.processed')
         end 
       end
 
       if delete_batch_files
-        delete_files_in_path(path_to_responses, /response_\d+.complete.asc.received.processed\z/)
+        delete_files_in_path(path_to_responses, /#{RESPONSE_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}.asc#{RECEIVED_FILE_SUFFIX}.processed\z/)
       end
     end
     
@@ -432,7 +444,7 @@ module CnpOnline
       end
 
       #rename the requests file
-      File.rename(@path_to_request, @path_to_request + '.complete')
+      File.rename(@path_to_request, @path_to_request + COMPLETE_FILE_SUFFIX)
       #we don't need the master batch file anymore
       File.delete(@path_to_batches)
     end
@@ -486,7 +498,7 @@ module CnpOnline
       end
 
       if use_encryption
-        encrypted_path = path + 'encrypted/'
+        encrypted_path = path + ENCRYPTED_PATH_DIR
         if !File.directory?(encrypted_path)
           Dir.mkdir(encrypted_path)
         end
@@ -497,8 +509,8 @@ module CnpOnline
 
     def encrypt_request_files(path, encrypted_path, options)
       Dir.foreach(path) do |filename|
-        if (filename =~ /request_\d+.complete\z/) != nil
-          cipher_filename = encrypted_path + filename + '.encrypted'
+        if (filename =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}\z/) != nil
+          cipher_filename = encrypted_path + filename + ENCRYPTED_FILE_SUFFIX
           plain_filename = path + filename
           encrypt_batch_file_request(cipher_filename, plain_filename, options)
         end
@@ -510,12 +522,12 @@ module CnpOnline
       delete_batch_files = get_config(SFTP_DELETE_BATCH_FILES_CONFIG_NAME, args)
 
       Dir.foreach(response_path) do |filename|
-        if (filename =~ /response_\d+.complete.encrypted.asc.received\z/) != nil
+        if (filename =~ /#{RESPONSE_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{ENCRYPTED_FILE_SUFFIX}.asc#{RECEIVED_FILE_SUFFIX}\z/) != nil
           decrypt_batch_file_response(response_path + filename, args)
         end
       end
       if delete_batch_files
-        delete_files_in_path(response_path, /response_\d+.complete.encrypted.asc.received\z/)
+        delete_files_in_path(response_path, /#{RESPONSE_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{ENCRYPTED_FILE_SUFFIX}.asc#{RECEIVED_FILE_SUFFIX}\z/)
       end
     end
 
@@ -525,7 +537,7 @@ module CnpOnline
       responses_expected = 0
       Net::SFTP.start(url, username, :password => password) do |sftp|
         Dir.foreach(path_to_requests) do |filename|
-          if (filename =~ /request_\d+.complete.?\w*\z/) != nil
+          if (filename =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}((#{ENCRYPTED_FILE_SUFFIX})?)\z/) != nil
             new_filename = filename + '.prg'
             File.rename(path_to_requests + filename, path_to_requests + new_filename)
             # upload the file
@@ -536,8 +548,8 @@ module CnpOnline
             File.rename(path_to_requests + new_filename, path_to_requests + new_filename.gsub('prg','sent'))
             if use_encryption
               # rename the plain text file too
-              text_filename = (path_to_requests + filename).gsub('encrypted/', '').gsub('.encrypted', '')
-              File.rename(text_filename, text_filename + '.sent')
+              text_filename = (path_to_requests + filename).gsub(ENCRYPTED_PATH_DIR, '').gsub(ENCRYPTED_FILE_SUFFIX, '')
+              File.rename(text_filename, text_filename + SENT_FILE_SUFFIX)
             end
           end
         end
@@ -548,11 +560,10 @@ module CnpOnline
     end
   end
 
-
-    def download_from_sftp(response_path, url, username, password)
+  def download_from_sftp(response_path, url, username, password)
     responses_grabbed = 0
     begin
-      #wait until a response has a possibility of being there
+      #wait until a response has a possibility of being there?
       sleep(@POLL_DELAY)
       time_begin = Time.now
       Net::SFTP.start(url, username, :password => password) do |sftp|
@@ -560,8 +571,8 @@ module CnpOnline
           #sleep for 60 seconds, ¿no es bueno?
           sleep(60)
           sftp.dir.foreach('/outbound/') do |entry|
-            if (entry.name =~ /request_\d+.complete.?\w*.asc\z/) != nil then
-              response_filename = response_path + entry.name.gsub('request', 'response') + '.received'
+            if (entry.name =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}((#{ENCRYPTED_FILE_SUFFIX})?).asc\z/) != nil then
+              response_filename = response_path + entry.name.gsub(REQUEST_FILE_PREFIX, RESPONSE_FILE_PREFIX) + RECEIVED_FILE_SUFFIX
               sftp.download!('/outbound/' + entry.name, response_filename)
               responses_grabbed += 1
               3.times{
@@ -622,7 +633,7 @@ module CnpOnline
       if passphrase == ""
         raise RuntimeError, "The passphrase to decrypt the batch file responses is missing from the config"
       end
-      decrypted_response_filename = response_filename.gsub('/encrypted', '').gsub(".encrypted", "")
+      decrypted_response_filename = response_filename.gsub(ENCRYPTED_PATH_DIR, '').gsub(ENCRYPTED_FILE_SUFFIX, "")
 
       decrypted_file = File.open(decrypted_response_filename, "w")
       IOStreams::Pgp::Reader.open(
