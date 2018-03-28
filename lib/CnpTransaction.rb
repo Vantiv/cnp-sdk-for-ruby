@@ -28,6 +28,28 @@ require_relative 'Configuration'
 #
 module CnpOnline
   class CnpTransaction
+
+    def fast_access_funding(options)
+      transaction = FastAccessFunding.new
+      transaction.reportGroup = options['reportGroup']
+      transaction.transactionId = options['transactionId']
+      transaction.customerId = options['customerId']
+      transaction.fundingSubmerchantId = options['fundingSubmerchantId']
+      transaction.submerchantName = options['submerchantName']
+      transaction.fundsTransferId = options['fundsTransferId']
+      transaction.amount = options['amount']
+      if(options['card'])
+        transaction.card = Card.from_hash(options)
+      end
+      if(options['token'])
+        transaction.token = CardToken.from_hash(options,'token')
+      end
+      if(options['paypage'])
+        transaction.paypage = CardPaypage.from_hash(options,'paypage')
+      end
+      return transaction
+    end
+
     def authorization(options)
       transaction = Authorization.new
       transaction.secondaryAmount = options['secondaryAmount']

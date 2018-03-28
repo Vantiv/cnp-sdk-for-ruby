@@ -120,7 +120,13 @@ module CnpOnline
 
       commit(transaction, :giftCardCapture, options)
     end
-    
+
+    def fast_access_funding(options)
+      transaction = @cnp_txn.fast_access_funding(options)
+
+      commit(transaction, :fastAccessFunding, options)
+    end
+
     def giftCardCredit(options)
       transaction = @cnp_transaction.giftCardCredit(options)
 
@@ -283,7 +289,7 @@ module CnpOnline
 
       request.authentication  = authentication
       request.merchantId      = get_merchant_id(options)
-      request.version         = '12.0'
+      request.version         = '12.1'
       request.loggedInUser    = get_logged_in_user(options)
       request.xmlns           = "http://www.vantivcnp.com/schema"
       request.merchantSdk     = get_merchant_sdk(options)

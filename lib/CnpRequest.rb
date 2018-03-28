@@ -207,9 +207,9 @@ module CnpOnline
       cnpRequest.authentication = authentication
       cnpRequest.numBatchRequests = "0"
       
-      cnpRequest.version         = '12.0'
+      cnpRequest.version         = '12.1'
       cnpRequest.xmlns           = "http://www.vantivcnp.com/schema"
-      
+
       
       xml = cnpRequest.save_to_xml.to_s
       
@@ -218,7 +218,7 @@ module CnpOnline
         ts += Time::now.nsec.to_s
       rescue NoMethodError # ruby 1.8.7 fix
         ts += Time::now.usec.to_s
-      end 
+      end
       if(File.file?(path)) then
         raise RuntimeError, "Entered a file not a path."
       end
@@ -459,7 +459,7 @@ module CnpOnline
       authentication.password = get_config(:password, options)
 
       cnp_request.authentication = authentication
-      cnp_request.version         = '12.0'
+      cnp_request.version         = '12.1'
       cnp_request.xmlns           = "http://www.vantivcnp.com/schema"
       # cnp_request.id              = options['sessionId'] #grab from options; okay if nil
       cnp_request.numBatchRequests = @num_batch_requests

@@ -1466,8 +1466,7 @@ module CnpOnline
     #SDK XML 11
     text_node :processingType,"processingType", :default_value=>nil
     text_node :originalNetworkTransactionId,"originalNetworkTransactionId", :default_value=>nil
-    text_node :originalTransactionAmount,"originalTransactionAmount", :default_value=>nil 
-    
+    text_node :originalTransactionAmount,"originalTransactionAmount", :default_value=>nil
   end
 
   class Sale
@@ -1519,8 +1518,10 @@ module CnpOnline
     #SDK XML 11
     text_node :processingType,"processingType", :default_value=>nil
     text_node :originalNetworkTransactionId,"originalNetworkTransactionId", :default_value=>nil
-    text_node :originalTransactionAmount,"originalTransactionAmount", :default_value=>nil 
-     
+    text_node :originalTransactionAmount,"originalTransactionAmount", :default_value=>nil
+    #SDK XML 12
+    text_node :routingPreference,"routingPreference", :default_value=>nil
+
   end
 
   class Credit
@@ -2134,7 +2135,28 @@ module CnpOnline
     root_element_name "fundingInstructionVoid"
     text_node :cnpTxnId, "cnpTxnId", :default_value=>nil
   end
-  
+
+  # Adding the Funding Void Instruction Class
+  # Date: 01-25-2016
+  # Change Type: New
+  # Desc: Change proposed as a part of XML 10 to incorporate the feature of voiding transactions
+  # on request.
+  class FastAccessFunding
+    include XML::Mapping
+    root_element_name "fastAccessFunding"
+    text_node :reportGroup, "@reportGroup", :default_value=>nil
+    text_node :transactionId, "@id", :default_value=>nil
+    text_node :customerId, "@customerId", :default_value=>nil
+
+    text_node :fundingSubmerchantId, "fundingSubmerchantId", :default_value=>nil
+    text_node :submerchantName, "submerchantName", :default_value=>nil
+    text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
+    text_node :amount, "amount", :default_value=>nil
+    optional_choice_node   :if,    'card', :then, (object_node :card, "card", :class=>Card),
+                           :elsif, 'token',    :then, (object_node :token,    "token",    :class=>CardToken),
+                           :elsif, 'paypage', :then, (object_node :paypage, "paypage", :class=>CardPaypage)
+  end
+
  # Adding the queryTransaction Class
  # Date: 01-27-2016
  # Change Type: New
@@ -2217,8 +2239,9 @@ end
     :elsif, 'unloadReversal', :then, (object_node :unloadReversal,"unloadReversal", :class=>UnloadReversal),
     :elsif, 'advancedFraudResults', :then, (object_node :advancedFraudResults,"advancedFraudResults", :class=>AdvancedFraudResults),
     :elsif, 'queryTransaction', :then, (object_node :queryTransaction, "queryTransaction", :class=>QueryTransaction),
-    :elsif, 'fraudCheck', :then, (object_node :fraudCheck, "fraudCheck", :class=>FraudCheck)
-    def post_save(xml, options={:Mapping=>:_default})
+    :elsif, 'fraudCheck', :then, (object_node :fraudCheck, "fraudCheck", :class=>FraudCheck),
+    :elsif, 'fastAccessFunding',    :then, (object_node :fastAccessFunding,    "fastAccessFunding",    :class=>FastAccessFunding)
+        def post_save(xml, options={:Mapping=>:_default})
       xml.each_element() {|el|
         if(el.name == 'captureTxn')
           el.name = 'capture'
@@ -2296,7 +2319,8 @@ end
     text_node :numVendorCredit , "@numVendorCredit", :default_value=>"0" 
     text_node :numPhysicalCheckDebit , "@numPhysicalCheckDebit", :default_value=>"0" 
     text_node :numPhysicalCheckCredit , "@numPhysicalCheckCredit", :default_value=>"0" 
-    text_node :numFundingInstructionVoid, "@numFundingInstructionVoid", :default_value=>"0" 
+    text_node :numFundingInstructionVoid, "@numFundingInstructionVoid", :default_value=>"0"
+    text_node :numFastAccessFunding, "@numFastAccessFunding", :default_value=>"0"
     text_node :payFacCreditAmount , "@payFacCreditAmount", :default_value=>"0" 
     text_node :payFacDebitAmount , "@payFacDebitAmount", :default_value=>"0"
     text_node :submerchantCreditAmount , "@submerchantCreditAmount", :default_value=>"0" 
@@ -2306,7 +2330,8 @@ end
     text_node :vendorDebitAmount , "@vendorDebitAmount", :default_value=>"0" 
     text_node :vendorCreditAmount , "@vendorCreditAmount", :default_value=>"0"
     text_node :physicalCheckDebitAmount , "@physicalCheckDebitAmount", :default_value=>"0" 
-    text_node :physicalCheckCreditAmount , "@physicalCheckCreditAmount", :default_value=>"0"                      
+    text_node :physicalCheckCreditAmount , "@physicalCheckCreditAmount", :default_value=>"0"
+    text_node :fastAccessFundingAmount , "@fastAccessFundingAmount", :default_value=>"0"
     text_node :merchantId, "@merchantId", :default_value=>nil
   end
 

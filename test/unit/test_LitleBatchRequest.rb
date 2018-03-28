@@ -637,8 +637,8 @@ module CnpOnline
 
     def test_PFIF_instruction_txn
       Configuration.any_instance.stubs(:config).returns({'currency_merchant_map'=>{'DEFAULT'=>'1'}, 'user'=>'a','password'=>'b','version'=>'9.3'}).once
-      File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').at_most(12)
-      File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'wb').at_most(10)
+      File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'a+').at_most(13)
+      File.expects(:open).with(regexp_matches(/.*batch_.*\d.*/), 'wb').at_most(11)
       File.expects(:rename).once
       File.expects(:open).with(regexp_matches(/.*batch_.*\d.closed.*/), 'w').once
       File.expects(:delete).with(regexp_matches(/.*batch_.*\d_txns.*/)).once
@@ -732,6 +732,16 @@ module CnpOnline
         'fundsTransferId'=>'1234567',
         'amount'=>'110',
       }
+
+      fastAccessFundingHash = {
+          'reportGroup'=>'Planets',
+          'orderId'=>'12344',
+          'fundingSubmerchantId'=>'123456',
+          'submerchantName' => 'Colin',
+          'fundsTransferId'=>'1234567',
+          'amount'=>'111',
+      }
+
       batch = CnpBatchRequest.new
       batch.create_new_batch('/usr/local/Batches/')
 
@@ -745,6 +755,7 @@ module CnpOnline
       batch.vendor_debit(vendorDebitHash)
       batch.reserve_debit(reserveDebitHash)
       batch.physical_check_debit(physicalCheckDebitHash)
+      batch.fast_access_funding(fastAccessFundingHash)
 
       #pid, size = `ps ax -o pid,rss | grep -E "^[[:space:]]*#{$$}"`.strip.split.map(&:to_i)
       #puts "PID: " + pid.to_s + " size: " + size.to_s
@@ -772,6 +783,9 @@ module CnpOnline
       assert_equal 109, counts[:reserveDebit ][:reserveDebitAmount ]
       assert_equal 107, counts[:vendorDebit ][:vendorDebitAmount ]
       assert_equal 110, counts[:physicalCheckDebit ][:physicalCheckDebitAmount ]
+
+      assert_equal 111, counts[:fastAccessFunding ][:fastAccessFundingAmount ]
+      assert_equal 1, counts[:fastAccessFunding ][:numFastAccessFunding ]
     end
   end
 end

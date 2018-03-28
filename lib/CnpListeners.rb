@@ -166,6 +166,30 @@ module CnpOnline
     end
   end
 
+  class FundingInstructionVoidListener < DefaultCnpListener
+    def apply(duck)
+      if(duck["type"] == "FundingInstructionVoidResponse") then
+        @action.call(duck)
+      end
+    end
+  end
+
+  class PinlessDebitListener < DefaultCnpListener
+    def apply(duck)
+      if(duck["type"] == "PinlessDebitResponse") then
+        @action.call(duck)
+      end
+    end
+  end
+
+  class FastAccessFundingListener < DefaultCnpListener
+    def apply(duck)
+      if(duck["type"] == "FastAccessFundingResponse") then
+        @action.call(duck)
+      end
+    end
+  end
+
   class PhysicalCheckCreditListener < DefaultCnpListener
     def apply(duck)
       if(duck["type"] == "physicalCheckCreditResponse") then
