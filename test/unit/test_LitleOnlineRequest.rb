@@ -245,7 +245,7 @@ module CnpOnline
       hash={
         'cnpTxnId' => '006'
       }
-      CnpXmlMapper.expects(:request).with(regexp_matches(/<cnpOnlineRequest.*version="12\.0".*/m), is_a(Hash))
+      CnpXmlMapper.expects(:request).with(regexp_matches(/<cnpOnlineRequest.*version="12\.1".*/m), is_a(Hash))
       response = CnpOnlineRequest.new.void(hash)
     end
     

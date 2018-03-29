@@ -92,7 +92,7 @@ module CnpOnline
         }}
       response= CnpOnlineRequest.new.sale(hash)
       assert_equal('Insufficient Funds', response.saleResponse.message)
-      assert_equal('0', response.saleResponse.applepayResponse.transactionAmount)
+      assert_equal('110', response.saleResponse.applepayResponse.transactionAmount)
     end
 
     def test_illegal_order_source
@@ -305,7 +305,7 @@ module CnpOnline
         }}
       response= CnpOnlineRequest.new.sale(hash)
       assert_equal('Insufficient Funds', response.saleResponse.message)
-      assert_equal('0', response.saleResponse.applepayResponse.transactionAmount)
+      assert_equal('110', response.saleResponse.applepayResponse.transactionAmount)
     end
         
     #SDK Ruby XML 10
