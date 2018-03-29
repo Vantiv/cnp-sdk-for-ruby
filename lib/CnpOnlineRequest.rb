@@ -319,7 +319,7 @@ module CnpOnline
     end
 
     def get_merchant_sdk(options)
-      options['merchantSdk'] || 'Ruby;12.0'
+      options['merchantSdk'] || 'Ruby;12.1'
     end
 
     def get_report_group(options)
