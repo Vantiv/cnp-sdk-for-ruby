@@ -91,7 +91,7 @@ module CnpOnline
          'version'=>'10000'
         }}
       response= CnpOnlineRequest.new.sale(hash)
-      assert_equal('Approved', response.saleResponse.message)
+      assert_equal('Insufficient Funds', response.saleResponse.message)
       assert_equal('0', response.saleResponse.applepayResponse.transactionAmount)
     end
 
@@ -304,7 +304,7 @@ module CnpOnline
          'version'=>'100000'
         }}
       response= CnpOnlineRequest.new.sale(hash)
-      assert_equal('Approved', response.saleResponse.message)
+      assert_equal('Insufficient Funds', response.saleResponse.message)
       assert_equal('0', response.saleResponse.applepayResponse.transactionAmount)
     end
         
