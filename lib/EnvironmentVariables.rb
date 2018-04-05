@@ -7,8 +7,8 @@ module CnpOnline
       @currency_merchant_map = ''
       @default_report_group = 'Default Report Group'
       @url = ''
-      @proxy_addr = ''
-      @proxy_port = ''
+      @proxy_addr = nil
+      @proxy_port = nil
       @sftp_username = ''
       @sftp_password = ''
       @sftp_url = ''
