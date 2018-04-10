@@ -4,10 +4,11 @@ require 'test/unit'
 
 module CnpOnline
   class Cnp_certTest < Test::Unit::TestCase
-    @@merchant_hash = {'reportGroup'=>'Planets',
-      'merchantId'=>'1288791',
-      'id'=>'test',
-      'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
+    @@merchant_hash = {
+        'reportGroup'=>'Planets',
+        'merchantId'=>'1288791',
+        'id'=>'test',
+        'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
     }
   
     def test_1_auth

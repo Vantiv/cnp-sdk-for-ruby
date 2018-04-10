@@ -4,10 +4,11 @@ require 'test/unit'
 module CnpOnline
   class Cnp_certTest4 < Test::Unit::TestCase
     # test echeck
-    @@merchant_hash = {'reportGroup'=>'Planets',
-      'merchantId'=>'1288791',
-      'id'=>'test',
-                       'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
+    @@merchant_hash = {
+        'reportGroup'=>'Planets',
+        'merchantId'=>'1288791',
+        'id'=>'test',
+        'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
 
     }
   
@@ -75,7 +76,7 @@ module CnpOnline
         hash = customer_hash.merge(@@merchant_hash)
         echeck_response = CnpOnlineRequest.new.echeck_verification(hash)
         assert_equal('950', echeck_response.echeckVerificationResponse.response)
-        # assert_equal('Declined - Negative Information on File', echeck_response.echeckVerificationResponse.message)
+        assert_equal('Decline - Negative Information on File', echeck_response.echeckVerificationResponse.message)
       end
     
       def test_40
@@ -209,7 +210,7 @@ module CnpOnline
         hash = customer_hash.merge(@@merchant_hash)
         echeck_response = CnpOnlineRequest.new.echeck_credit(hash)
     
-        # assert_equal('301', echeck_response.echeckCreditResponse.response)
+         assert_equal('301', echeck_response.echeckCreditResponse.response)
       end
     
       def test_46

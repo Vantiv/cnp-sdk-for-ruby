@@ -4,10 +4,11 @@ require 'test/unit'
 module CnpOnline
   class Cnp_certTest2 < Test::Unit::TestCase
     #test enhanced data on auth response
-    @@merchant_hash = {'reportGroup'=>'Planets',
-      'merchantId'=>'1288791',
-      'id'=>'test',
-                       'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
+    @@merchant_hash = {
+        'reportGroup'=>'Planets',
+        'merchantId'=>'1288791',
+        'id'=>'test',
+        'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
 
     }
   
@@ -27,10 +28,10 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type']) #Ruby 1.8.7 has type as an attribute of Object
-      #assert_equal('2000', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
-      #assert_equal('NO', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
-      #assert_equal('GIFT', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
+      assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type']) #Ruby 1.8.7 has type as an attribute of Object
+      assert_equal('2000', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
+      assert_equal('NO', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
+      assert_equal('GIFT', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
     end
   
     def test_15
@@ -48,10 +49,10 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
-      #assert_equal('2000', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
-      #assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
-      #assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
+      assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
+      assert_equal('2000', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
+      assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
+      assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
     end
   
     def test_16
@@ -69,10 +70,10 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
-      #assert_equal('0', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
-      #assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
-      #assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
+      assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
+      assert_equal('0', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
+      assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
+      assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
     end
   
     def test_17
@@ -90,10 +91,10 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
-      #assert_equal('6500', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
-      #assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
-      #assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
+      assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
+      assert_equal('6500', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
+      assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
+      assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
     end
   
     def test_18
@@ -111,10 +112,10 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
-      #assert_equal('12200', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
-      #assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
-      #assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
+      assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
+      assert_equal('12200', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
+      assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
+      assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
     end
   
     def test_19
@@ -132,10 +133,10 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
-      #assert_equal('20000', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
-      #assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
-      #assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
+      assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
+      assert_equal('20000', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
+      assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
+      assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
     end
   
     def test_20
@@ -153,10 +154,10 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
-      #assert_equal('10050', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
-      #assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
-      #assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
+      assert_equal('PREPAID', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource['type'])
+      assert_equal('10050', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.availableBalance)
+      assert_equal('YES', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.reloadable)
+      assert_equal('PAYROLL', auth_response.authorizationResponse.enhancedAuthResponse.fundingSource.prepaidCardType)
     end
   
     def test_21
@@ -174,7 +175,7 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('AFFLUENT', auth_response.authorizationResponse.enhancedAuthResponse.affluence)
+      assert_equal('AFFLUENT', auth_response.authorizationResponse.enhancedAuthResponse.affluence)
     end
   
     def test_22
@@ -192,7 +193,7 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('MASS AFFLUENT', auth_response.authorizationResponse.enhancedAuthResponse.affluence)
+      assert_equal('MASS AFFLUENT', auth_response.authorizationResponse.enhancedAuthResponse.affluence)
     end
   
     def test_23
@@ -210,7 +211,7 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('AFFLUENT', auth_response.authorizationResponse.enhancedAuthResponse.affluence)
+      assert_equal('AFFLUENT', auth_response.authorizationResponse.enhancedAuthResponse.affluence)
     end
   
     def test_24
@@ -228,7 +229,7 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('MASS AFFLUENT', auth_response.authorizationResponse.enhancedAuthResponse.affluence)
+      assert_equal('MASS AFFLUENT', auth_response.authorizationResponse.enhancedAuthResponse.affluence)
     end
   
     def test_25
@@ -245,7 +246,7 @@ module CnpOnline
       auth_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('000', auth_response.authorizationResponse.response)
       assert_equal('Approved', auth_response.authorizationResponse.message)
-      #assert_equal('BRA', auth_response.authorizationResponse.enhancedAuthResponse.issuerCountry)
+      assert_equal('BRA', auth_response.authorizationResponse.enhancedAuthResponse.issuerCountry)
     end
   
     # test 26-31 healthcare iias
@@ -268,8 +269,8 @@ module CnpOnline
       }
       hash = customer_hash.merge(@@merchant_hash)
       auth_response = CnpOnlineRequest.new.authorization(hash)
-      #assert_equal('341', auth_response.authorizationResponse.response)
-      # assert_equal('Invalid healthcare amounts', auth_response.authorizationResponse.message)
+      assert_equal('341', auth_response.authorizationResponse.response)
+      assert_equal('Invalid healthcare amounts', auth_response.authorizationResponse.message)
     end
   
     def test_27
@@ -292,8 +293,8 @@ module CnpOnline
       }
       hash = customer_hash.merge(@@merchant_hash)
       auth_response = CnpOnlineRequest.new.authorization(hash)
-      #assert_equal('341', auth_response.authorizationResponse.response)
-      # assert_equal('Invalid healthcare amounts', auth_response.authorizationResponse.message)
+      assert_equal('341', auth_response.authorizationResponse.response)
+      assert_equal('Invalid healthcare amounts', auth_response.authorizationResponse.message)
     end
   
     def test_28
@@ -316,8 +317,8 @@ module CnpOnline
       }
       hash = customer_hash.merge(@@merchant_hash)
       auth_response = CnpOnlineRequest.new.authorization(hash)
-      #assert_equal('000', auth_response.authorizationResponse.response)
-      #assert_equal('Approved', auth_response.authorizationResponse.message)
+      assert_equal('000', auth_response.authorizationResponse.response)
+      assert_equal('Approved', auth_response.authorizationResponse.message)
     end
   
     def test_29
@@ -343,8 +344,8 @@ module CnpOnline
       }
       hash = customer_hash.merge(@@merchant_hash)
       auth_response = CnpOnlineRequest.new.authorization(hash)
-      #assert_equal('341', auth_response.authorizationResponse.response)
-      # assert_equal('Invalid healthcare amounts', auth_response.authorizationResponse.message)
+      assert_equal('341', auth_response.authorizationResponse.response)
+      assert_equal('Invalid healthcare amounts', auth_response.authorizationResponse.message)
     end
   
     def test_30
@@ -370,8 +371,8 @@ module CnpOnline
       }
       hash = customer_hash.merge(@@merchant_hash)
       auth_response = CnpOnlineRequest.new.authorization(hash)
-      #assert_equal('341', auth_response.authorizationResponse.response)
-      # assert_equal('Invalid healthcare amounts', auth_response.authorizationResponse.message)
+      assert_equal('341', auth_response.authorizationResponse.response)
+      assert_equal('Invalid healthcare amounts', auth_response.authorizationResponse.message)
     end
   
     def test_31
@@ -395,9 +396,9 @@ module CnpOnline
       }
       hash = customer_hash.merge(@@merchant_hash)
       auth_response = CnpOnlineRequest.new.authorization(hash)
-      #assert_equal('010', auth_response.authorizationResponse.response)
-      #assert_equal('Partially Approved', auth_response.authorizationResponse.message)
-      #assert_equal('18699', auth_response.authorizationResponse.approvedAmount)
+      assert_equal('010', auth_response.authorizationResponse.response)
+      assert_equal('Partially Approved', auth_response.authorizationResponse.message)
+      assert_equal('18699', auth_response.authorizationResponse.approvedAmount)
     end
   
     def test_32

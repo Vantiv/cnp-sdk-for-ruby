@@ -4,9 +4,12 @@ require 'test/unit'
 module CnpOnline
   class Cnp_certTest3 < Test::Unit::TestCase
     #test auth reversal
-    @@merchant_hash = {'reportGroup'=>'Planets','id'=>'321','customerId'=>'123',
-      'merchantId'=>'1288791',
-                       'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
+    @@merchant_hash = {
+        'reportGroup'=>'Planets',
+        'id'=>'321',
+        'customerId'=>'123',
+        'merchantId'=>'1288791',
+        'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
 
     }
   

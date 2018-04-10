@@ -3,10 +3,11 @@ require 'test/unit'
 
 module CnpOnline
   class Cnp_certTest5 < Test::Unit::TestCase
-    @@merchant_hash = {'reportGroup'=>'Planets',
-      'merchantId'=>'1288791',
-      'id'=>'test',
-                       'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
+    @@merchant_hash = {
+        'reportGroup'=>'Planets',
+        'merchantId'=>'1288791',
+        'id'=>'test',
+        'url'=> 'https://payments.vantivprelive.com/vap/communicator/online'
 
     }
   
@@ -45,7 +46,8 @@ module CnpOnline
       assert_equal('445711', token_response.registerTokenResponse.bin)
       assert_equal('VI', token_response.registerTokenResponse['type'])
       assert_equal('802', token_response.registerTokenResponse.response)
-      #assert_equal('1111222233330123', token_response.registerTokenResponse.cnpToken)
+      lastFour = String.new(token_response.registerTokenResponse.cnpToken)[12..15]
+      assert_equal('0123', lastFour)
       assert_equal('Account number was previously registered', token_response.registerTokenResponse.message)
     end
   
@@ -126,12 +128,12 @@ module CnpOnline
         'orderId' => '59',
         'amount' => '15000',
         'orderSource' => 'ecommerce',
-        'token' => {'cnpToken' => '1712990000040196', 'expDate' => '1112'}
+        'token' => {'cnpToken' => '1111000100092332', 'expDate' => '1121'}
       }
       hash = customer_hash.merge(@@merchant_hash)
       token_response = CnpOnlineRequest.new.authorization(hash)
-      #assert_equal('822', token_response.authorizationResponse.response)
-      #assert_equal('Token was not found', token_response.authorizationResponse.message)
+      assert_equal('822', token_response.authorizationResponse.response)
+      assert_equal('Token was not found', token_response.authorizationResponse.message)
     end
   
     def test_60
@@ -139,12 +141,12 @@ module CnpOnline
         'orderId' => '60',
         'amount' => '15000',
         'orderSource' => 'ecommerce',
-        'token' => {'cnpToken' => '1712999999999999', 'expDate' => '1112'}
+        'token' => {'cnpToken' => '1112000100000085', 'expDate' => '1121'}
       }
       hash = customer_hash.merge(@@merchant_hash)
       token_response = CnpOnlineRequest.new.authorization(hash)
-      #assert_equal('823', token_response.authorizationResponse.response)
-      # assert_equal('Token was invalid', token_response.authorizationResponse.message)
+      assert_equal('823', token_response.authorizationResponse.response)
+      assert_equal('Token was invalid', token_response.authorizationResponse.message)
     end
   
     def test_61
