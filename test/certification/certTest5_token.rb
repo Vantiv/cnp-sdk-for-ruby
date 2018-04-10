@@ -46,8 +46,8 @@ module CnpOnline
       assert_equal('445711', token_response.registerTokenResponse.bin)
       assert_equal('VI', token_response.registerTokenResponse['type'])
       assert_equal('802', token_response.registerTokenResponse.response)
-      lastFour = String.new(token_response.registerTokenResponse.cnpToken)[12..15]
-      assert_equal('0123', lastFour)
+      cardString =  "" + token_response.registerTokenResponse.cnpToken
+      assert_equal('0123', cardString[12..15])
       assert_equal('Account number was previously registered', token_response.registerTokenResponse.message)
     end
   
