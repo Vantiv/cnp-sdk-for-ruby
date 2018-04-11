@@ -73,7 +73,7 @@ module CnpOnline
       hash = customer_hash.merge(@@merchant_hash)
       token_response = CnpOnlineRequest.new.register_token_request(hash)
       assert_equal('900', token_response.registerTokenResponse.response)
-      # assert_equal('Invalid bank routing number', token_response.registerTokenResponse.message)
+      assert_equal('Invalid Bank Routing Number', token_response.registerTokenResponse.message)
     end
   
     def test_55
@@ -103,7 +103,7 @@ module CnpOnline
       hash = customer_hash.merge(@@merchant_hash)
       token_response = CnpOnlineRequest.new.authorization(hash)
       assert_equal('301', token_response.authorizationResponse.response)
-      # assert_equal('Invalid account number', token_response.authorizationResponse.message)
+      assert_equal('Invalid Account Number', token_response.authorizationResponse.message)
     end
   
     def test_57
