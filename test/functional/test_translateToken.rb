@@ -160,7 +160,7 @@ module CnpOnline
       response= CnpOnlineRequest.new.translate_to_low_value_token_request(hash)
 
       assert_equal('803', response.translateToLowValueTokenResponse.response)
-      assert_equal('Valid Token', response.translateToLowValueTokenResponse.response)
+      assert_equal('Valid Token', response.translateToLowValueTokenResponse.message)
     end
 
     def test_ttlvt_response_not_authorized
@@ -176,7 +176,7 @@ module CnpOnline
       response= CnpOnlineRequest.new.translate_to_low_value_token_request(hash)
 
       assert_equal('821', response.translateToLowValueTokenResponse.response)
-      assert_equal('Merchant is not authorized for tokens', response.translateToLowValueTokenResponse.response)
+      assert_equal('Merchant is not authorized for tokens', response.translateToLowValueTokenResponse.message)
 
     end
 
@@ -193,7 +193,7 @@ module CnpOnline
       response= CnpOnlineRequest.new.translate_to_low_value_token_request(hash)
 
       assert_equal('822', response.translateToLowValueTokenResponse.response)
-      assert_equal('Token was not found', response.translateToLowValueTokenResponse.response)
+      assert_equal('Token was not found', response.translateToLowValueTokenResponse.message)
 
     end
 

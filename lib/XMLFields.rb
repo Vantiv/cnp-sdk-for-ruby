@@ -2459,7 +2459,7 @@ module CnpOnline
     text_node :physicalCheckCreditAmount , "@physicalCheckCreditAmount", :default_value=>"0"
     text_node :fastAccessFundingAmount , "@fastAccessFundingAmount", :default_value=>"0"
     text_node :merchantId, "@merchantId", :default_value=>nil
-    text_node :numTranslateToLowValueTokenRequest, "@numTranslateToLowValueTokenRequest", :default_value=>"0"
+    text_node :numTranslateToLowValueTokenRequests, "@numTranslateToLowValueTokenRequests", :default_value=>"0"
   end
 
   class CnpRequest

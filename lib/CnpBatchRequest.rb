@@ -45,7 +45,7 @@ module CnpOnline
         #12.1
         :fastAccessFunding=>{ :numFastAccessFunding=>0, :fastAccessFundingAmount=>0 },
         #12.3
-        :numTranslateToLowValueTokenRequest=>0,
+        :numTranslateToLowValueTokenRequests=>0,
         #12.0 begin
         :giftCardAuthReversal=>{ :numGiftCardAuthReversals=>0, :giftCardAuthReversalOriginalAmount=>0 },
         #end 
@@ -224,9 +224,9 @@ module CnpOnline
 
     def translate_to_low_value_token_request(options)
       transaction = @cnp_txn.translate_to_low_value_token_request(options)
-      @txn_counts[:numTranslateToLowValueTokenRequest] += 1
+      @txn_counts[:numTranslateToLowValueTokenRequests] += 1
 
-      add_txn_to_batch(transaction, :translateToLowValueTokenRequest, options)
+      add_txn_to_batch(transaction, :translateToLowValueTokenRequests, options)
     end
 
     def gift_card_auth_reversal(options)
@@ -545,7 +545,7 @@ module CnpOnline
       request.numAuthReversals         = @txn_counts[:authReversal][:numAuthReversals]
       request.authReversalAmount       = @txn_counts[:authReversal][:authReversalAmount]
       # 12.3 begin
-      request.numTranslateToLowValueTokenRequest = @txn_counts[:numTranslateToLowValueTokenRequest]
+      request.numTranslateToLowValueTokenRequests = @txn_counts[:numTranslateToLowValueTokenRequests]
       # 12.3 end
       # 12.1 begin
       request.numFastAccessFunding     = @txn_counts[:fastAccessFunding][:numFastAccessFunding]
