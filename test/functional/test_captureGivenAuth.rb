@@ -44,7 +44,41 @@ module CnpOnline
         'type'=>'VI',
         'number' =>'4100000000000000',
         'expDate' =>'1210'
-        }}
+        }
+      }
+      response= CnpOnlineRequest.new.capture_given_auth(hash)
+      assert_equal('Valid Format', response.message)
+    end
+
+    def test_simple_capture_given_lodging_info
+      hash = {
+          'merchantId' => '101',
+          'version'=>'8.8',
+          'id'=>'test',
+          'reportGroup'=>'Planets',
+          'orderId'=>'12344',
+          'amount'=>'106',
+          'authInformation' => {
+              'authDate'=>'2002-10-09','authCode'=>'543216',
+              'authAmount'=>'12345'
+          },
+          'orderSource'=>'ecommerce',
+          'card'=>{
+              'type'=>'VI',
+              'number' =>'4100000000000000',
+              'expDate' =>'1210'
+          },
+        'lodgingInfo' => {
+            'hotelFolioNumber ' => 'testFolio',
+            'duration' => '111',
+            'customerServicePhone' => 'testPhone1',
+            'programCode' => 'LODGING',
+            'roomRate' => '112233445566',
+            'numAdults' => '11',
+            'propertyLocalPhone' => 'testPhone2',
+            'fireSafetyIndicator' => 'true',
+            'lodgingCharge' => {'name' => 'RESTAURANT'}
+      }}
       response= CnpOnlineRequest.new.capture_given_auth(hash)
       assert_equal('Valid Format', response.message)
     end

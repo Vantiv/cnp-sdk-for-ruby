@@ -300,8 +300,8 @@ module CnpOnline
   #SDK XML 10
   class Wallet
     include XML::Mapping
-    text_node :walletSourceType, "walletSourceType", :default_value=>nil   
-    text_node :walletSourceTypeId, "walletSourceTypeId", :default_value=>nil 
+    text_node :walletSourceType, "walletSourceType", :default_value=>nil
+    text_node :walletSourceTypeId, "walletSourceTypeId", :default_value=>nil
     def self.from_hash(hash, name='wallet')
       base = hash[name]
       if(base)
@@ -316,7 +316,7 @@ module CnpOnline
       nil
       end
     end
-  end    
+  end
 
 
   class FraudCheck
@@ -1320,6 +1320,106 @@ module CnpOnline
     end
   end
 
+  class LodgingCharge
+    include XML::Mapping
+    text_node :name, "name", :default_value=>nil
+    def self.from_hash(hash, name='lodgingCharge')
+      base = hash[name]
+      if(base)
+        this = LodgingCharge.new
+        this.name = base['name']
+        SchemaValidation.validate_required(this.name,true,name,'name')
+        SchemaValidation.validate_enum(this.name, false, ['RESTAURANT','GIFTSHOP','MINIBAR','TELEPHONE','OTHER','LAUNDRY'], name, 'name')
+        this
+      else
+        nil
+      end
+    end
+  end
+
+  class LodgingInfo
+    include XML::Mapping
+    text_node :hotelFolioNumber, "hotelFolioNumber", :default_value=>nil
+    text_node :checkInDate, "checkInDate", :default_value=>nil
+    text_node :checkOutDate, "checkOutDate", :default_value=>nil
+    text_node :duration, "duration", :default_value=>nil
+    text_node :customerServicePhone, "customerServicePhone", :default_value=>nil
+    text_node :programCode, "programCode", :default_value=>nil
+    text_node :roomRate, "roomRate", :default_value=>nil
+    text_node :roomTax, "roomTax", :default_value=>nil
+    text_node :numAdults, "numAdults", :default_value=>nil
+    text_node :propertyLocalPhone, "propertyLocalPhone", :default_value=>nil
+    text_node :fireSafetyIndicator, "fireSafetyIndicator", :default_value=>nil
+    object_node :lodgingCharge, "lodgingCharge", :class=>LodgingCharge, :default_value=>nil
+    def self.from_hash(hash, name='lodgingInfo')
+      base = hash[name]
+      if(base)
+        this = LodgingInfo.new
+        this.hotelFolioNumber = base['hotelFolioNumber']
+        this.checkInDate = base['checkInDate']
+        this.checkOutDate = base['checkOutDate']
+        this.duration = base['duration']
+        this.customerServicePhone = base['customerServicePhone']
+        this.programCode = base['programCode']
+        this.roomRate = base['roomRate']
+        this.roomTax = base['roomTax']
+        this.numAdults = base['numAdults']
+        this.propertyLocalPhone = base['propertyLocalPhone']
+        this.fireSafetyIndicator = base['fireSafetyIndicator']
+        this.lodgingCharge = LodgingCharge.from_hash(base)
+        SchemaValidation.validate_length(this.hotelFolioNumber, false, 1, 25, name, 'hotelFolioNumber')
+        SchemaValidation.validate_date(this.checkInDate, false, name, 'hotelFolioNumber')
+        SchemaValidation.validate_date(this.checkOutDate, false, name, 'hotelFolioNumber')
+        SchemaValidation.validate_size(this.duration, false, 0, 999, name, 'duration')
+        SchemaValidation.validate_length(this.customerServicePhone, false, 1, 17, name, 'customerServicePhone')
+        SchemaValidation.validate_enum(this.programCode, false, ['LODGING','NOSHOW','ADVANCEDDEPOSIT'], name, 'programCode')
+        SchemaValidation.validate_size(this.roomRate, false, -999999999999, 999999999999, name, 'roomRate')
+        SchemaValidation.validate_size(this.roomTax, false, -999999999999, 999999999999, name, 'roomTax')
+        SchemaValidation.validate_size(this.numAdults, false, 0, 99, name, 'numAdults')
+        SchemaValidation.validate_length(this.propertyLocalPhone, false, 1, 17, name, 'propertyLocalPhone')
+        SchemaValidation.validate_boolean(this.fireSafetyIndicator, false, name, 'fireSafetyIndicator')
+        this
+      else
+        nil
+      end
+    end
+  end
+
+  class PreferredDebitNetworksType
+    include XML::Mapping
+    text_node :debitNetworkName, "debitNetworkName", :default_value=>nil
+    def self.from_hash(hash, name='preferredDebitNetworks')
+      base = hash[name]
+      if(base)
+        this = PreferredDebitNetworksType.new
+        this.debitNetworkName = base['debitNetworkName']
+        SchemaValidation.validate_length(this.debitNetworkName, true, 1, 25, name, 'debitNetworkName')
+        this
+      else
+        nil
+      end
+    end
+  end
+
+  class PinlessDebitRequestType
+    include XML::Mapping
+    text_node :routingPreference, "routingPreference", :default_value=>nil
+    object_node :preferredDebitNetworks, "preferredDebitNetworks", :class=>PreferredDebitNetworksType,:default_value=>nil
+    def self.from_hash(hash, name='pinlessDebitRequest')
+      base = hash[name]
+      if(base)
+        this = PinlessDebitRequestType.new
+        this.routingPreference = base['routingPreference']
+        this.preferredDebitNetworks = PreferredDebitNetworksType.from_hash(base)
+        SchemaValidation.validate_enum(this.routingPreference, false, ['pinlessDebitOnly','signatureOnly','regular'], name, 'routingPreference')
+        this
+      else
+        nil
+      end
+    end
+  end
+
+
   class Activate
     include XML::Mapping
     root_element_name "activate"
@@ -1384,6 +1484,7 @@ module CnpOnline
     include XML::Mapping
     root_element_name "advancedFraudChecks"
     text_node :threatMetrixSessionId, 'threatMetrixSessionId', :default_value=>nil
+    text_node :webSessionId, 'webSessionId', :default_value=>nil
     text_node :customAttribute1, 'customAttribute1', :default_value=>nil
     text_node :customAttribute2, 'customAttribute2', :default_value=>nil
     text_node :customAttribute3, 'customAttribute3', :default_value=>nil
@@ -1395,6 +1496,8 @@ module CnpOnline
         this = AdvancedFraudChecks.new
         this.threatMetrixSessionId = base['threatMetrixSessionId']      #   /\A([A-Z,a-z,0-9, ,\*,,,\-,',#,&,.]){4,25}\Z/
         #SchemaValidation.validate_regex(this.threatMetrixSessionId, true, '[-a-zA-Z0-9_]{1,128}', name, 'threatMetrixSessionId')
+        this.webSessionId = base['webSessionId']
+        #SchemaValidation.validate_regex(this.webSessionId, true, '[-a-zA-Z0-9_]{1,128}', name, 'webSessionId')
         this.customAttribute1 = base['customAttribute1']
         SchemaValidation.validate_length(this.customAttribute1,false,1,200,name,"customAttribute1")
         this.customAttribute2 = base['customAttribute2']
@@ -1420,6 +1523,10 @@ module CnpOnline
     object_node :billToAddress, "billToAddress", :class=>Contact, :default_value=>nil
     object_node :shipToAddress, "shipToAddress", :class=>Contact, :default_value=>nil
     text_node :amount, "amount", :default_value=>nil
+    text_node :eventType, "eventType", :default_value=>nil
+    text_node :accountLogin, "accountLogin", :default_value=>nil
+    text_node :accountPasshash, "accountPasshash", :default_value=>nil
+
   end
   
   class Authorization
@@ -1467,6 +1574,8 @@ module CnpOnline
     text_node :processingType,"processingType", :default_value=>nil
     text_node :originalNetworkTransactionId,"originalNetworkTransactionId", :default_value=>nil
     text_node :originalTransactionAmount,"originalTransactionAmount", :default_value=>nil
+    #SDK XML 12
+    object_node :lodgingInfo, "lodgingInfo", :class=>LodgingInfo, :default_value=>nil
   end
 
   class Sale
@@ -1520,7 +1629,8 @@ module CnpOnline
     text_node :originalNetworkTransactionId,"originalNetworkTransactionId", :default_value=>nil
     text_node :originalTransactionAmount,"originalTransactionAmount", :default_value=>nil
     #SDK XML 12
-    text_node :routingPreference,"routingPreference", :default_value=>nil
+    object_node :lodgingInfo, "lodgingInfo", :class=>LodgingInfo, :default_value=>nil
+    object_node :pinlessDebitRequest, "pinlessDebitRequest", :class=>PinlessDebitRequestType, :default_value=>nil
 
   end
 
@@ -1555,7 +1665,9 @@ module CnpOnline
     text_node :actionReason, "actionReason", :default_value=>nil
     #SDK XML 11
     text_node :pin, "pin", :default_value=>nil
-    
+    #SDK XML 12
+    object_node :lodgingInfo, "lodgingInfo", :class=>LodgingInfo, :default_value=>nil
+
   end
 
   class RegisterTokenRequest
@@ -1603,7 +1715,9 @@ module CnpOnline
     #SDK XML 11
     text_node :processingType,"processingType", :default_value=>nil
     text_node :originalNetworkTransactionId,"originalNetworkTransactionId", :default_value=>nil
-    text_node :originalTransactionAmount,"originalTransactionAmount", :default_value=>nil 
+    text_node :originalTransactionAmount,"originalTransactionAmount", :default_value=>nil
+    #SDK XML 12
+    object_node :lodgingInfo, "lodgingInfo", :class=>LodgingInfo, :default_value=>nil
   end
 
   class ForceCapture
@@ -1633,6 +1747,9 @@ module CnpOnline
     text_node :debtRepayment,"debtRepayment", :default_value=>nil
     #SDK XML 11
     text_node :processingType,"processingType", :default_value=>nil
+    #SDK XML 12
+    object_node :lodgingInfo, "lodgingInfo", :class=>LodgingInfo, :default_value=>nil
+
   end
 
   class AuthReversal
@@ -1668,6 +1785,8 @@ module CnpOnline
     #SDK XML 11
     object_node :customBilling, "customBilling", :class=>CustomBilling, :default_value=>nil
     text_node :pin, "pin", :default_value=>nil
+    #SDK XML 12
+    object_node :lodgingInfo, "lodgingInfo", :class=>LodgingInfo, :default_value=>nil
   end
 
   class Void
@@ -2136,11 +2255,6 @@ module CnpOnline
     text_node :cnpTxnId, "cnpTxnId", :default_value=>nil
   end
 
-  # Adding the Funding Void Instruction Class
-  # Date: 01-25-2016
-  # Change Type: New
-  # Desc: Change proposed as a part of XML 10 to incorporate the feature of voiding transactions
-  # on request.
   class FastAccessFunding
     include XML::Mapping
     root_element_name "fastAccessFunding"
@@ -2162,35 +2276,46 @@ module CnpOnline
  # Change Type: New
  # Desc: Change proposed as a part of XML 10 to incorporate the feature of querying transactions
  # on request.
-class QueryTransaction
-  include XML::Mapping
-  root_element_name "queryTransaction"
-  text_node :reportGroup, "@reportGroup", :default_value=>nil
-  text_node :transactionId, "@id", :default_value=>nil
-  text_node :customerId, "@customerId", :default_value=>nil
-  text_node :origId, "origId", :default_value=>nil
-  text_node :origActionType, "origActionType", :default_value=>nil
-  text_node :origCnpTxnId, "origCnpTxnId", :default_value=>nil
-  #text_node :origOrderId, "origOrderId", :default_value=>nil
-  #text_node :origAccountNumber, "origAccountNumber", :default_value=>nil
-  def self.from_hash(hash, name='queryTransaction')
-        base = hash[name]
-        if(base)
-          this = QueryTransaction.new
-          this.origId = base['origId']
-          this.origActionType = base['origActionType']
-          this.origCnpTxnId = base['origCnpTxnId']
-          this.origOrderId = base['origOrderId']
-          this.origAccountNumber = base['origAccountNumber']
-          SchemaValidation.validate_required(this.origId,true,name,'origId')
-          SchemaValidation.validate_required(this.origActionType,true,name,'origActionType')
-          SchemaValidation.validate_enum(this.origActionType, false, ['','A','D','R','AR','G','I','J','L','LR','P','RR','S','T','UR','V','W','X'], name, 'origActionType')
-          this
-        else
-          nil
-        end   
-   end
-end
+  class QueryTransaction
+    include XML::Mapping
+    root_element_name "queryTransaction"
+    text_node :reportGroup, "@reportGroup", :default_value=>nil
+    text_node :transactionId, "@id", :default_value=>nil
+    text_node :customerId, "@customerId", :default_value=>nil
+    text_node :origId, "origId", :default_value=>nil
+    text_node :origActionType, "origActionType", :default_value=>nil
+    text_node :origCnpTxnId, "origCnpTxnId", :default_value=>nil
+    text_node :showStatusOnly, "showStatusOnly", :default_value=>nil
+    #text_node :origOrderId, "origOrderId", :default_value=>nil
+    #text_node :origAccountNumber, "origAccountNumber", :default_value=>nil
+    def self.from_hash(hash, name='queryTransaction')
+          base = hash[name]
+          if(base)
+            this = QueryTransaction.new
+            this.origId = base['origId']
+            this.origActionType = base['origActionType']
+            this.origCnpTxnId = base['origCnpTxnId']
+            this.origOrderId = base['origOrderId']
+            this.origAccountNumber = base['origAccountNumber']
+            SchemaValidation.validate_enum(this.origActionType, false, ['','A','D','R','AR','G','I','J','L','LR','P','RR','S','T','UR','V','W','X'], name, 'origActionType')
+            SchemaValidation.validate_enum(this.origActionType, false, ['Y','N'], name, 'showStatusOnly')
+            this
+          else
+            nil
+          end
+     end
+  end
+
+  class TranslateToLowValueTokenRequest
+    include XML::Mapping
+    root_element_name "translateToLowValueTokenRequest"
+    text_node :reportGroup, "@reportGroup", :default_value=>nil
+    text_node :transactionId, "@id", :default_value=>nil
+    text_node :customerId, "@customerId", :default_value=>nil
+
+    text_node :orderId, "orderId", :default_value=>nil
+    text_node :token, "token", :default_value=>nil
+  end
   
   class OnlineRequest
     include XML::Mapping
@@ -2240,8 +2365,9 @@ end
     :elsif, 'advancedFraudResults', :then, (object_node :advancedFraudResults,"advancedFraudResults", :class=>AdvancedFraudResults),
     :elsif, 'queryTransaction', :then, (object_node :queryTransaction, "queryTransaction", :class=>QueryTransaction),
     :elsif, 'fraudCheck', :then, (object_node :fraudCheck, "fraudCheck", :class=>FraudCheck),
-    :elsif, 'fastAccessFunding',    :then, (object_node :fastAccessFunding,    "fastAccessFunding",    :class=>FastAccessFunding)
-        def post_save(xml, options={:Mapping=>:_default})
+    :elsif, 'fastAccessFunding',    :then, (object_node :fastAccessFunding,    "fastAccessFunding",    :class=>FastAccessFunding),
+    :elsif, 'translateToLowValueTokenRequest',    :then, (object_node :translateToLowValueTokenRequest,    "translateToLowValueTokenRequest",    :class=>TranslateToLowValueTokenRequest)
+    def post_save(xml, options={:Mapping=>:_default})
       xml.each_element() {|el|
         if(el.name == 'captureTxn')
           el.name = 'capture'
@@ -2333,6 +2459,7 @@ end
     text_node :physicalCheckCreditAmount , "@physicalCheckCreditAmount", :default_value=>"0"
     text_node :fastAccessFundingAmount , "@fastAccessFundingAmount", :default_value=>"0"
     text_node :merchantId, "@merchantId", :default_value=>nil
+    text_node :numTranslateToLowValueTokenRequest, "@numTranslateToLowValueTokenRequest", :default_value=>"0"
   end
 
   class CnpRequest

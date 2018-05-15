@@ -122,9 +122,15 @@ module CnpOnline
     end
 
     def fast_access_funding(options)
-      transaction = @cnp_txn.fast_access_funding(options)
+      transaction = @cnp_transaction.fast_access_funding(options)
 
       commit(transaction, :fastAccessFunding, options)
+    end
+
+    def translate_to_low_value_token_request(options)
+      transaction = @cnp_transaction.translate_to_low_value_token_request(options)
+
+      commit(transaction, :translateToLowValueTokenRequest, options)
     end
 
     def giftCardCredit(options)
@@ -190,7 +196,7 @@ module CnpOnline
     
     def update_card_validation_num_on_token(options)
    	  transaction = @cnp_transaction.update_card_validation_num_on_token(options)
-    	
+
       commit(transaction, :updateCardValidationNumOnToken, options)
     end
 
@@ -289,7 +295,7 @@ module CnpOnline
 
       request.authentication  = authentication
       request.merchantId      = get_merchant_id(options)
-      request.version         = '12.1'
+      request.version         = '12.3'
       request.loggedInUser    = get_logged_in_user(options)
       request.xmlns           = "http://www.vantivcnp.com/schema"
       request.merchantSdk     = get_merchant_sdk(options)
@@ -319,7 +325,7 @@ module CnpOnline
     end
 
     def get_merchant_sdk(options)
-      options['merchantSdk'] || 'Ruby;12.1'
+      options['merchantSdk'] || 'Ruby;12.3'
     end
 
     def get_report_group(options)

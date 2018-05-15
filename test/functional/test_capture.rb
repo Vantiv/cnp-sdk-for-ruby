@@ -39,6 +39,31 @@ module CnpOnline
       response= CnpOnlineRequest.new.capture(hash)
       assert_equal('Valid Format', response.message)
     end
+
+    def test_simple_capture_with_lodginginfo
+      hash = {
+          'merchantId' => '101',
+          'version'=>'8.8',
+          'id'=>'test',
+          'reportGroup'=>'Planets',
+          'cnpTxnId'=>'123456000',
+          'amount'=>'106',
+          'lodgingInfo' => {
+              'hotelFolioNumber ' => 'testFolio',
+              'duration' => '111',
+              'customerServicePhone' => 'testPhone1',
+              'programCode' => 'LODGING',
+              'roomRate' => '112233445566',
+              'numAdults' => '11',
+              'propertyLocalPhone' => 'testPhone2',
+              'fireSafetyIndicator' => 'true',
+              'lodgingCharge' => {'name' => 'RESTAURANT'}
+          }
+
+      }
+      response= CnpOnlineRequest.new.capture(hash)
+      assert_equal('Valid Format', response.message)
+    end
   
     def test_simple_capture_with_partial
       hash = {

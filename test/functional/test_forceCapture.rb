@@ -213,6 +213,38 @@ module CnpOnline
       assert_equal('0', response.response)
 
     end
+
+    def test_simple_force_capture_with_lodgingInfo
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'8.8',
+          'reportGroup'=>'Planets',
+          'orderId'=>'12344',
+          'amount'=>'106',
+          'orderSource'=>'ecommerce',
+          'card'=>{
+              'type'=>'VI',
+              'number' =>'4100000000000001',
+              'expDate' =>'1210'
+          },
+          'lodgingInfo' => {
+              'hotelFolioNumber ' => 'testFolio',
+              'duration' => '111',
+              'customerServicePhone' => 'testPhone1',
+              'programCode' => 'LODGING',
+              'roomRate' => '112233445566',
+              'numAdults' => '11',
+              'propertyLocalPhone' => 'testPhone2',
+              'fireSafetyIndicator' => 'true',
+              'lodgingCharge' => {'name' => 'RESTAURANT'}
+        }
+      }
+      response= CnpOnlineRequest.new.force_capture(hash)
+
+      assert_equal('0', response.response)
+
+    end
   
   end
 

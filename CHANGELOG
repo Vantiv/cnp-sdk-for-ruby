@@ -1,3 +1,9 @@
+==Version 12.3.0 (May 10, 2018)
+*Feature: Added LodgingInfo support
+*Feature: Added TranslateToLowTokenValue support
+*Feature: Added PinlessDebitRequest support
+*Update: Additional fields to QueryTransaction & Fraudcheck requests
+
 ==Version 12.1.1 (April 05, 2018)
 * Bugfix: nil defaults for proxy_addr & proxy_port
 

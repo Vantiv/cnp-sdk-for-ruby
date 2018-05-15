@@ -400,8 +400,60 @@ module CnpOnline
       assert_equal('jj2d1d372osmmt7tb8epm0a99q', response.saleResponse.sepaDirectDebitResponse.redirectToken)
       assert_equal('1BADA58', response.saleResponse.sepaDirectDebitResponse.mandateReference)    
     end
-    
-    
+
+    def test_simple_sale_with_lodgingInfo
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'8.8',
+          'reportGroup'=>'Planets',
+          'cnpTxnId'=>'123456',
+          'orderId'=>'12344',
+          'amount'=>'106',
+          'orderSource'=>'ecommerce',
+          'card'=>{
+              'type'=>'VI',
+              'number' =>'4100000000000002',
+              'expDate' =>'1210'
+          },
+          'lodgingInfo' => {
+              'hotelFolioNumber ' => 'testFolio',
+              'duration' => '111',
+              'customerServicePhone' => 'testPhone1',
+              'programCode' => 'LODGING',
+              'roomRate' => '112233445566',
+              'numAdults' => '11',
+              'propertyLocalPhone' => 'testPhone2',
+              'fireSafetyIndicator' => 'true',
+              'lodgingCharge' => {'name' => 'RESTAURANT'}
+          }
+      }
+
+      response= CnpOnlineRequest.new.sale(hash)
+      assert_equal('000', response.saleResponse.response)
+    end
+
+    def test_simple_sale_with_pinlessDebitRequestType
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'8.8',
+          'reportGroup'=>'Planets',
+          'cnpTxnId'=>'123456',
+          'orderId'=>'12344',
+          'amount'=>'106',
+          'orderSource'=>'ecommerce',
+          'card'=>{
+              'type'=>'VI',
+              'number' =>'4100000000000002',
+              'expDate' =>'1210'
+          }, 'pinlessDebitRequest' => {'routingPreference' => 'regular',
+                                       'preferredDebitNetworks' => {'debitNetworkName' => 'fast'}}
+      }
+
+      response= CnpOnlineRequest.new.sale(hash)
+      assert_equal('000', response.saleResponse.response)
+    end
     
    end
 end

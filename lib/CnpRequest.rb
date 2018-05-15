@@ -207,7 +207,7 @@ module CnpOnline
       cnpRequest.authentication = authentication
       cnpRequest.numBatchRequests = "0"
       
-      cnpRequest.version         = '12.1'
+      cnpRequest.version         = '12.3'
       cnpRequest.xmlns           = "http://www.vantivcnp.com/schema"
 
       
@@ -459,7 +459,7 @@ module CnpOnline
       authentication.password = get_config(:password, options)
 
       cnp_request.authentication = authentication
-      cnp_request.version         = '12.1'
+      cnp_request.version         = '12.3'
       cnp_request.xmlns           = "http://www.vantivcnp.com/schema"
       # cnp_request.id              = options['sessionId'] #grab from options; okay if nil
       cnp_request.numBatchRequests = @num_batch_requests

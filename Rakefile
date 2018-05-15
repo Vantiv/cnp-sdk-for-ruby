@@ -28,11 +28,11 @@ require 'rake/clean'
 spec = Gem::Specification.new do |s|
   FileUtils.rm_rf('pkg')
   s.name = 'CnpOnline'
-  s.summary = 'Ruby SDK produced by Vantiv eCommerce for transaction processing using Vantiv eCommerce XML format v12.0'
+  s.summary = 'Ruby SDK produced by Vantiv eCommerce for transaction processing using Vantiv eCommerce XML format v12.3'
   s.description = File.read(File.join(File.dirname(__FILE__), 'DESCRIPTION'))
   s.requirements =
     ['Contact sdksupport@vantiv.com for more information']
-  s.version = '12.1.1'
+  s.version = '12.3.0'
   s.author = 'Vantiv - eCommerce'
   s.email = 'sdksupport@vantiv.com'
   s.homepage = 'https://developer.vantiv.com/community/ecommerce/pages/sdks#jive_content_id_Ruby_SDK'

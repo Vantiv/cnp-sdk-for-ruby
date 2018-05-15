@@ -50,6 +50,14 @@ module CnpOnline
       return transaction
     end
 
+    def translate_to_low_value_token_request(options)
+      transaction = TranslateToLowValueTokenRequest.new
+      add_account_info(transaction, options)
+      transaction.orderId = options['orderId']
+      transaction.token = options['token']
+      return transaction
+    end
+
     def authorization(options)
       transaction = Authorization.new
       transaction.secondaryAmount = options['secondaryAmount']
@@ -59,6 +67,7 @@ module CnpOnline
       transaction.advancedFraudChecks= AdvancedFraudChecks.from_hash(options, 'advancedFraudChecks')
       #SDK XML 11
       transaction.wallet                            = Wallet.from_hash(options, 'wallet')
+      transaction.lodgingInfo                       = LodgingInfo.from_hash(options, 'lodgingInfo')
       transaction.processingType                    = options['processingType']
       transaction.originalNetworkTransactionId      = options['originalNetworkTransactionId']
       transaction.originalTransactionAmount         = options['originalTransactionAmount']
@@ -299,13 +308,18 @@ module CnpOnline
       transaction.cnpInternalRecurringRequest = CnpInternalRecurringRequest.from_hash(options,'cnpInternalRecurringRequest')
       transaction.debtRepayment      = options['debtRepayment']
       transaction.advancedFraudChecks = AdvancedFraudChecks.from_hash(options, 'advancedFraudChecks')
+
       #SDK XML 11
       transaction.wallet                            = Wallet.from_hash(options, 'wallet')
       transaction.processingType                    = options['processingType']
       transaction.originalNetworkTransactionId      = options['originalNetworkTransactionId']
       transaction.originalTransactionAmount         = options['originalTransactionAmount']
       transaction.sepaDirectDebit                   = SepaDirectDebit.from_hash(options,'sepaDirectDebit')
-          
+
+      #SDK 12
+      transaction.lodgingInfo = LodgingInfo.from_hash(options, 'lodgingInfo')
+      transaction.pinlessDebitRequest = PinlessDebitRequestType.from_hash(options, 'pinlessDebitRequest')
+
       return transaction
     end
 
@@ -328,6 +342,7 @@ module CnpOnline
       transaction.surchargeAmount         = options['surchargeAmount']
       transaction.customBilling           = CustomBilling.from_hash(options)
       transaction.enhancedData            = EnhancedData.from_hash(options)
+      transaction.lodgingInfo             = LodgingInfo.from_hash(options)
       transaction.processingInstructions  = ProcessingInstructions.from_hash(options)
       transaction.pos                     = Pos.from_hash(options)
       transaction.billMeLaterRequest      = BillMeLaterRequest.from_hash(options)
@@ -385,6 +400,7 @@ module CnpOnline
       transaction.secondaryAmount = options['secondaryAmount']
       transaction.surchargeAmount    = options['surchargeAmount']
       transaction.customBilling      = CustomBilling.from_hash(options)
+      transaction.lodgingInfo      = LodgingInfo.from_hash(options)
       transaction.debtRepayment      = options['debtRepayment']
       #SDK XML 11
       transaction.processingType                    = options['processingType']
@@ -407,6 +423,8 @@ module CnpOnline
       transaction.payPalNotes             = options['payPalNotes']
       #SDK XML 11
       transaction.customBilling           = CustomBilling.from_hash(options)
+      #SDK XML 12
+      transaction.lodgingInfo           = LodgingInfo.from_hash(options)
       transaction.pin                     = options['pin']
       
       add_account_info(transaction, options)
@@ -421,6 +439,7 @@ module CnpOnline
       transaction.authInformation    = AuthInformation.from_hash(options)
       transaction.shipToAddress      = Contact.from_hash(options,'shipToAddress')
       transaction.customBilling      = CustomBilling.from_hash(options)
+      transaction.lodgingInfo      = LodgingInfo.from_hash(options)
       transaction.billMeLaterRequest = BillMeLaterRequest.from_hash(options)
       transaction.debtRepayment      = options['debtRepayment']
       #SDK XML 11
@@ -550,7 +569,8 @@ module CnpOnline
       transaction.origId = options['origId']
       transaction.origActionType = options['origActionType']
       transaction.origCnpTxnId = options['origCnpTxnId']
-     # transaction.origOrderId = options['origOrderId']
+      transaction.showStatusOnly = options['showStatusOnly']
+      # transaction.origOrderId = options['origOrderId']
      # transaction.origAccountNumber = options['origAccountNumber']
       add_account_info(transaction, options)
          

@@ -43,6 +43,59 @@ module CnpOnline
        response= CnpOnlineRequest.new.query_Transaction(hash)
        assert_equal('150', response.queryTransactionResponse.response)
     end
+
+    def test_queryTransaction_noOrigId_noOrigActionType
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'10.0',
+          'reportGroup'=>'Some RG',
+          'customerId' => '038945',
+          'transactionId'=>'123456',
+          'orderId'=>'65347567',
+          #'origAccountNumber' => '4000000000000001'
+      }
+      response= CnpOnlineRequest.new.query_Transaction(hash)
+      assert_equal('150', response.queryTransactionResponse.response)
+    end
+
+    def test_queryTransaction_withShowStatusOnly
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'10.0',
+          'reportGroup'=>'Some RG',
+          'customerId' => '038945',
+          'origId' => '834262',
+          'origActionType' => 'A',
+          'transactionId'=>'123456',
+          'orderId'=>'65347567',
+          'showStatusOnly' => 'Y'
+          #'origAccountNumber' => '4000000000000001'
+      }
+      response= CnpOnlineRequest.new.query_Transaction(hash)
+      assert_equal('150', response.queryTransactionResponse.response)
+    end
+
+    def test_queryTransaction_invalidShowStatusOnly
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'10.0',
+          'reportGroup'=>'Some RG',
+          'customerId' => '038945',
+          'origId' => '834262',
+          'origActionType' => 'A',
+          'transactionId'=>'123456',
+          'orderId'=>'65347567',
+          'showStatusOnly' => 'A'
+          #'origAccountNumber' => '4000000000000001'
+      }
+      #Get exceptions
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
+      #Test
+      assert(exception.message =~ /Error validating xml data against the schema/)
+    end
       
     def test_queryTransaction_valid_enum
      hash = {
@@ -59,42 +112,6 @@ module CnpOnline
       }  
       response= CnpOnlineRequest.new.query_Transaction(hash)
       assert('000', response.queryTransactionResponse.response)                
-    end 
-      
-    def test_queryTransaction_no_origid
-     hash = {
-       'merchantId' => '101',
-       'id' => 'test',
-       'version'=>'10.0',
-       'reportGroup'=>'Some RG',
-       'customerId' => '038945',
-       'origActionType' => 'A',
-       'transactionId'=>'123456',
-       'orderId'=>'65347567',
-       #'origAccountNumber' => '4000000000000001'      
-      }
-      #Get exceptions
-      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
-      #Test 
-      assert(exception.message =~ /Error validating xml data against the schema/)  
-    end     
-          
-    def test_queryTransaction_no_accttype
-     hash = {
-       'merchantId' => '101',
-       'id' => 'test',
-       'version'=>'10.0',
-       'reportGroup'=>'Some RG',
-       'customerId' => '038945',
-       'origId' => '834262',
-       'transactionId'=>'123456',
-       'orderId'=>'65347567',
-       #'origAccountNumber' => '4000000000000001'      
-       }  
-       #Get exceptions
-        exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
-        #Test 
-        assert(exception.message =~ /Error validating xml data against the schema/)   
     end
     
     def test_queryTransaction_invalid_values
@@ -111,22 +128,6 @@ module CnpOnline
        #'origAccountNumber' => '4000000000000001'      
      }
      #Get exceptions
-      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
-      #Test 
-      assert(exception.message =~ /Error validating xml data against the schema/)  
-    end     
-        
-    def test_queryTransaction_missing_attributes
-     hash = {
-       'merchantId' => '101',
-       'id' => 'test',
-       'version'=>'10.0',                    
-       'customerId' => '038945',                      
-       'origActionType' => 'A',
-       'transactionId'=>'123456',
-       #'origAccountNumber' => '4000000000000001'      
-       }
-       #Get exceptions
       exception = assert_raise(RuntimeError){CnpOnlineRequest.new.query_Transaction(hash)}
       #Test 
       assert(exception.message =~ /Error validating xml data against the schema/)  

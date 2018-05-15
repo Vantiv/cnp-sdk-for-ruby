@@ -186,7 +186,37 @@ module CnpOnline
       response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
       assert_equal('000', response.creditResponse.response)
-    end 
+    end
+
+    def test_simple_credit_with_lodging_info
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'8.8',
+          'reportGroup'=>'Planets',
+          'orderId'=>'12344',
+          'amount'=>'106',
+          'orderSource'=>'ecommerce',
+          'card'=>{
+              'type'=>'VI',
+              'number' =>'4100000000000001',
+              'expDate' =>'1210'
+          },
+          'lodgingInfo' => {
+          'hotelFolioNumber ' => 'testFolio',
+          'duration' => '111',
+          'customerServicePhone' => 'testPhone1',
+          'programCode' => 'LODGING',
+          'roomRate' => '112233445566',
+          'numAdults' => '11',
+          'propertyLocalPhone' => 'testPhone2',
+          'fireSafetyIndicator' => 'true',
+          'lodgingCharge' => {'name' => 'RESTAURANT'}
+          }
+      }
+      response= CnpOnlineRequest.new.credit(hash)
+      assert_equal('Valid Format', response.message)
+    end
    
   end
 end
