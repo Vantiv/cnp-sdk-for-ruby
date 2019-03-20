@@ -295,7 +295,7 @@ module CnpOnline
 
       request.authentication  = authentication
       request.merchantId      = get_merchant_id(options)
-      request.version         = '12.3'
+      request.version         = '12.7'
       request.loggedInUser    = get_logged_in_user(options)
       request.xmlns           = "http://www.vantivcnp.com/schema"
       request.merchantSdk     = get_merchant_sdk(options)
@@ -325,7 +325,7 @@ module CnpOnline
     end
 
     def get_merchant_sdk(options)
-      options['merchantSdk'] || 'Ruby;12.3'
+      options['merchantSdk'] || 'Ruby;12.7'
     end
 
     def get_report_group(options)
