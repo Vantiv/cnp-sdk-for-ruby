@@ -38,6 +38,11 @@ module CnpOnline
       transaction.submerchantName = options['submerchantName']
       transaction.fundsTransferId = options['fundsTransferId']
       transaction.amount = options['amount']
+      if(options['disbursementType'])
+        transaction.disbursementType = options['disbursementType']
+      else
+        transaction.disbursementType = "VMD"
+      end
       if(options['card'])
         transaction.card = Card.from_hash(options)
       end
@@ -372,11 +377,16 @@ module CnpOnline
     def register_token_request(options)
       transaction = RegisterTokenRequest.new
 
-      transaction.orderId               = options['orderId']
-      transaction.accountNumber         = options['accountNumber']
-      transaction.echeckForToken        = EcheckForToken.from_hash(options)
-      transaction.paypageRegistrationId = options['paypageRegistrationId']
-      transaction.applepay              = Applepay.from_hash(options,'applepay')
+      transaction.encryptionKeyId           = options['encryptionKeyId']
+      transaction.orderId                   = options['orderId']
+      transaction.mpos                    = Mpos.from_hash(options,'mpos')
+      transaction.accountNumber             = options['accountNumber']
+      transaction.echeckForToken            = EcheckForToken.from_hash(options)
+      transaction.paypageRegistrationId     = options['paypageRegistrationId']
+      transaction.applepay                  = Applepay.from_hash(options,'applepay')
+      transaction.encryptedAccountNumber   = options['encryptedAccountNumber']
+      transaction.cardValidationNum   = options['cardValidationNum']
+      transaction.encryptedCardValidationNum   = options['encryptedCardValidationNum']
       add_account_info(transaction, options)
       return transaction
     end
@@ -764,5 +774,6 @@ module CnpOnline
       #options['reportGroup'] || @config_hash['default_report_group']
       options['reportGroup']
     end
+
   end
 end

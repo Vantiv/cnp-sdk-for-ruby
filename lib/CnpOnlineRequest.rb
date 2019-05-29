@@ -272,6 +272,7 @@ module CnpOnline
       commit(transaction, :fraudCheck, options)
     end
 
+
     private
 
     def add_account_info(transaction, options)
@@ -295,7 +296,7 @@ module CnpOnline
 
       request.authentication  = authentication
       request.merchantId      = get_merchant_id(options)
-      request.version         = '12.3'
+      request.version         = '12.7'
       request.loggedInUser    = get_logged_in_user(options)
       request.xmlns           = "http://www.vantivcnp.com/schema"
       request.merchantSdk     = get_merchant_sdk(options)
@@ -309,6 +310,7 @@ module CnpOnline
 
       add_account_info(transaction, options)
       request.send(:"#{type}=", transaction)
+
 
       xml = request.save_to_xml.to_s
       CnpXmlMapper.request(xml, @config_hash)
@@ -325,7 +327,7 @@ module CnpOnline
     end
 
     def get_merchant_sdk(options)
-      options['merchantSdk'] || 'Ruby;12.3'
+      options['merchantSdk'] || 'Ruby;12.7'
     end
 
     def get_report_group(options)
@@ -339,5 +341,6 @@ module CnpOnline
     def get_logged_in_user(options)
       options['loggedInUser'] || nil
     end
+
   end
 end

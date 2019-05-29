@@ -1677,11 +1677,19 @@ module CnpOnline
     text_node :transactionId, "@id", :default_value=>nil
     text_node :customerId, "@customerId", :default_value=>nil
 
+    text_node :encryptionKeyId, "encryptionKeyId", :default_value => nil
     text_node :orderId, "orderId", :default_value=>nil
-    optional_choice_node :if,    'accountNumber', :then, (text_node :accountNumber, "accountNumber", :default_value=>nil),
+    optional_choice_node :if,    'mpos', :then, (object_node :mpos, "mpos", :class=>Mpos),
+    :elsif, 'accountNumber', :then, (text_node :accountNumber, "accountNumber", :default_value=>nil),
     :elsif, 'echeckForToken', :then, (object_node :echeckForToken, "echeckForToken", :class=>EcheckForToken),
     :elsif, 'paypageRegistrationId', :then, (text_node :paypageRegistrationId, "paypageRegistrationId", :default_value=>nil),
-    :elsif, 'applepay', :then, (object_node :applepay, "applepay", :class=>Applepay)
+    :elsif, 'applepay', :then, (object_node :applepay, "applepay", :class=>Applepay),
+    :elsif, 'encryptedAccountNumber', :then, (text_node :encryptedAccountNumber, "encryptedAccountNumber", :default_value=>nil)
+
+    optional_choice_node :if, 'cardValidationNum', :then, (text_node :cardValidationNum, "cardValidationNum", :default_value => nil),
+    :elsif, 'encryptedCardValidationNum', :then, (text_node :encryptedCardValidationNum, "encryptedCardValidationNum", :default_value => nil)
+
+
   end
 
   class CaptureGivenAuth
@@ -2266,6 +2274,7 @@ module CnpOnline
     text_node :submerchantName, "submerchantName", :default_value=>nil
     text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
     text_node :amount, "amount", :default_value=>nil
+    text_node :disbursementType, "disbursementType", :default_value=>nil
     optional_choice_node   :if,    'card', :then, (object_node :card, "card", :class=>Card),
                            :elsif, 'token',    :then, (object_node :token,    "token",    :class=>CardToken),
                            :elsif, 'paypage', :then, (object_node :paypage, "paypage", :class=>CardPaypage)
@@ -2305,6 +2314,8 @@ module CnpOnline
           end
      end
   end
+
+
 
   class TranslateToLowValueTokenRequest
     include XML::Mapping
@@ -2503,6 +2514,8 @@ module CnpOnline
     object_node :authentication, "authentication", :class=>Authentication
     object_node :rfrRequest, 'RFRRequest', :class=>CnpRFRRequest
   end
+
+
 
   
  
