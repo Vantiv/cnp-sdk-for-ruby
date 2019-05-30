@@ -37,10 +37,13 @@ module CnpOnline
   
       proxy_addr = config_hash['proxy_addr']
       proxy_port = config_hash['proxy_port']
-      cnp_url = config_hash['url']
+      _commManager = CommManager.instance(Configuration.new.config)
+      _requestTarget = _commManager.findUrl
+
+      #cnp_url = config_hash['url']
   
       # setup https or http post
-      url = URI.parse(cnp_url)
+      url = URI.parse(_requestTarget.targetUrl)
   
       response_xml = nil
       https = Net::HTTP.new(url.host, url.port, proxy_addr, proxy_port)
@@ -52,6 +55,7 @@ module CnpOnline
       https.start { |http|
         response = http.request_post(url.path, post_data.to_s, {'Content-Type'=>'text/xml; charset=UTF-8','Connection'=>'close'})
         response_xml = response
+        CommManager.instance(Configuration.new.config).reportResult(_requestTarget, _commManager.REQUEST_RESULT_RESPONSE_RECEIVED, response.code)
       }
   
       # validate response, only an HTTP 200 will work, redirects are not followed

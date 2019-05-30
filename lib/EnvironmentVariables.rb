@@ -20,6 +20,14 @@ module CnpOnline
       @useEncryption = false
       @vantivPublicKeyID = ''
       @passphrase = ''
+      @multiSiteUrl1 = ''
+      @multiSiteUrl2 = ''
+      @multiSite = false
+      @printMultiSiteDebug = false
+      @multiSiteErrorThreshold = 5
+      @maxsHoursWithoutSwitch = 48
+
+
     end
   end
 end
