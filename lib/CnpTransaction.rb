@@ -377,16 +377,16 @@ module CnpOnline
     def register_token_request(options)
       transaction = RegisterTokenRequest.new
 
-      transaction.encryptionKeyId           = options['encryptionKeyId']
-      transaction.orderId                   = options['orderId']
-      transaction.mpos                    = Mpos.from_hash(options,'mpos')
-      transaction.accountNumber             = options['accountNumber']
-      transaction.echeckForToken            = EcheckForToken.from_hash(options)
-      transaction.paypageRegistrationId     = options['paypageRegistrationId']
-      transaction.applepay                  = Applepay.from_hash(options,'applepay')
-      transaction.encryptedAccountNumber   = options['encryptedAccountNumber']
-      transaction.cardValidationNum   = options['cardValidationNum']
-      transaction.encryptedCardValidationNum   = options['encryptedCardValidationNum']
+      transaction.encryptionKeyId             = options['encryptionKeyId']
+      transaction.orderId                     = options['orderId']
+      transaction.mpos                        = Mpos.from_hash(options,'mpos')
+      transaction.accountNumber               = options['accountNumber']
+      transaction.echeckForToken              = EcheckForToken.from_hash(options)
+      transaction.paypageRegistrationId       = options['paypageRegistrationId']
+      transaction.applepay                    = Applepay.from_hash(options,'applepay')
+      transaction.encryptedAccountNumber      = options['encryptedAccountNumber']
+      transaction.cardValidationNum           = options['cardValidationNum']
+      transaction.encryptedCardValidationNum  = options['encryptedCardValidationNum']
       add_account_info(transaction, options)
       return transaction
     end
