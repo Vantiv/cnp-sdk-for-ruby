@@ -517,14 +517,40 @@ module CnpOnline
       return transaction
     end
 
+    def submerchant_credit_ctx(options)
+      transaction = SubmerchantCredit.new
+      transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
+      transaction.submerchantName         = options['submerchantName']
+      transaction.fundsTransferId         = options['fundsTransferId']
+      transaction.amount                  = options['amount']
+      transaction.customIdentifier        = options['customIdentifier']
+      transaction.accountInfo = EcheckCtx.from_hash(options,'accountInfo')
+      add_account_info(transaction, options)
+
+      return transaction
+    end
+
     def vendor_credit(options)
       transaction = VendorCredit.new
       transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
       transaction.vendorName              = options['vendorName']
       transaction.fundsTransferId         = options['fundsTransferId']
       transaction.amount                  = options['amount']
-      
+
       transaction.accountInfo = Echeck.from_hash(options,'accountInfo')
+      add_account_info(transaction, options)
+
+      return transaction
+    end
+
+    def vendor_credit_ctx(options)
+      transaction = VendorCredit.new
+      transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
+      transaction.vendorName              = options['vendorName']
+      transaction.fundsTransferId         = options['fundsTransferId']
+      transaction.amount                  = options['amount']
+
+      transaction.accountInfo = EcheckCtx.from_hash(options,'accountInfo')
       add_account_info(transaction, options)
 
       return transaction
@@ -601,6 +627,19 @@ module CnpOnline
       return transaction
     end
 
+    def submerchant_debit_ctx(options)
+      transaction = SubmerchantDebit.new
+      transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
+      transaction.submerchantName         = options['submerchantName']
+      transaction.fundsTransferId         = options['fundsTransferId']
+      transaction.amount                  = options['amount']
+      transaction.customIdentifier        = options['customIdentifier']
+      transaction.accountInfo = EcheckCtx.from_hash(options,'accountInfo')
+      add_account_info(transaction, options)
+
+      return transaction
+    end
+
     def vendor_debit(options)
       transaction = VendorDebit.new
       transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
@@ -609,6 +648,19 @@ module CnpOnline
       transaction.amount                  = options['amount']
      
       transaction.accountInfo = Echeck.from_hash(options,'accountInfo')
+      add_account_info(transaction, options)
+
+      return transaction
+    end
+
+    def vendor_debit_ctx(options)
+      transaction = VendorDebit.new
+      transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
+      transaction.vendorName              = options['vendorName']
+      transaction.fundsTransferId         = options['fundsTransferId']
+      transaction.amount                  = options['amount']
+
+      transaction.accountInfo = EcheckCtx.from_hash(options,'accountInfo')
       add_account_info(transaction, options)
 
       return transaction
