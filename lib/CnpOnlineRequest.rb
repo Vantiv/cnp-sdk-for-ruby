@@ -272,6 +272,30 @@ module CnpOnline
       commit(transaction, :fraudCheck, options)
     end
 
+    def vendor_credit(options)
+      transaction = @cnp_transaction.vendor_credit(options)
+
+      commit(transaction, :vendorCredit, options)
+    end
+
+    def vendor_debit(options)
+      transaction = @cnp_transaction.vendor_debit(options)
+
+      commit(transaction, :vendorDebit, options)
+    end
+
+    def submerchant_credit(options)
+      transaction = @cnp_transaction.submerchant_credit(options)
+
+      commit(transaction, :submerchantCredit, options)
+    end
+
+    def submerchant_debit(options)
+      transaction = @cnp_transaction.submerchant_debit(options)
+
+      commit(transaction, :submerchantDebit, options)
+    end
+
 
     private
 

@@ -1017,6 +1017,37 @@ module CnpOnline
     end
   end
 
+  class EcheckCtx
+    include XML::Mapping
+    text_node :accType, "accType", :default_value=>nil
+    text_node :accNum, "accNum", :default_value=>nil
+    text_node :routingNum, "routingNum", :default_value=>nil
+    text_node :checkNum, "checkNum", :default_value=>nil
+    text_node :ccdPaymentInformation, "ccdPaymentInformation", :default_value=>nil
+    text_node :ctxPaymentInformation, "ctxPaymentInformation", :default_value=>nil
+    def self.from_hash(hash, name='echeckCtx')
+      base = hash[name]
+      if(base)
+        this = EcheckCtx.new
+        this.accType = base['accType']
+        this.accNum = base['accNum']
+        this.routingNum = base['routingNum']
+        this.checkNum = base['checkNum']
+        this.ccdPaymentInformation = base['ccdPaymentInformation']
+        this.ctxPaymentInformation = base['ctxPaymentInformation']
+        SchemaValidation.validate_enum(this.accType, true, ['Checking','Savings','Corporate','Corp Savings'], name, 'accType')
+        SchemaValidation.validate_length(this.accNum, true, 1, 17, name, 'accNum')
+        SchemaValidation.validate_length(this.routingNum, true, 9, 9, name, 'routingNum')
+        SchemaValidation.validate_length(this.checkNum, false, 1, 15, name, 'checkNum')
+        SchemaValidation.validate_length(this.ccdPaymentInformation, false, 1, 80, name, 'ccdPaymentInformation')
+        SchemaValidation.validate_length(this.ctxPaymentInformation, false, 1, 80, name, 'ctxPaymentInformation')
+        this
+      else
+        nil
+      end
+    end
+  end
+
   class EcheckToken
     include XML::Mapping
     text_node :cnpToken, "cnpToken", :default_value=>nil
@@ -2099,10 +2130,13 @@ module CnpOnline
     text_node :submerchantName, "submerchantName", :default_value=>nil
     text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
     text_node :amount, "amount", :default_value=>nil
+    object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil
+    # optional_choice_node :if,    'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil),
+    #                      :elsif, 'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil)
     text_node :customIdentifier, "customIdentifier", :default_value=>nil
-    
-    object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil
+
   end
+
   
   class PayFacCredit
     include XML::Mapping
@@ -2141,8 +2175,27 @@ module CnpOnline
     text_node :vendorName, "vendorName", :default_value=>nil
     text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
     text_node :amount, "amount", :default_value=>nil
-  
     object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil
+    # optional_choice_node :if,    'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil),
+    #                      :elsif, 'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil)
+
+  end
+
+  class VendorCreditCtx
+    include XML::Mapping
+    root_element_name "vendorCredit"
+    text_node :reportGroup, "@reportGroup", :default_value=>nil
+    text_node :transactionId, "@id", :default_value=>nil
+    text_node :customerId, "@customerId", :default_value=>nil
+
+    text_node :fundingSubmerchantId, "fundingSubmerchantId", :default_value=>nil
+    text_node :vendorName, "vendorName", :default_value=>nil
+    text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
+    text_node :amount, "amount", :default_value=>nil
+    object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil
+    # optional_choice_node :if,    'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil),
+    #                      :elsif, 'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil)
+
   end
 
   class PhysicalCheckCredit
@@ -2169,9 +2222,29 @@ module CnpOnline
     text_node :submerchantName, "submerchantName", :default_value=>nil
     text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
     text_node :amount, "amount", :default_value=>nil
-    text_node :customIdentifier, "customIdentifier", :default_value=>nil
-    
     object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil
+    # optional_choice_node :if,    'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil),
+    #                      :elsif, 'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil)
+    text_node :customIdentifier, "customIdentifier", :default_value=>nil
+
+  end
+
+  class SubmerchantDebitCtx
+    include XML::Mapping
+    root_element_name "submerchantDebit"
+    text_node :reportGroup, "@reportGroup", :default_value=>nil
+    text_node :transactionId, "@id", :default_value=>nil
+    text_node :customerId, "@customerId", :default_value=>nil
+
+    text_node :fundingSubmerchantId, "fundingSubmerchantId", :default_value=>nil
+    text_node :submerchantName, "submerchantName", :default_value=>nil
+    text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
+    text_node :amount, "amount", :default_value=>nil
+    object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil
+    # optional_choice_node :if,    'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil),
+    #                      :elsif, 'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil)
+    text_node :customIdentifier, "customIdentifier", :default_value=>nil
+
   end
 
   class PayFacDebit
@@ -2210,9 +2283,28 @@ module CnpOnline
     text_node :fundingSubmerchantId, "fundingSubmerchantId", :default_value=>nil
     text_node :vendorName, "vendorName", :default_value=>nil
     text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
+
     text_node :amount, "amount", :default_value=>nil
-    
+
     object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil
+    # optional_choice_node :if,    'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>Echeck, :default_value=>nil),
+    #                      :elsif, 'accountInfo', :then, (object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil)
+  end
+
+  class VendorDebitCtx
+    include XML::Mapping
+    root_element_name "vendorDebit"
+    text_node :reportGroup, "@reportGroup", :default_value=>nil
+    text_node :transactionId, "@id", :default_value=>nil
+    text_node :customerId, "@customerId", :default_value=>nil
+
+    text_node :fundingSubmerchantId, "fundingSubmerchantId", :default_value=>nil
+    text_node :vendorName, "vendorName", :default_value=>nil
+    text_node :fundsTransferId, "fundsTransferId", :default_value=>nil
+
+    text_node :amount, "amount", :default_value=>nil
+
+    object_node :accountInfo, "accountInfo", :class=>EcheckCtx, :default_value=>nil
   end
 
   class PhysicalCheckDebit
@@ -2377,7 +2469,12 @@ module CnpOnline
     :elsif, 'queryTransaction', :then, (object_node :queryTransaction, "queryTransaction", :class=>QueryTransaction),
     :elsif, 'fraudCheck', :then, (object_node :fraudCheck, "fraudCheck", :class=>FraudCheck),
     :elsif, 'fastAccessFunding',    :then, (object_node :fastAccessFunding,    "fastAccessFunding",    :class=>FastAccessFunding),
-    :elsif, 'translateToLowValueTokenRequest',    :then, (object_node :translateToLowValueTokenRequest,    "translateToLowValueTokenRequest",    :class=>TranslateToLowValueTokenRequest)
+    :elsif, 'translateToLowValueTokenRequest',    :then, (object_node :translateToLowValueTokenRequest,    "translateToLowValueTokenRequest",    :class=>TranslateToLowValueTokenRequest),
+    :elsif, 'vendorDebit', :then, (object_node :vendorDebit, "vendorDebit", :class=>VendorDebit),
+    :elsif, 'vendorCredit', :then, (object_node :vendorCredit, "vendorCredit", :class=>VendorCredit),
+    :elsif, 'submerchantDebit', :then, (object_node :submerchantDebit, "submerchantDebit", :class=>SubmerchantDebit),
+    :elsif, 'submerchantCredit', :then, (object_node :submerchantCredit, "submerchantCredit", :class=>SubmerchantCredit)
+
     def post_save(xml, options={:Mapping=>:_default})
       xml.each_element() {|el|
         if(el.name == 'captureTxn')
