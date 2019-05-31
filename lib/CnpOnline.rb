@@ -54,6 +54,8 @@ require_relative 'CnpOnlineRequest'
 require_relative 'CnpRequest'
 require_relative 'CnpListeners'
 require_relative 'Configuration'
+require_relative 'CommManager'
+require_relative 'RequestTarget'
 
 #allows attribute values to be in double quotes, required by Cnp Server
 REXML::Attribute.class_eval( %q^

@@ -4,7 +4,7 @@ module CnpOnline
     def initialize(url, index)
       @targetUrl = url
       @urlIndex = index
-      @requestTime = Time.now.to_i
+      @requestTime = Time.now.to_i * 1000
     end
   end
 end

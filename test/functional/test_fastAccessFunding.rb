@@ -151,6 +151,27 @@ module CnpOnline
       assert(exception.message =~ /Error validating xml data against the schema/)
     end
 
+    def test_faf_wrong_disbursement_type
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'8.8',
+          'reportGroup'=>'Planets',
+          'amount'=>'106',
+          'fundingSubmerchantId'=>'this is a merchant id',
+          'submerchantName'=>'this is a very long string',
+          'disbursementType'=>'WRONG_TYPE',
+          'fundsTransferId'=>'0123456789abcdef',
+          'card'=>{
+              'type'=>'VI',
+              'number' =>'4100000000000001',
+              'expDate' =>'1210'
+          }}
+      exception = assert_raise(RuntimeError){CnpOnlineRequest.new.fast_access_funding(hash)}
+
+      assert(exception.message =~ /Error validating xml data against the schema/)
+    end
+
   end
 
 end
