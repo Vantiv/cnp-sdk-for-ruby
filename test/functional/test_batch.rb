@@ -159,6 +159,94 @@ module CnpOnline
       assert_raise ArgumentError do
         batch2.open_existing_batch(dir + '/cnp-sdk-for-ruby-test/' + entries[2])  
       end
-    end 
+    end
+
+    def test_ctx_all
+      dir = '/tmp'
+
+      request = CnpRequest.new()
+      request.create_new_cnp_request(dir + '/cnp-sdk-for-ruby-test')
+
+      batch = CnpBatchRequest.new
+      batch.create_new_batch(dir + '/cnp-sdk-for-ruby-test')
+
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries.sort!
+
+      echeck = {
+          'accNum' => '1092969901',
+          'accType' => 'Corporate',
+          'routingNum' => '011075150',
+          'checkNum' => '123455'
+      }
+
+      vCredit = {
+          'reportGroup' => 'vendorCredit',
+          'id' => '111',
+          'fundingSubmerchantId' => 'vendorCredit',
+          'vendorName' => 'Vendor101',
+          'fundsTransferId' => '1001',
+          'amount' => '500',
+          'accountInfo' => echeck
+      }
+      batch.vendor_credit(vCredit)
+
+      vDebit = {
+          'reportGroup' => 'vendorDebit',
+          'id' => '111',
+          'fundingSubmerchantId' => 'vendorDebit',
+          'vendorName' => 'Vendor101',
+          'fundsTranferId' => '1001',
+          'amount' => '500',
+          'accountInfo' => echeck
+      }
+      batch.vendor_debit(vDebit)
+
+      submerchantCreditCtx = {
+          'reportGroup' => 'submerchantCredit',
+          'id' => '111',
+          'fundingSubmerchantId' => 'submerchantCredit',
+          'vendorName' => 'Vendor101',
+          'fundsTranferId' => '1001',
+          'amount' => '500',
+          'accountInfo' => echeck
+      }
+      batch.submerchant_credit(submerchantCreditCtx)
+
+      submerchantDebitCtx = {
+          'reportGroup' => 'submerchantDebit',
+          'id' => '111',
+          'fundingSubmerchantId' => 'submerchantDebit',
+          'vendorName' => 'Vendor101',
+          'fundsTranferId' => '1001',
+          'amount' => '500',
+          'accountInfo' => echeck
+      }
+      batch.submerchant_credit(submerchantDebitCtx)
+
+      batch.close_batch
+
+      request.commit_batch(batch)
+      request.finish_request
+      entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
+      entries.sort!
+
+      transactionCount = batch.get_num_transactions
+
+      #send the batch files at the given directory over sFTP
+      count = 1
+      begin
+        # request.send_to_cnp_stream
+        request.send_to_cnp
+      rescue
+        if (count < 3) then
+          count = count + 1
+          retry
+        else
+          raise
+        end
+      end
+    end
+
   end
 end 

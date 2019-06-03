@@ -502,6 +502,10 @@ module CnpOnline
       return @txn_counts
     end
 
+    def get_num_transactions
+      return @txn_counts[:total]
+    end
+
     def get_batch_name
       return @path_to_batch
     end
@@ -729,6 +733,10 @@ module CnpOnline
 
     def get_counts_and_amounts
       return @txn_counts
+    end
+
+    def get_num_transactions
+      return @txn_counts[:total]
     end
 
     def get_batch_name
