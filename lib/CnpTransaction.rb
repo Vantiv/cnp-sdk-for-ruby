@@ -544,7 +544,7 @@ module CnpOnline
     end
 
     def vendor_credit_ctx(options)
-      transaction = VendorCredit.new
+      transaction = VendorCreditCtx.new
       transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
       transaction.vendorName              = options['vendorName']
       transaction.fundsTransferId         = options['fundsTransferId']
@@ -615,7 +615,7 @@ module CnpOnline
   
 
     def submerchant_debit(options)
-      transaction = SubmerchantDebit.new
+      transaction = SubmerchantDebitCtx.new
       transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
       transaction.submerchantName         = options['submerchantName']
       transaction.fundsTransferId         = options['fundsTransferId']
@@ -628,7 +628,7 @@ module CnpOnline
     end
 
     def submerchant_debit_ctx(options)
-      transaction = SubmerchantDebit.new
+      transaction = SubmerchantDebitCtx.new
       transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
       transaction.submerchantName         = options['submerchantName']
       transaction.fundsTransferId         = options['fundsTransferId']
@@ -654,7 +654,7 @@ module CnpOnline
     end
 
     def vendor_debit_ctx(options)
-      transaction = VendorDebit.new
+      transaction = VendorDebitCtx.new
       transaction.fundingSubmerchantId    = options['fundingSubmerchantId']
       transaction.vendorName              = options['vendorName']
       transaction.fundsTransferId         = options['fundsTransferId']

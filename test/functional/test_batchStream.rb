@@ -118,7 +118,7 @@ module CnpOnline
       #send the batch files at the given directory over sFTP
       count = 1
       begin
-        request.send_to_cnp_stream
+        request.send_to_cnp
       rescue
         if (count < 3) then
           count = count + 1
@@ -127,9 +127,10 @@ module CnpOnline
           raise
         end
       end
+      request.get_responses_from_server
       request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
       type = transaction["type"]
-    
+
       if(type == "cancelSubscriptionResponse") then
       assert_equal "100" ,transaction["subscriptionId"]
        end

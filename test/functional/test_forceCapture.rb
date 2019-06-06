@@ -67,6 +67,27 @@ module CnpOnline
       response= CnpOnlineRequest.new.force_capture(hash)
       assert_equal('Valid Format', response.message)
     end
+
+
+    def test_simple_force_capture_with_tokenUrl
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'8.8',
+          'reportGroup'=>'Planets',
+          'cnpTxnId'=>'123456',
+          'orderId'=>'12344',
+          'amount'=>'106',
+          'orderSource'=>'ecommerce',
+          'token'=> {
+              'tokenURL'=>'http://tokens.com/sales',
+              'expDate'=>'1210',
+              'cardValidationNum'=>'555',
+              'type'=>'VI'
+          }}
+      response= CnpOnlineRequest.new.force_capture(hash)
+      assert_equal('Valid Format', response.message)
+    end
   
     def test_fields_out_of_order
       hash = {

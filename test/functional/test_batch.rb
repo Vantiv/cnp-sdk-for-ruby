@@ -177,15 +177,18 @@ module CnpOnline
           'accNum' => '1092969901',
           'accType' => 'Corporate',
           'routingNum' => '011075150',
-          'checkNum' => '123455'
+          'checkNum' => '123455',
+          'ctxPaymentInformation' => {
+              'ctxPaymentDetail' => 'ctx1 for submerchantcredit'
+          }
       }
 
       vCredit = {
-          'reportGroup' => 'vendorCredit',
+        'reportGroup' => 'vendorCredit',
           'id' => '111',
           'fundingSubmerchantId' => 'vendorCredit',
           'vendorName' => 'Vendor101',
-          'fundsTransferId' => '1001',
+          'fundsTransferId' => '1559742287058',
           'amount' => '500',
           'accountInfo' => echeck
       }
@@ -196,7 +199,7 @@ module CnpOnline
           'id' => '111',
           'fundingSubmerchantId' => 'vendorDebit',
           'vendorName' => 'Vendor101',
-          'fundsTranferId' => '1001',
+          'fundsTransferId' => '1559742287058',
           'amount' => '500',
           'accountInfo' => echeck
       }
@@ -206,8 +209,8 @@ module CnpOnline
           'reportGroup' => 'submerchantCredit',
           'id' => '111',
           'fundingSubmerchantId' => 'submerchantCredit',
-          'vendorName' => 'Vendor101',
-          'fundsTranferId' => '1001',
+          'submerchantName' => 'submerchant101',
+          'fundsTransferId' => '1559742287058',
           'amount' => '500',
           'accountInfo' => echeck
       }
@@ -217,12 +220,12 @@ module CnpOnline
           'reportGroup' => 'submerchantDebit',
           'id' => '111',
           'fundingSubmerchantId' => 'submerchantDebit',
-          'vendorName' => 'Vendor101',
-          'fundsTranferId' => '1001',
+          'submerchantName' => 'submerchant101',
+          'fundsTransferId' => '1559742287058',
           'amount' => '500',
           'accountInfo' => echeck
       }
-      batch.submerchant_credit(submerchantDebitCtx)
+      batch.submerchant_debit(submerchantDebitCtx)
 
       batch.close_batch
 
@@ -230,9 +233,12 @@ module CnpOnline
       request.finish_request
       entries = Dir.entries(dir + '/cnp-sdk-for-ruby-test')
       entries.sort!
-
+      print batch.get_counts_and_amounts
+      print "\n"
       transactionCount = batch.get_num_transactions
-
+      print batch.get_num_transactions
+      print "\n"
+      print transactionCount
       #send the batch files at the given directory over sFTP
       count = 1
       begin
@@ -246,7 +252,18 @@ module CnpOnline
           raise
         end
       end
+
+      count_of_responses = 0
+      request.get_responses_from_server
+      request.process_responses({:transaction_listener => CnpOnline::DefaultCnpListener.new do |transaction|
+        count_of_responses = count_of_responses + 1
+      end})
+
+      print count_of_responses
+
+      assert_equal(transactionCount, count_of_responses)
     end
+
 
   end
 end 

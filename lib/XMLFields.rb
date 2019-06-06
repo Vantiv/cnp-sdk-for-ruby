@@ -797,7 +797,9 @@ module CnpOnline
 
   class CardToken
     include XML::Mapping
-    text_node :cnpToken, "cnpToken", :default_value=>nil
+
+    optional_choice_node :if,    'cnpToken', :then, (text_node :cnpToken, "cnpToken", :default_value=>nil),
+                         :elsif, 'tokenURL',  :then, (text_node :tokenURL, "tokenURL", :default_value=>nil)
     text_node :expDate, "expDate", :default_value=>nil
     text_node :cardValidationNum, "cardValidationNum", :default_value=>nil
     text_node :mop, "type", :default_value=>nil
@@ -806,10 +808,18 @@ module CnpOnline
       if(base)
         this = CardToken.new
         this.cnpToken = base['cnpToken']
+        this.tokenURL = base['tokenURL']
         this.expDate = base['expDate']
         this.cardValidationNum = base['cardValidationNum']
         this.mop = base['type']
-        SchemaValidation.validate_length(this.cnpToken, true, 13, 25, name, 'cnpToken')
+
+        if (this.cnpToken == nil && this.tokenURL == nil)
+          raise raise "If " + name  + " is specified, it must have a cnpToken"
+        elsif (this.cnpToken != nil)
+          SchemaValidation.validate_length(this.cnpToken, true, 13, 25, name, 'cnpToken')
+        elsif (this.tokenURL != nil)
+          SchemaValidation.validate_regex(this.tokenURL, false,  /http.?:\/\/.*\/.*/, name, 'tokenURL')
+        end
         SchemaValidation.validate_length(this.expDate, false, 4, 4, name, 'expDate')
         SchemaValidation.validate_length(this.cardValidationNum, false, 1, 4, name, 'cardValidationNum')
         SchemaValidation.validate_enum(this.mop, false, ['','MC','VI','AX','DC','DI','PP','JC','BL','EC'], name, 'type')
@@ -1017,6 +1027,22 @@ module CnpOnline
     end
   end
 
+  class CtxPaymentInformation
+    include XML::Mapping
+    text_node :ctxPaymentDetail, "ctxPaymentDetail", :default_value=>nil
+
+    def self.from_hash(hash, name='ctxPaymentInformation')
+      base = hash[name]
+      if(base)
+        this = CtxPaymentInformation.new
+        this.ctxPaymentDetail = base['ctxPaymentDetail']
+        this
+      else
+        nil
+      end
+    end
+  end
+
   class EcheckCtx
     include XML::Mapping
     text_node :accType, "accType", :default_value=>nil
@@ -1024,7 +1050,7 @@ module CnpOnline
     text_node :routingNum, "routingNum", :default_value=>nil
     text_node :checkNum, "checkNum", :default_value=>nil
     text_node :ccdPaymentInformation, "ccdPaymentInformation", :default_value=>nil
-    text_node :ctxPaymentInformation, "ctxPaymentInformation", :default_value=>nil
+    object_node :ctxPaymentInformation, "ctxPaymentInformation", :class=>CtxPaymentInformation, :default_value=>nil
     def self.from_hash(hash, name='echeckCtx')
       base = hash[name]
       if(base)
@@ -1034,19 +1060,20 @@ module CnpOnline
         this.routingNum = base['routingNum']
         this.checkNum = base['checkNum']
         this.ccdPaymentInformation = base['ccdPaymentInformation']
-        this.ctxPaymentInformation = base['ctxPaymentInformation']
+        this.ctxPaymentInformation = CtxPaymentInformation.from_hash(base)
         SchemaValidation.validate_enum(this.accType, true, ['Checking','Savings','Corporate','Corp Savings'], name, 'accType')
         SchemaValidation.validate_length(this.accNum, true, 1, 17, name, 'accNum')
         SchemaValidation.validate_length(this.routingNum, true, 9, 9, name, 'routingNum')
         SchemaValidation.validate_length(this.checkNum, false, 1, 15, name, 'checkNum')
         SchemaValidation.validate_length(this.ccdPaymentInformation, false, 1, 80, name, 'ccdPaymentInformation')
-        SchemaValidation.validate_length(this.ctxPaymentInformation, false, 1, 80, name, 'ctxPaymentInformation')
         this
       else
         nil
       end
     end
   end
+
+
 
   class EcheckToken
     include XML::Mapping

@@ -207,7 +207,7 @@ module CnpOnline
       cnpRequest.authentication = authentication
       cnpRequest.numBatchRequests = "0"
       
-      cnpRequest.version         = '12.7'
+      cnpRequest.version         = '12.8'
       cnpRequest.xmlns           = "http://www.vantivcnp.com/schema"
 
       
@@ -248,16 +248,20 @@ module CnpOnline
     # +options+:: An (option) +Hash+ containing the username, password, and URL to attempt to sFTP to.
     # If not provided, the values will be populated from the configuration file.
     def send_to_cnp(path = (File.dirname(@path_to_batches)), options = {})
+
       use_encryption = get_config(SFTP_USE_ENCRYPTION_CONFIG_NAME, options)
       username = get_config(SFTP_USERNAME_CONFIG_NAME, options)
       password = get_config(SFTP_PASSWORD_CONFIG_NAME, options)
       delete_batch_files = get_config(SFTP_DELETE_BATCH_FILES_CONFIG_NAME, options)
       url = get_config(SFTP_URL_CONFIG_NAME, options)
 
+
+
       if(username == nil or password == nil or url == nil) then
         raise ArgumentError, "You are not configured to use sFTP for batch processing. Please run /bin/Setup.rb again!"
       end
       path = path_to_requests = prepare_for_sftp(path, use_encryption)
+
 
       if use_encryption
         encrypted_path = path_to_requests + ENCRYPTED_PATH_DIR
@@ -265,7 +269,10 @@ module CnpOnline
         path_to_requests = encrypted_path
       end
 
+
+
       @responses_expected = upload_to_sftp(path_to_requests, url, username, password, use_encryption)
+
       if delete_batch_files
         delete_files_in_path(path_to_requests, /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}#{ENCRYPTED_FILE_SUFFIX}?#{SENT_FILE_SUFFIX}\z/)
         if use_encryption
@@ -300,7 +307,7 @@ module CnpOnline
           
       Dir.foreach(path) do |filename|
         if((filename =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}\z/) != nil) then
-          begin 
+          begin
             socket = TCPSocket.open(url,port.to_i)
             ssl_context = OpenSSL::SSL::SSLContext.new()
             ssl_context.ssl_version = :SSLv23
@@ -349,6 +356,7 @@ module CnpOnline
         response_path += ENCRYPTED_PATH_DIR
       end
 
+
       download_from_sftp(response_path, url, username, password)
 
       if use_encryption
@@ -361,6 +369,7 @@ module CnpOnline
     # for a transaction listener (see +DefaultCnpListener+). It may also include a batch listener and a
     # custom path where response files from the server are located (if it is not provided, we'll guess the position)
     def process_responses(args)
+
       #the transaction listener is required
       if(!args.has_key?(:transaction_listener)) then
         raise ArgumentError, "The arguments hash must contain an entry for transaction listener!"
@@ -371,7 +380,7 @@ module CnpOnline
       path_to_responses = args[:path_to_responses] ||= (File.dirname(@path_to_batches) + '/' + RESPONSE_PATH_DIR)
       delete_batch_files = args[:deleteBatchFiles] ||= get_config(:deleteBatchFiles, args)
       #deleteBatchFiles = get_config(:deleteBatchFiles, args)
-      
+
       Dir.foreach(path_to_responses) do |filename|
         if ((filename =~ /#{RESPONSE_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}.asc#{RECEIVED_FILE_SUFFIX}\z/) != nil) then
           process_response(path_to_responses + filename, transaction_listener, batch_listener)
@@ -392,6 +401,7 @@ module CnpOnline
     # Note that this will om-nom-nom quite a bit of memory    
     def process_response(path_to_response, transaction_listener, batch_listener = nil)
       reader = LibXML::XML::Reader.file(path_to_response)
+
       reader.read # read into the root node
       #if the response attribute is nil, we're dealing with an RFR and everything is a-okay
       if reader.get_attribute('response') != "0" and reader.get_attribute('response') != nil then
@@ -459,7 +469,7 @@ module CnpOnline
       authentication.password = get_config(:password, options)
 
       cnp_request.authentication = authentication
-      cnp_request.version         = '12.7'
+      cnp_request.version         = '12.8'
       cnp_request.xmlns           = "http://www.vantivcnp.com/schema"
       # cnp_request.id              = options['sessionId'] #grab from options; okay if nil
       cnp_request.numBatchRequests = @num_batch_requests
@@ -535,10 +545,14 @@ module CnpOnline
     def upload_to_sftp(path_to_requests, url, username, password, use_encryption)
     begin
       responses_expected = 0
+
       Net::SFTP.start(url, username, :password => password) do |sftp|
+
         Dir.foreach(path_to_requests) do |filename|
           if (filename =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}((#{ENCRYPTED_FILE_SUFFIX})?)\z/) != nil
+
             new_filename = filename + '.prg'
+
             File.rename(path_to_requests + filename, path_to_requests + new_filename)
             # upload the file
             sftp.upload!(path_to_requests + new_filename, '/inbound/' + new_filename)
@@ -554,6 +568,7 @@ module CnpOnline
           end
         end
       end
+
       return responses_expected
     rescue Net::SSH::AuthenticationFailed
       raise ArgumentError, "The sFTP credentials provided were incorrect. Try again!"
@@ -564,13 +579,18 @@ module CnpOnline
     responses_grabbed = 0
     begin
       #wait until a response has a possibility of being there?
+
       sleep(@POLL_DELAY)
+
       time_begin = Time.now
       Net::SFTP.start(url, username, :password => password) do |sftp|
         while((Time.now - time_begin) < @RESPONSE_TIME_OUT  && responses_grabbed < @responses_expected)
           #sleep for 60 seconds, ¿no es bueno?
           sleep(60)
+
+
           sftp.dir.foreach('/outbound/') do |entry|
+
             if (entry.name =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}((#{ENCRYPTED_FILE_SUFFIX})?).asc\z/) != nil then
               response_filename = response_path + entry.name.gsub(REQUEST_FILE_PREFIX, RESPONSE_FILE_PREFIX) + RECEIVED_FILE_SUFFIX
               sftp.download!('/outbound/' + entry.name, response_filename)
