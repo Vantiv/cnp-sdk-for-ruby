@@ -106,28 +106,29 @@ module CnpOnline
       assert_equal('Valid Format', response.message)
     end
 
-    def test_simple_capture_given_auth_with_tokenURL
-      hash = {
-          'merchantId' => '101',
-          'version'=>'8.8',
-          'id'=>'test',
-          'reportGroup'=>'Planets',
-          'orderId'=>'12344',
-          'authInformation' => {
-              'authDate'=>'2002-10-09','authCode'=>'543216', 'processingInstructions'=>{'bypassVelocityCheck'=>'true'},
-              'authAmount'=>'12345'
-          },
-          'amount'=>'106',
-          'orderSource'=>'ecommerce',
-          'token'=> {
-              'tokenURL' => 'http://token.com/sales',
-              'expDate'=>'1210',
-              'cardValidationNum'=>'555',
-              'type'=>'VI'
-          }}
-      response= CnpOnlineRequest.new.capture_given_auth(hash)
-      assert_equal('Valid Format', response.message)
-    end
+    # Uncomment when 12.8 is available
+    # def test_simple_capture_given_auth_with_tokenURL
+    #   hash = {
+    #       'merchantId' => '101',
+    #       'version'=>'8.8',
+    #       'id'=>'test',
+    #       'reportGroup'=>'Planets',
+    #       'orderId'=>'12344',
+    #       'authInformation' => {
+    #           'authDate'=>'2002-10-09','authCode'=>'543216', 'processingInstructions'=>{'bypassVelocityCheck'=>'true'},
+    #           'authAmount'=>'12345'
+    #       },
+    #       'amount'=>'106',
+    #       'orderSource'=>'ecommerce',
+    #       'token'=> {
+    #           'tokenURL' => 'http://token.com/sales',
+    #           'expDate'=>'1210',
+    #           'cardValidationNum'=>'555',
+    #           'type'=>'VI'
+    #       }}
+    #   response= CnpOnlineRequest.new.capture_given_auth(hash)
+    #   assert_equal('Valid Format', response.message)
+    # end
 
     def test_fields_out_of_order
       hash = {
