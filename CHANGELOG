@@ -1,3 +1,13 @@
+==Version 12.7.0 (June 17, 2019)
+* Feature: Full functions for XML v12.7
+* Feature: add support for new type: echeckTypeCtx
+* Feature: add 4 new types in cnpBatch: vendorCreditCtx, vendorDebitCtx, submerchantCreditCtx, submerchantDebitCtx
+* Feature: add support for multiSite functionality
+* Feature: add a new type: encryptedCcAccountNumberType
+* Feature: add support for encryption on registerTokenRequestType
+* Feature: add paymentAccountReferenceNumber in authorizationResponse and saleResponse
+* Feature: add disbursementTypeEnum in fastAccessFunding
+
 ==Version 12.3.0 (May 10, 2018)
 *Feature: Added LodgingInfo support
 *Feature: Added TranslateToLowTokenValue support
