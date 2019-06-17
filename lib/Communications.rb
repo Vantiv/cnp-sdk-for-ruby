@@ -37,14 +37,14 @@ module CnpOnline
   
       proxy_addr = config_hash['proxy_addr']
       proxy_port = config_hash['proxy_port']
-      _commManager = CommManager.instance(Configuration.new.config)
+      _commManager = CommManager.instance(config_hash)
       _requestTarget = _commManager.findUrl
 
       #cnp_url = config_hash['url']
   
       # setup https or http post
       url = URI.parse(_requestTarget.targetUrl)
-  
+
       response_xml = nil
       https = Net::HTTP.new(url.host, url.port, proxy_addr, proxy_port)
       if(url.scheme == 'https') 
