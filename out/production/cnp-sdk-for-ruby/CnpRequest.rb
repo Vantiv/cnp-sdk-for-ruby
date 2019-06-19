@@ -255,7 +255,10 @@ module CnpOnline
       delete_batch_files = get_config(SFTP_DELETE_BATCH_FILES_CONFIG_NAME, options)
       url = get_config(SFTP_URL_CONFIG_NAME, options)
 
-
+      print (use_encryption)
+      print (username + "\n")
+      print (password + "\n")
+      print (url + "\n")
 
       if(username == nil or password == nil or url == nil) then
         raise ArgumentError, "You are not configured to use sFTP for batch processing. Please run /bin/Setup.rb again!"
@@ -269,7 +272,7 @@ module CnpOnline
         path_to_requests = encrypted_path
       end
 
-
+      print (path_to_requests + "\n")
 
       @responses_expected = upload_to_sftp(path_to_requests, url, username, password, use_encryption)
 
@@ -356,7 +359,6 @@ module CnpOnline
         response_path += ENCRYPTED_PATH_DIR
       end
 
-
       download_from_sftp(response_path, url, username, password)
 
       if use_encryption
@@ -401,7 +403,7 @@ module CnpOnline
     # Note that this will om-nom-nom quite a bit of memory    
     def process_response(path_to_response, transaction_listener, batch_listener = nil)
       reader = LibXML::XML::Reader.file(path_to_response)
-
+      print path_to_response
       reader.read # read into the root node
       #if the response attribute is nil, we're dealing with an RFR and everything is a-okay
       if reader.get_attribute('response') != "0" and reader.get_attribute('response') != nil then
@@ -545,14 +547,13 @@ module CnpOnline
     def upload_to_sftp(path_to_requests, url, username, password, use_encryption)
     begin
       responses_expected = 0
-
+      print "uploading attempt\n"
       Net::SFTP.start(url, username, :password => password) do |sftp|
-
+        print "uploading attempt 2\n"
         Dir.foreach(path_to_requests) do |filename|
           if (filename =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}((#{ENCRYPTED_FILE_SUFFIX})?)\z/) != nil
-
+            print "uploading attempt 3\n"
             new_filename = filename + '.prg'
-
             File.rename(path_to_requests + filename, path_to_requests + new_filename)
             # upload the file
             sftp.upload!(path_to_requests + new_filename, '/inbound/' + new_filename)
@@ -568,7 +569,7 @@ module CnpOnline
           end
         end
       end
-
+      print "uploading done\n"
       return responses_expected
     rescue Net::SSH::AuthenticationFailed
       raise ArgumentError, "The sFTP credentials provided were incorrect. Try again!"
@@ -579,18 +580,13 @@ module CnpOnline
     responses_grabbed = 0
     begin
       #wait until a response has a possibility of being there?
-
       sleep(@POLL_DELAY)
-
       time_begin = Time.now
       Net::SFTP.start(url, username, :password => password) do |sftp|
         while((Time.now - time_begin) < @RESPONSE_TIME_OUT  && responses_grabbed < @responses_expected)
           #sleep for 60 seconds, ¿no es bueno?
           sleep(60)
-
-
           sftp.dir.foreach('/outbound/') do |entry|
-
             if (entry.name =~ /#{REQUEST_FILE_PREFIX}\d+#{COMPLETE_FILE_SUFFIX}((#{ENCRYPTED_FILE_SUFFIX})?).asc\z/) != nil then
               response_filename = response_path + entry.name.gsub(REQUEST_FILE_PREFIX, RESPONSE_FILE_PREFIX) + RECEIVED_FILE_SUFFIX
               sftp.download!('/outbound/' + entry.name, response_filename)

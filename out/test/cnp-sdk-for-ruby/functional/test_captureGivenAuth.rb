@@ -106,7 +106,6 @@ module CnpOnline
       assert_equal('Valid Format', response.message)
     end
 
-    # Uncomment when 12.8 is available
     def test_simple_capture_given_auth_with_tokenURL
       hash = {
           'merchantId' => '101',

@@ -286,7 +286,7 @@ module CnpOnline
       response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
-
+  
     def test_token_missing_exp_dat_and_valid_num
       hash = {
         'merchantId' => '101',

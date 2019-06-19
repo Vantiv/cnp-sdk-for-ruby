@@ -68,7 +68,7 @@ module CnpOnline
       assert_equal('Valid Format', response.message)
     end
 
-    # Uncomment when 12.8 sandbox is available
+
     def test_simple_force_capture_with_tokenUrl
       hash = {
           'merchantId' => '101',
