@@ -3,3 +3,4 @@ pkg
 .loadpath
 .DS_STORE
 .idea/
+cnp-sdk-for-ruby.iml

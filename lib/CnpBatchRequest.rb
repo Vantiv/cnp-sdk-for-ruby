@@ -397,11 +397,11 @@ module CnpOnline
     end
 
     def submerchant_credit(options)
-      transaction = @cnp_txn.submerchant_credit(options)
+      transaction = @cnp_txn.submerchant_credit_ctx(options)
       @txn_counts[:submerchantCredit][:numSubmerchantCredit] += 1
       @txn_counts[:submerchantCredit][:submerchantCreditAmount] += options['amount'].to_i
 
-      add_txn_to_batch(transaction, :submerchantCredit, options)
+      add_txn_to_batch(transaction, :submerchantCreditCtx, options)
     end
 
     def reserve_credit(options)
@@ -413,11 +413,11 @@ module CnpOnline
     end
 
     def vendor_credit(options)
-      transaction = @cnp_txn.vendor_credit(options)
+      transaction = @cnp_txn.vendor_credit_ctx(options)
       @txn_counts[:vendorCredit][:numVendorCredit] += 1
       @txn_counts[:vendorCredit][:vendorCreditAmount] += options['amount'].to_i
 
-      add_txn_to_batch(transaction, :vendorCredit, options)
+      add_txn_to_batch(transaction, :vendorCreditCtx, options)
     end
 
     def physical_check_credit(options)
@@ -450,11 +450,11 @@ module CnpOnline
     end
 
     def submerchant_debit(options)
-      transaction = @cnp_txn.submerchant_debit(options)
+      transaction = @cnp_txn.submerchant_debit_ctx(options)
       @txn_counts[:submerchantDebit][:numSubmerchantDebit] += 1
       @txn_counts[:submerchantDebit][:submerchantDebitAmount] += options['amount'].to_i
 
-      add_txn_to_batch(transaction, :submerchantDebit, options)
+      add_txn_to_batch(transaction, :submerchantDebitCtx, options)
     end
 
     def reserve_debit(options)
@@ -466,11 +466,11 @@ module CnpOnline
     end
 
     def vendor_debit(options)
-      transaction = @cnp_txn.vendor_debit(options)
+      transaction = @cnp_txn.vendor_debit_ctx(options)
       @txn_counts[:vendorDebit][:numVendorDebit] += 1
       @txn_counts[:vendorDebit][:vendorDebitAmount] += options['amount'].to_i
 
-      add_txn_to_batch(transaction, :vendorDebit, options)
+      add_txn_to_batch(transaction, :vendorDebitCtx, options)
     end
 
     def physical_check_debit(options)
@@ -502,6 +502,10 @@ module CnpOnline
       return @txn_counts
     end
 
+    def get_num_transactions
+      return @txn_counts[:total]
+    end
+
     def get_batch_name
       return @path_to_batch
     end
@@ -515,6 +519,7 @@ module CnpOnline
     def add_txn_to_batch(transaction, type, options)
       @txn_counts[:total] += 1
       xml = transaction.save_to_xml.to_s
+
       File.open(@txn_file, 'a+') do |file|
         file.write(xml)
       end
@@ -728,6 +733,10 @@ module CnpOnline
 
     def get_counts_and_amounts
       return @txn_counts
+    end
+
+    def get_num_transactions
+      return @txn_counts[:total]
     end
 
     def get_batch_name

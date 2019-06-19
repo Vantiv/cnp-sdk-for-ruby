@@ -267,7 +267,26 @@ module CnpOnline
       response= CnpOnlineRequest.new.credit(hash)
       assert_equal('Valid Format', response.message)
     end
-  
+
+    def test_simple_tokenURL
+      hash = {
+          'merchantId' => '101',
+          'id' => 'test',
+          'version'=>'8.8',
+          'reportGroup'=>'Planets',
+          'orderId'=>'12344',
+          'amount'=>'106',
+          'orderSource'=>'ecommerce',
+          'token'=> {
+              'tokenURL' => 'http://token.com/sales',
+              'expDate'=>'1210',
+              'cardValidationNum'=>'555',
+              'type'=>'VI'
+          }}
+      response= CnpOnlineRequest.new.credit(hash)
+      assert_equal('Valid Format', response.message)
+    end
+
     def test_token_missing_exp_dat_and_valid_num
       hash = {
         'merchantId' => '101',
