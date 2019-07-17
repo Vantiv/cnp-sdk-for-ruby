@@ -48,7 +48,7 @@ module CnpOnline
     end
 
     def test_MEGA_batch
-      omit_if(TestBatch.preliveStatus.downcase == "down")
+      omit_if(CnpBatchCertTest.preliveStatus.downcase == "down")
 
       authHash = {
         'reportGroup'=>'Planets',
@@ -261,7 +261,7 @@ module CnpOnline
     end
 
     def test_mini_batch_borked_counts
-      omit_if(TestBatch.preliveStatus.downcase == "down")
+      omit_if(CnpBatchCertTest.preliveStatus.downcase == "down")
 
       echeckSaleHash = {
         'merchantId' => '101',
@@ -310,7 +310,7 @@ module CnpOnline
     end
 
     def test_mini_batch_borked_amounts
-      omit_if(TestBatch.preliveStatus.downcase == "down")
+      omit_if(CnpBatchCertTest.preliveStatus.downcase == "down")
 
       echeckSaleHash = {
         'merchantId' => '101',
@@ -510,7 +510,7 @@ module CnpOnline
     
     def test_echeck_pre_note_all
 
-      omit_if(TestBatch.preliveStatus.downcase == "down")
+      omit_if(CnpBatchCertTest.preliveStatus.downcase == "down")
       
       billToAddress = {'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}        
       echeckSuccess = {'accType'=>'Corporate','accNum'=>'1092969901','routingNum'=>'011075150'}
