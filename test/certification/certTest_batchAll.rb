@@ -28,6 +28,13 @@ require 'fileutils'
 
 module CnpOnline
   class CnpBatchCertTest < Test::Unit::TestCase
+
+    @@preliveStatus = ENV["preliveStatus"]
+
+    def self.preliveStatus
+      @@preliveStatus
+    end
+
     def setup
       path = "/tmp/cnp-sdk-for-ruby"
       FileUtils.rm_rf path
@@ -41,6 +48,8 @@ module CnpOnline
     end
 
     def test_MEGA_batch
+      omit_if(CnpBatchCertTest.preliveStatus.downcase == "down")
+
       authHash = {
         'reportGroup'=>'Planets',
         'id' => '006',
@@ -252,6 +261,8 @@ module CnpOnline
     end
 
     def test_mini_batch_borked_counts
+      omit_if(CnpBatchCertTest.preliveStatus.downcase == "down")
+
       echeckSaleHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -299,6 +310,8 @@ module CnpOnline
     end
 
     def test_mini_batch_borked_amounts
+      omit_if(CnpBatchCertTest.preliveStatus.downcase == "down")
+
       echeckSaleHash = {
         'merchantId' => '101',
         'version'=>'8.8',
@@ -495,7 +508,9 @@ module CnpOnline
     #   assert_equal 10, count
     # end
     
-    def test_echeck_pre_note_all 
+    def test_echeck_pre_note_all
+
+      omit_if(CnpBatchCertTest.preliveStatus.downcase == "down")
       
       billToAddress = {'name'=>'Bob','city'=>'lowell','state'=>'MA','email'=>'cnp.com'}        
       echeckSuccess = {'accType'=>'Corporate','accNum'=>'1092969901','routingNum'=>'011075150'}

@@ -25,7 +25,13 @@ require 'fileutils'
 
 module CnpOnline
   class TestCnpBatchStream < Test::Unit::TestCase
-  
+
+    @@preliveStatus = ENV["preliveStatus"]
+
+    def self.preliveStatus
+      @@preliveStatus
+    end
+
     def setup
       dir = '/tmp/cnp-sdk-for-ruby-test'
       FileUtils.rm_rf dir
@@ -33,6 +39,8 @@ module CnpOnline
     end
 
     def test_full_flow
+      omit_if(TestCnpBatchStream.preliveStatus.downcase == "down")
+
       saleHash = {
         'reportGroup'=>'Planets',
         'id' => '006',
