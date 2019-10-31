@@ -38,6 +38,7 @@ module CnpOnline
       proxy_addr = config_hash['proxy_addr']
       proxy_port = config_hash['proxy_port']
       cnp_url = config_hash['url']
+      ssl_verify_mode = config_hash['ssl_verify_mode'] || OpenSSL::SSL::VERIFY_PEER
   
       # setup https or http post
       url = URI.parse(cnp_url)
@@ -46,7 +47,7 @@ module CnpOnline
       https = Net::HTTP.new(url.host, url.port, proxy_addr, proxy_port)
       if(url.scheme == 'https') 
         https.use_ssl = url.scheme=='https'
-        https.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        https.verify_mode = ssl_verify_mode
         https.ca_file = File.join(File.dirname(__FILE__), "cacert.pem")
       end
       https.start { |http|
