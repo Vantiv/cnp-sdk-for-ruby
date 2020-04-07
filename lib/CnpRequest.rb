@@ -52,9 +52,9 @@ COMPLETE_FILE_SUFFIX = '.complete'
 module CnpOnline
   class CnpRequest
     include XML::Mapping
-    def initialize(options = {})
+    def initialize(options = {}, config_hash = {})
       #load configuration data
-      @config_hash = Configuration.new.config
+      @config_hash = Configuration.new.config.merge(config_hash)
       @num_batch_requests = 0
       @path_to_request = ""
       @path_to_batches = ""

@@ -29,9 +29,9 @@ require_relative 'Configuration'
 module CnpOnline
   class CnpBatchRequest
     include XML::Mapping
-    def initialize ()
+    def initialize(config_hash = {})
       #load configuration data
-      @config_hash = Configuration.new.config
+      @config_hash = Configuration.new.config.merge(config_hash)
 
       @txn_counts = { :id=>nil,
         :merchantId=>nil,
@@ -634,9 +634,9 @@ module CnpOnline
 
   class CnpAUBatch
     include XML::Mapping
-    def initialize
+    def initialize(config_hash = {})
       #load configuration data
-      @config_hash = Configuration.new.config
+      @config_hash = Configuration.new.config.merge(config_hash)
 
       @txn_counts = { :id=>nil,
         :merchantId=>nil,

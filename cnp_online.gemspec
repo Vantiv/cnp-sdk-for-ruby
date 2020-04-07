@@ -6,7 +6,7 @@ require 'version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'CnpOnline'
-  spec.version       = CnpOnline::VERSION
+  spec.version       = '12.7.0'
   spec.authors       = ['Ryan Kortmann']
   spec.email         = ['ryan.kortmann@food52.com']
   spec.summary       = 'Food52 Forked version of CnpOnline from Vantiv/WorldPay'

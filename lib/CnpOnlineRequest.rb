@@ -30,9 +30,9 @@ require_relative 'Configuration'
 module CnpOnline
 
   class CnpOnlineRequest
-    def initialize
+    def initialize(config_hash = {})
       #load configuration data
-      @config_hash = Configuration.new.config
+      @config_hash = Configuration.new.config.merge(config_hash)
       @cnp_transaction = CnpTransaction.new
     end
 
