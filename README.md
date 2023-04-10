@@ -19,7 +19,7 @@ See LICENSE file for details on using this software.
 
 Source Code available from : [https://github.com/Vantiv/cnp-sdk-for-ruby](https://github.com/Vantiv/cnp-sdk-for-ruby)
 
-Please contact [Vantiv eCommerce](http://www.vantiv.com) to receive valid merchant credentials in order to run tests successfully or if you require assistance in any way. We are reachable at sdksupport@vantiv.com
+Please contact [Vantiv eCommerce](http://www.vantiv.com) to receive valid merchant credentials in order to run tests successfully or if you require assistance in any way. We are reachable at sdksupport@fisglobal.com
 
 Setup
 -----
@@ -69,4 +69,4 @@ puts "Cnp Transaction ID: "+ response.saleResponse.cnpTxnId
  
 More examples can be found here [Ruby SDK](https://vantiv.github.io/ruby/#gettingStarted)
 
-Please contact Vantiv eCommerce with any further questions. You can reach us at sdksupport@vantiv.com.
+Please contact Vantiv eCommerce with any further questions. You can reach us at sdksupport@fisglobal.com
