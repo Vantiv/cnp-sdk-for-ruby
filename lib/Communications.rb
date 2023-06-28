@@ -54,7 +54,7 @@ module CnpOnline
       if !Rails.env.production?
         host = 'online.vantivcnp.com'
       else
-        host = 'services.vantivprelive.com'
+        host = 'online.vantivprelive.com'
       end 
 
       https.start { |http|
