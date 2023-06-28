@@ -50,8 +50,16 @@ module CnpOnline
         https.verify_mode = ssl_verify_mode
         https.ca_file = File.join(File.dirname(__FILE__), "cacert.pem")
       end
+      
+      if !Rails.env.production?
+        host = 'online.vantivcnp.com'
+      else
+        host = 'services.vantivprelive.com'
+      end 
+
       https.start { |http|
-        response = http.request_post(url.path, post_data.to_s, {'Content-Type'=>'text/xml; charset=UTF-8','Connection'=>'close'})
+        response = http.request_post(url.path, post_data.to_s, {'Content-Type'=>'text/xml; charset=UTF-8',
+          'Connection'=>'close', 'host' => host})
         response_xml = response
       }
   
